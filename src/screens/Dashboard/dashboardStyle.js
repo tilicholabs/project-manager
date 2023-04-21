@@ -70,6 +70,7 @@ const styles = StyleSheet.create({
   tasksSection: {
     paddingHorizontal: 16,
     paddingTop: 30,
+    paddingBottom: 40,
   },
   tasksHeader: {
     display: 'flex',
@@ -103,9 +104,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 15,
     color: appTheme.INACTIVE_COLOR,
-  },
-  tasksBody: {
-    height: 220,
   },
   tasksList: {
     marginBottom: 50,

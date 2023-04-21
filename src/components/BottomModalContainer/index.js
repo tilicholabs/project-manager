@@ -17,7 +17,10 @@ export function BottomModalContainer() {
   };
 
   return (
-    <Modal animationType="slide" transparent={true}>
+    <Modal
+      animationType="slide"
+      transparent={true}
+      onRequestClose={() => handleBottomModal(null)}>
       <SafeAreaView style={styles.modalContainer}>
         <TouchableOpacity
           style={styles.closeButton}

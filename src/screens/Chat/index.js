@@ -28,7 +28,8 @@ export function Chat({navigation, route}) {
       {
         sender: 'opponent',
         text: 'We sure do! Check it out below.',
-        image: 'https://assets-global.website-files.com/5bcb5ee81fb2091a2ec550c7/5ec36523544c771830037859_wfh-drawkit-thumbnail.png',
+        image:
+          'https://assets-global.website-files.com/5bcb5ee81fb2091a2ec550c7/5ec36523544c771830037859_wfh-drawkit-thumbnail.png',
       },
       {
         sender: 'me',
@@ -72,9 +73,7 @@ export function Chat({navigation, route}) {
           }}
         />
         <View style={styles.selectedMemberInfo}>
-          <Text style={styles.selectedMemberName}>
-            {selectedMember?.name}
-          </Text>
+          <Text style={styles.selectedMemberName}>{selectedMember?.name}</Text>
           <Text style={styles.selectedMemberLastSeen}>
             Last seen {selectedMember?.lastSeen}
           </Text>
@@ -84,7 +83,8 @@ export function Chat({navigation, route}) {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    // <SafeAreaView style={styles.container}>
+    <>
       <TabScreenHeader
         leftComponent={() => <ChatHeader />}
         isSearchBtnVisible={false}
@@ -143,6 +143,7 @@ export function Chat({navigation, route}) {
           </TouchableOpacity>
         </View>
       </View>
-    </SafeAreaView>
+    </>
+    // </SafeAreaView>
   );
 }

@@ -1,4 +1,5 @@
 apply plugin: "com.android.application"
+apply plugin: 'com.google.gms.google-services'
 
 import com.android.build.OutputFile
 
@@ -124,6 +125,13 @@ def enableHermes = project.ext.react.get("enableHermes", false);
 android {
     ndkVersion rootProject.ext.ndkVersion
 
+     packagingOptions {
+      pickFirst 'lib/x86/libc++_shared.so'
+      pickFirst 'lib/x86_64/libc++_shared.so'
+      pickFirst 'lib/armeabi-v7a/libc++_shared.so'
+      pickFirst 'lib/arm64-v8a/libc++_shared.so'
+  }
+
     compileSdkVersion rootProject.ext.compileSdkVersion
 
     compileOptions {
@@ -153,6 +161,12 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        release {
+      storeFile file('your_key_name.keystore')
+      storePassword 'android'
+      keyAlias 'your_key_alias'
+      keyPassword 'android'
+    }
     }
     buildTypes {
         debug {
@@ -164,6 +178,7 @@ android {
             signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            signingConfig signingConfigs.release
         }
     }
 

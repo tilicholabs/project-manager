@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
     marginRight: 'auto',
     marginBottom: 10,
-    borderRadius: 20
+    borderRadius: 20,
   },
   modalContainer: {
     flex: 1,
