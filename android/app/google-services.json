@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "172708422792",
+    "firebase_url": "https://project-manager-bb8aa-default-rtdb.firebaseio.com",
     "project_id": "project-manager-bb8aa",
     "storage_bucket": "project-manager-bb8aa.appspot.com"
   },
@@ -13,6 +14,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "172708422792-k3u9g995ot60u3un3qulvg0qtdiakrtu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.project_management_mobile_app",
+            "certificate_hash": "fa6435571ae9f65eafef4ca153c1887bf0baa49d"
+          }
+        },
         {
           "client_id": "172708422792-c7jn6oortg2qt2lv8le9uvp3plbs86rg.apps.googleusercontent.com",
           "client_type": 3
@@ -27,7 +36,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "172708422792-c7jn6oortg2qt2lv8le9uvp3plbs86rg.apps.googleusercontent.com",
+              "client_id": "172708422792-5dam0l2fickjgs3j2qilav24sibqfk4c.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

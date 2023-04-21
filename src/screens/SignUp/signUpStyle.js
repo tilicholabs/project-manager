@@ -39,7 +39,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    borderBottomColor: '#ccc',
     borderBottomWidth: 1,
     marginBottom: 35,
     height: 40,

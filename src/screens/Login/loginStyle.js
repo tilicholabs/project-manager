@@ -39,7 +39,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    borderBottomColor: '#ccc',
     borderBottomWidth: 1,
     marginBottom: 35,
     height: 40,
@@ -74,6 +73,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     height: 45,
     borderRadius: 7,
+    marginBottom: 15,
   },
   signUpBtnText: {fontWeight: 'bold', fontSize: 16, color: '#000000aa'},
 });

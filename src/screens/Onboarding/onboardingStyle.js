@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 40,
   },
-  illustrationWrapper: {display: 'flex', alignItems: 'center'},
+  illustrationWrapper: {flex: 1, alignItems: 'center'},
   illustrationContent: {
     height: 300,
     width: 250,
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: appTheme.INACTIVE_COLOR,
     fontWeight: '500',
-    marginBottom: 'auto',
+    marginBottom: 20,
   },
   loginBtnWrapper: {
     borderColor: appTheme.INACTIVE_COLOR,
