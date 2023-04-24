@@ -4,6 +4,7 @@ const tasksState = {
       id: 1,
       projectId: 1,
       title: 'Dashboard Design',
+      projectName: 'Lokal App',
       members: [
         {
           name: 'John Doe',
@@ -26,6 +27,7 @@ const tasksState = {
     {
       id: 2,
       projectId: 1,
+      projectName: 'Meedloop',
       title: 'Mobile App Design',
       members: [
         {
@@ -49,6 +51,7 @@ const tasksState = {
     {
       id: 3,
       projectId: 2,
+      projectName: 'DashX',
       title: 'Wireframe Design',
       members: [
         {
@@ -73,6 +76,7 @@ const tasksState = {
       id: 4,
       projectId: 2,
       title: 'A/B Testing',
+      projectName: 'Gather',
       members: [
         {
           name: 'Jeff Atwood',
@@ -91,6 +95,7 @@ const tasksState = {
       id: 4,
       projectId: 2,
       title: 'A/B Testing',
+      projectName: 'Gather',
       members: [
         {
           name: 'Jeff Atwood',
@@ -109,6 +114,7 @@ const tasksState = {
       id: 4,
       projectId: 2,
       title: 'A/B Testing',
+      projectName: 'Gather',
       members: [
         {
           name: 'Jeff Atwood',
@@ -127,6 +133,7 @@ const tasksState = {
       id: 4,
       projectId: 2,
       title: 'A/B Testing',
+      projectName: 'Gather',
       members: [
         {
           name: 'Jeff Atwood',
@@ -145,6 +152,7 @@ const tasksState = {
       id: 4,
       projectId: 2,
       title: 'A/B Testing',
+      projectName: 'Gather',
       members: [
         {
           name: 'Jeff Atwood',
@@ -163,6 +171,7 @@ const tasksState = {
       id: 4,
       projectId: 2,
       title: 'A/B Testing',
+      projectName: 'Gather',
       members: [
         {
           name: 'Jeff Atwood',
@@ -181,6 +190,7 @@ const tasksState = {
       id: 4,
       projectId: 2,
       title: 'A/B Testing',
+      projectName: 'Gather',
       members: [
         {
           name: 'Jeff Atwood',
@@ -199,6 +209,7 @@ const tasksState = {
       id: 4,
       projectId: 2,
       title: 'A/B Testing',
+      projectName: 'Gather',
       members: [
         {
           name: 'Jeff Atwood',

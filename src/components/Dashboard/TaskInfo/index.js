@@ -26,6 +26,11 @@ export function TaskInfo({task}) {
   return (
     <TouchableWithoutFeedback onPress={() => handleBottomModal()}>
       <View style={styles.container}>
+        <View style={{position: 'absolute', left: 8, top: -8}}>
+          <Text style={{fontSize: 12, letterSpacing: 1, color: '#1c1c1c'}}>
+            {task?.projectName}
+          </Text>
+        </View>
         <AntDesign
           name="checksquareo"
           size={20}
@@ -45,13 +50,7 @@ export function TaskInfo({task}) {
           />
         </View>
         <View style={styles.teamWrapper}>
-          {task?.members?.slice(0, 2)?.map(member => (
-            <Image
-              key={shortid.generate()}
-              style={styles.memberPhoto}
-              source={{uri: member?.photo}}
-            />
-          ))}
+          <Text>due 20 days </Text>
         </View>
         <MaterialIcons
           name="keyboard-arrow-right"
