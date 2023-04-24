@@ -13,13 +13,13 @@ import Fontisto from 'react-native-vector-icons/Fontisto';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import styles from './profileStyle';
 import appTheme from '../../constants/colors';
-import {AuthContext} from '../../context';
+import {AppContext} from '../../context';
 import {TabScreenHeader} from '../../components';
 import {navigateToNestedRoute} from '../../navigators/RootNavigation';
 import {getScreenParent} from '../../utils/NavigationHelper';
 
 export function Profile({navigation}) {
-  const {state, dispatch} = useContext(AuthContext);
+  const {state, dispatch} = useContext(AppContext);
   const {user} = state;
 
   const handleBackButton = () => {

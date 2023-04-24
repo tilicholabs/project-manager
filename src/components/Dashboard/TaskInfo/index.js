@@ -6,25 +6,23 @@ import {ProgressBar} from 'react-native-paper';
 import shortid from 'shortid';
 import styles from './taskInfoStyle';
 import appTheme from '../../../constants/colors';
-import {AuthContext} from '../../../context';
+import {AppContext} from '../../../context';
+import {navigateToNestedRoute} from '../../../navigators/RootNavigation';
+import {getScreenParent} from '../../../utils/NavigationHelper';
 
 export function TaskInfo({task}) {
-  const {state, dispatch} = useContext(AuthContext);
+  const {state, dispatch} = useContext(AppContext);
 
-  const handleBottomModal = () => {
-    dispatch({
-      type: 'toggleBottomModal',
-      payload: {bottomModal: 'TaskView'},
-    });
-
+  const handleNavigation = (screen, params) => {
     dispatch({
       type: 'viewTask',
       payload: {selectedTask: task},
     });
+    navigateToNestedRoute(getScreenParent(screen), screen, params);
   };
 
   return (
-    <TouchableWithoutFeedback onPress={() => handleBottomModal()}>
+    <TouchableWithoutFeedback onPress={() => handleNavigation('TaskView')}>
       <View style={styles.container}>
         <AntDesign
           name="checksquareo"

@@ -22,13 +22,14 @@ import {
 } from '../screens';
 import appTheme from '../constants/colors';
 import {combineData} from '../utils/DataHelper';
-import {AuthContext} from '../context';
+import {AppContext} from '../context';
+import {TaskView} from '../screens/TaskView';
 
 const Stack = createStackNavigator();
 const BottomTab = createBottomTabNavigator();
 
 function CustomTabBar(props) {
-  const {state, dispatch} = useContext(AuthContext);
+  const {state, dispatch} = useContext(AppContext);
   const [data, setData] = useState({activeNavTab: 'Dashboard'});
 
   const handleNavigation = route => {
@@ -86,6 +87,20 @@ function CustomTabBar(props) {
   );
 }
 
+export const customHeader = ({title = '', bg = '#fafafa'}) => {
+  return {
+    title: title,
+    headerStyle: {
+      backgroundColor: bg,
+    },
+    headerTitleStyle: {
+      fontSize: 18,
+      paddingVertical: 10,
+      paddingHorizontal: 20,
+    },
+  };
+};
+
 const BottomStack = () => {
   return (
     <BottomTab.Navigator tabBar={props => <CustomTabBar {...props} />}>
@@ -139,6 +154,11 @@ const SingleStack = () => {
         name="Tasks"
         component={Tasks}
         options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="TaskView"
+        component={TaskView}
+        options={() => customHeader({title: ''})}
       />
     </Stack.Navigator>
   );

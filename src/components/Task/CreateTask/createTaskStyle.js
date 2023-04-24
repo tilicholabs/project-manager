@@ -4,7 +4,6 @@ import appTheme from '../../../constants/colors';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fafafa',
     display: 'flex',
     alignItems: 'center',
   },
@@ -14,6 +13,7 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
     marginRight: 'auto',
     marginBottom: 40,
+    marginTop: 10,
   },
   textInput: {
     height: 40,
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
   },
-  teamSection: {height: 150, width: '90%'},
+  teamSection: {width: '90%'},
   teamWrapper: {
     display: 'flex',
     flexDirection: 'row',
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     paddingVertical: 5,
     borderRadius: 5,
-    marginHorizontal: 2.5
+    marginHorizontal: 2.5,
   },
   memberPhoto: {height: 40, width: 40, borderRadius: 50},
   memberName: {width: 60, textAlign: 'center', color: '#000', fontSize: 13},

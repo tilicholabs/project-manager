@@ -10,13 +10,13 @@ import shortid from 'shortid';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import DropDownPicker from 'react-native-dropdown-picker';
 import styles from './dashboardStyle';
-import {AuthContext} from '../../context';
+import {AppContext} from '../../context';
 import {TabScreenHeader, TaskInfo, EmptyListComponent} from '../../components';
 import {formatCurrentDate} from '../../utils/DataHelper';
 import appTheme from '../../constants/colors';
 
 export function Dashboard() {
-  const {state, dispatch} = useContext(AuthContext);
+  const {state, dispatch} = useContext(AppContext);
   let {tasks} = state;
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);

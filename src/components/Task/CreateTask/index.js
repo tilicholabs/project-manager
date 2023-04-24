@@ -10,92 +10,51 @@ import {
 import shortid from 'shortid';
 import styles from './createTaskStyle';
 import {combineData} from '../../../utils/DataHelper';
-import {AuthContext} from '../../../context';
+import {AppContext} from '../../../context';
+import {SelectedMembers} from '../../SelectMembers';
 
-export function CreateTask() {
-  const {state, dispatch} = useContext(AuthContext);
-  const {members} = state;
+export function CreateTask({subTask = false}) {
+  const {state, dispatch, setSubTasks} = useContext(AppContext);
   const [data, setData] = useState({
     newTask: {title: '', description: '', selectedMembers: []},
   });
 
-  const handleSetValue = (field, value) => {
-    let {newTask} = data;
-    if (field === 'selectedMembers') {
-      let {selectedMembers} = newTask;
-      const foundIndex = selectedMembers?.findIndex(a => a?.id === value?.id);
-      if (foundIndex === -1) {
-        selectedMembers.push(value);
-      } else {
-        selectedMembers = selectedMembers.filter(a => a?.id !== value?.id);
-      }
-      newTask['selectedMembers'] = selectedMembers;
-    } else {
-      newTask[field] = value;
-    }
-
-    setData(
-      combineData(data, {
-        newTask,
-      }),
-    );
+  const handleSetValue = text => {
+    setData(prev => ({...prev, newTask: {...prev.newTask, title: text}}));
   };
 
-  const isSelectedMember = member => {
-    let value;
-    let {selectedMembers} = data?.newTask;
-    const foundIndex = selectedMembers?.findIndex(
-      a => a?.id?.toLowerCase() == member?.id?.toLowerCase(),
-    );
-    if (foundIndex > -1) {
-      value = true;
+  const taskCreateHandler = () => {
+    if (subTask) {
+      setSubTasks(prev => [
+        ...prev,
+        {title: data?.newTask?.title, status: 'Not started'},
+      ]);
     }
-    return value;
+    dispatch({
+      type: 'toggleBottomModal',
+      payload: {bottomModal: ''},
+    });
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.boldText}>Create Task</Text>
+      <Text style={styles.boldText}>
+        {subTask ? 'Create Sub Task' : 'Create Task'}
+      </Text>
       <TextInput
-        placeholder="Title"
+        placeholder="Task"
         placeholderTextColor="gray"
         style={styles.textInput}
-        onChangeText={text => handleSetValue('title', text)}
+        onChangeText={text => handleSetValue(text)}
       />
       <View style={styles.teamTextWrapper}>
         <Text style={styles.teamText}>Select Members</Text>
       </View>
       <View style={styles.teamSection}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={styles.teamWrapper}>
-            {members?.map(member => (
-              <TouchableOpacity
-                key={shortid.generate()}
-                style={[
-                  styles.memberWrapper,
-                  isSelectedMember(member) ? styles.activeTeamWrapper : null,
-                ]}
-                onPress={() => handleSetValue('selectedMembers', member)}>
-                <Image
-                  style={styles.memberPhoto}
-                  source={{uri: member?.photo}}
-                />
-                <Text
-                  style={[
-                    styles.memberName,
-                    isSelectedMember(member) ? styles.activeMemberName : null,
-                  ]}
-                  numberOfLines={2}
-                  ellipsizeMode="tail">
-                  {member?.name}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        </ScrollView>
+        <SelectedMembers />
       </View>
-      <TouchableOpacity style={styles.btnWrapper}>
-        <Text style={styles.btnText}>Send</Text>
+      <TouchableOpacity style={styles.btnWrapper} onPress={taskCreateHandler}>
+        <Text style={styles.btnText}>Create</Text>
       </TouchableOpacity>
     </View>
   );

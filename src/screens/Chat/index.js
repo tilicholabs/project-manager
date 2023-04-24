@@ -14,11 +14,11 @@ import Feather from 'react-native-vector-icons/Feather';
 import shortid from 'shortid';
 import styles from './chatStyle';
 import {TabScreenHeader, EmptyListComponent} from '../../components';
-import {AuthContext} from '../../context';
+import {AppContext} from '../../context';
 
 export function Chat({navigation, route}) {
   const selectedMember = route.params;
-  const {state, dispatch} = useContext(AuthContext);
+  const {state, dispatch} = useContext(AppContext);
   const [data, setData] = useState({
     messages: [
       {
