@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -24,11 +24,12 @@ import appTheme from '../constants/colors';
 import {combineData} from '../utils/DataHelper';
 import {AppContext} from '../context';
 import {TaskView} from '../screens/TaskView';
+import auth from '@react-native-firebase/auth';
 
 const Stack = createStackNavigator();
 const BottomTab = createBottomTabNavigator();
 
-function CustomTabBar(props) {
+const CustomTabBar = props => {
   const {state, dispatch} = useContext(AppContext);
   const [data, setData] = useState({activeNavTab: 'Dashboard'});
 
@@ -85,7 +86,7 @@ function CustomTabBar(props) {
       </View>
     </View>
   );
-}
+};
 
 export const customHeader = ({title = '', bg = '#fafafa'}) => {
   return {
@@ -165,6 +166,24 @@ const SingleStack = () => {
 };
 
 function AppStack() {
+  const [userIn, setUserIn] = useState(false);
+  const [firstRender, setFirstRender] = useState(true);
+  function userState(User) {
+    if (User) {
+      setUserIn(true);
+    } else {
+      setUserIn(false);
+    }
+    setFirstRender(false);
+  }
+
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(userState);
+    return subscriber; // unsubscribe on unmount
+  });
+
+  if (firstRender) return null;
+
   return (
     <Stack.Navigator initialRouteName="BottomStack">
       <Stack.Screen
@@ -172,11 +191,13 @@ function AppStack() {
         component={SingleStack}
         options={{headerShown: false}}
       />
-      <Stack.Screen
-        name="BottomStack"
-        component={BottomStack}
-        options={{headerShown: false}}
-      />
+      {userIn && (
+        <Stack.Screen
+          name="BottomStack"
+          component={BottomStack}
+          options={{headerShown: false}}
+        />
+      )}
     </Stack.Navigator>
   );
 }

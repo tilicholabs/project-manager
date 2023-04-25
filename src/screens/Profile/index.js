@@ -17,6 +17,7 @@ import {AppContext} from '../../context';
 import {TabScreenHeader} from '../../components';
 import {navigateToNestedRoute} from '../../navigators/RootNavigation';
 import {getScreenParent} from '../../utils/NavigationHelper';
+import auth from '@react-native-firebase/auth';
 
 export function Profile({navigation}) {
   const {state, dispatch} = useContext(AppContext);
@@ -28,6 +29,15 @@ export function Profile({navigation}) {
 
   const handleNavigation = (screen, params) => {
     navigateToNestedRoute(getScreenParent(screen), screen, params);
+  };
+
+  const handleLogout = () => {
+    auth()
+      .signOut()
+      .then(() => {
+        handleNavigation('Onboarding');
+        console.log('User signed out!');
+      });
   };
 
   return (
@@ -107,7 +117,7 @@ export function Profile({navigation}) {
                   styles.singleExplore,
                   {marginRight: 'auto', marginLeft: '7%'},
                 ]}
-                onPress={() => handleNavigation('Onboarding')}>
+                onPress={handleLogout}>
                 <MaterialCommunityIcons
                   name="logout"
                   size={22}
