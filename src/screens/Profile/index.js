@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
+  Modal,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -17,9 +18,16 @@ import {AuthContext} from '../../context';
 import {TabScreenHeader} from '../../components';
 import {navigateToNestedRoute} from '../../navigators/RootNavigation';
 import {getScreenParent} from '../../utils/NavigationHelper';
+import {TextInput} from 'react-native-paper';
+import {FontAwesome} from 'react-native-vector-icons/FontAwesome';
+import {black} from 'react-native-paper/lib/typescript/styles/colors';
 
 export function Profile({navigation}) {
   const {state, dispatch} = useContext(AuthContext);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [text, setText] = useState('');
+  const [text1, setTextone] = useState('');
+
   const {user} = state;
 
   const handleBackButton = () => {
@@ -29,7 +37,7 @@ export function Profile({navigation}) {
   const handleNavigation = (screen, params) => {
     navigateToNestedRoute(getScreenParent(screen), screen, params);
   };
-
+  const uploadImage = () => {};
   return (
     <SafeAreaView style={styles.container}>
       <TabScreenHeader
@@ -58,6 +66,15 @@ export function Profile({navigation}) {
                   uri: user?.photo,
                 }}
               />
+              <View>
+                <TouchableOpacity onPress={() => uploadImage()}>
+                  <MaterialCommunityIcons
+                    name="camera"
+                    size={20}
+                    color={'blue'}
+                  />
+                </TouchableOpacity>
+              </View>
               <View style={styles.statisticsContainer}>
                 <Text style={styles.statisticsText}>20</Text>
                 <Text style={styles.statisticsTitle}>Ongoing Tasks</Text>
@@ -66,56 +83,52 @@ export function Profile({navigation}) {
             <View style={styles.profileCenterSection}>
               <Text style={styles.nameText}>{user?.name}</Text>
               <Text style={styles.designationText}>{user?.designation}</Text>
-              <TouchableOpacity style={styles.editProfileWrapper}>
+              <TouchableOpacity
+                style={styles.editProfileWrapper}
+                onPress={() => setIsModalOpen(true)}>
                 <Text style={styles.editProfileText}>Edit Profile</Text>
               </TouchableOpacity>
+              <Modal
+                animationType={'slide'}
+                visible={isModalOpen}
+                onRequestClose={() => setIsModalOpen(false)}
+                style={{backgroundColor: 'red'}}>
+                <View style={styles.inputContainer}>
+                  <Text style={styles.labels}>Enter Your Name</Text>
+                  <TextInput
+                    style={styles.inputStyle}
+                    onChangeText={newText => setText(newText)}
+                    defaultValue={text}
+                  />
+                  <Text style={styles.labels}>Enter Your Designation</Text>
+                  <TextInput
+                    style={styles.inputStyle}
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    onChangeText={newText1 => setText(newText1)}
+                    defaultValue={text1}
+                  />
+                  <TouchableOpacity style={styles.button}>
+                    <Text style={styles.text}>Submit</Text>
+                  </TouchableOpacity>
+                </View>
+              </Modal>
             </View>
           </View>
           <View style={styles.exploreSection}>
-            <Text style={styles.exploreHeader}>Explore</Text>
-            <View style={styles.exploreContent}>
-              <TouchableOpacity style={styles.singleExplore}>
-                <Ionicons name="people" size={22} color={appTheme.COLOR1} />
-                <Text style={styles.exploreText}>Members</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.singleExplore}>
-                <MaterialCommunityIcons
-                  name="crown"
-                  size={22}
-                  color={appTheme.COLOR1}
-                />
-                <Text style={styles.exploreText}>Go Pro</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.singleExplore}>
-                <Fontisto
-                  name="pie-chart-1"
-                  size={22}
-                  color={appTheme.COLOR1}
-                />
-                <Text style={styles.exploreText}>Report</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.singleExplore}>
-                <SimpleLineIcons
-                  name="settings"
-                  size={22}
-                  color={appTheme.COLOR1}
-                />
-                <Text style={styles.exploreText}>Settings</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[
-                  styles.singleExplore,
-                  {marginRight: 'auto', marginLeft: '7%'},
-                ]}
-                onPress={() => handleNavigation('Onboarding')}>
-                <MaterialCommunityIcons
-                  name="logout"
-                  size={22}
-                  color={appTheme.COLOR1}
-                />
-                <Text style={styles.exploreText}>Log out</Text>
-              </TouchableOpacity>
-            </View>
+            <TouchableOpacity
+              style={[
+                styles.singleExplore,
+                {marginRight: 'auto', marginLeft: '2%'},
+              ]}
+              onPress={() => handleNavigation('Onboarding')}>
+              <MaterialCommunityIcons
+                name="logout"
+                size={22}
+                color={appTheme.COLOR1}
+              />
+              <Text style={styles.exploreText}>Log out</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </ScrollView>
