@@ -66,11 +66,7 @@ function CustomTabBar(props) {
             color={getColor('Projects')}
           />
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.plusBtnContainer}
-          onPress={() => handleBottomModal('CreateProject')}>
-          <MaterialCommunityIcons name="plus" size={25} color="#fff" />
-        </TouchableOpacity>
+
         <TouchableOpacity onPress={() => handleNavigation('Members')}>
           <Feather name="send" size={25} color={getColor('Members')} />
         </TouchableOpacity>
@@ -89,7 +85,7 @@ function CustomTabBar(props) {
 const BottomStack = () => {
   return (
     <BottomTab.Navigator tabBar={props => <CustomTabBar {...props} />}>
-      <BottomTab.Screen name="Dashboard" component={Dashboard} options={{}} />
+      <BottomTab.Screen name="Dashboard" component={Dashboard} />
       <BottomTab.Screen name="Projects" component={Projects} />
       <BottomTab.Screen name="Members" component={Members} />
       <BottomTab.Screen name="Profile" component={Profile} />
