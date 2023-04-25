@@ -21,8 +21,7 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     backgroundColor: '#fff',
     paddingHorizontal: 16,
-    borderBottomStartRadius: 30,
-    borderBottomEndRadius: 30,
+    borderRadius: 30,
     paddingBottom: 30,
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 1},
@@ -58,17 +57,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   statisticsValue: {
-    color: '#fff',
+    color: 'white',
     fontSize: 20,
     fontWeight: 'bold',
   },
   statisticsTitle: {
-    color: '#fff',
+    color: 'white',
     fontSize: 15,
     fontWeight: 'bold',
   },
   tasksSection: {
-    paddingHorizontal: 16,
     paddingTop: 30,
     paddingBottom: 40,
   },
@@ -106,7 +104,7 @@ const styles = StyleSheet.create({
     color: appTheme.INACTIVE_COLOR,
   },
   tasksList: {
-    marginBottom: 50,
+    marginBottom: 30,
   },
 });
 
