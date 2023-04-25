@@ -7,6 +7,7 @@ import {
   ScrollView,
   Image,
   Modal,
+  PermissionsAndroid,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -20,14 +21,15 @@ import {navigateToNestedRoute} from '../../navigators/RootNavigation';
 import {getScreenParent} from '../../utils/NavigationHelper';
 import {TextInput} from 'react-native-paper';
 import {FontAwesome} from 'react-native-vector-icons/FontAwesome';
-import {black} from 'react-native-paper/lib/typescript/styles/colors';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker'; // Migration from 2.x.x to 3.x.x => showImagePicker API is removed.
+import * as ImagePicker from 'react-native-image-picker';
 
 export function Profile({navigation}) {
   const {state, dispatch} = useContext(AuthContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [text, setText] = useState('');
   const [text1, setTextone] = useState('');
-
+  const [cameraPhoto, setCameraPhoto] = useState();
   const {user} = state;
 
   const handleBackButton = () => {
@@ -37,7 +39,23 @@ export function Profile({navigation}) {
   const handleNavigation = (screen, params) => {
     navigateToNestedRoute(getScreenParent(screen), screen, params);
   };
-  const uploadImage = () => {};
+  let options = {
+    saveToPhotos: true,
+    mediaType: 'photo',
+  };
+  const uploadImage = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+      );
+      if (granted == PermissionsAndroid.RESULTS.GRANTED) {
+        const result = await launchCamera(options);
+        setCameraPhoto(result.assets[0].uri);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
   return (
     <SafeAreaView style={styles.container}>
       <TabScreenHeader
@@ -74,6 +92,12 @@ export function Profile({navigation}) {
                     color={'blue'}
                   />
                 </TouchableOpacity>
+                {/* <Image
+                  style={styles.profilePhoto}
+                  source={{
+                    uri: cameraPhoto,
+                  }}
+                /> */}
               </View>
               <View style={styles.statisticsContainer}>
                 <Text style={styles.statisticsText}>20</Text>
