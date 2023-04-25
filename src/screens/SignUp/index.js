@@ -24,6 +24,8 @@ import {
   userNameValidator,
 } from '../../utils/FormValidator';
 import auth from '@react-native-firebase/auth';
+import {Modals} from '../../api/firebaseModal';
+import firestore from '@react-native-firebase/firestore';
 
 export function SignUp({navigation}) {
   const handleBackButton = () => {
@@ -92,12 +94,16 @@ export function SignUp({navigation}) {
     ) {
       auth()
         .createUserWithEmailAndPassword(formData.email, formData.password)
-        .then(userCredential => {
+        .then(async userCredential => {
           userCredential.user.updateProfile({
             displayName: formData.userName,
           });
-          // userCredential.user.updatePhoneNumber(formData.phoneNumber);s
-          Alert.alert('Account Created Succesfully');
+          const userData = {
+            phoneNumber: formData.phoneNumber,
+            email: formData.email,
+          };
+          await Modals.users.registerUser(userCredential?.user?.uid, userData);
+          navigation.navigate('BottomStack');
           console.log('User account created & signed in!');
         })
         .catch(error => {

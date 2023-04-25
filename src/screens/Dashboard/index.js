@@ -9,7 +9,7 @@ import {
 import shortid from 'shortid';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import styles from './dashboardStyle';
-import {AuthContext} from '../../context';
+import {AppContext} from '../../context';
 import {TabScreenHeader, TaskInfo} from '../../components';
 import appTheme from '../../constants/colors';
 import {dashboardDetails} from '../../constants/all';
@@ -17,7 +17,7 @@ import ActionButton from 'react-native-action-button';
 import Search from '../../components/Search';
 
 export function Dashboard() {
-  const {state, dispatch} = useContext(AuthContext);
+  const {state, dispatch} = useContext(AppContext);
   let {tasks} = state;
   const [open, setOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(0);

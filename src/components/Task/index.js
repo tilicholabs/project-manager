@@ -1,2 +1,2 @@
 export * from './CreateTask';
-export * from './TaskView';
+export * from '../../screens/TaskView';

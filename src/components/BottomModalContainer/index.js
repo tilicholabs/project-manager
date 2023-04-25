@@ -1,12 +1,14 @@
 import React, {useContext} from 'react';
-import {View, SafeAreaView, TouchableOpacity, Modal} from 'react-native';
+import {View, SafeAreaView, TouchableOpacity, Modal, Text} from 'react-native';
 import {CreateProject} from '../Project';
 import {CreateTask, TaskView} from '../Task';
 import styles from './bottomModalContainerStyle';
-import {AuthContext} from '../../context';
+import {AppContext} from '../../context';
+import {SelectedMembers} from '../SelectMembers';
+import {Comments} from '../Comments';
 
 export function BottomModalContainer() {
-  const {state, dispatch} = useContext(AuthContext);
+  const {state, dispatch} = useContext(AppContext);
   const {bottomModal} = state;
 
   const handleBottomModal = bottomModal => {
@@ -32,6 +34,23 @@ export function BottomModalContainer() {
             <CreateTask />
           ) : bottomModal === 'TaskView' ? (
             <TaskView />
+          ) : bottomModal === 'CreateSubTask' ? (
+            <CreateTask subTask={true} />
+          ) : bottomModal === 'SelectMembers' ? (
+            <>
+              <Text
+                style={{
+                  textAlign: 'center',
+                  fontSize: 20,
+                  fontWeight: 'bold',
+                  paddingBottom: 30,
+                }}>
+                Select Members
+              </Text>
+              <SelectedMembers doneButton={true} />
+            </>
+          ) : bottomModal === 'Comments' ? (
+            <Comments />
           ) : null}
         </View>
       </SafeAreaView>

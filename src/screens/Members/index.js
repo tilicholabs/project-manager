@@ -12,12 +12,12 @@ import shortid from 'shortid';
 import styles from './membersStyle';
 import appTheme from '../../constants/colors';
 import {TabScreenHeader, EmptyListComponent} from '../../components';
-import {AuthContext} from '../../context';
+import {AppContext} from '../../context';
 import {navigateToNestedRoute} from '../../navigators/RootNavigation';
 import {getScreenParent} from '../../utils/NavigationHelper';
 
 export function Members() {
-  const {state, dispatch} = useContext(AuthContext);
+  const {state, dispatch} = useContext(AppContext);
   const {members} = state;
 
   const handleNavigation = (screen, params) => {

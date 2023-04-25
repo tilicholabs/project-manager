@@ -62,12 +62,17 @@ export function Login({navigation}) {
     return auth().signInWithCredential(googleCredential);
   };
 
+  const handleNavigation = (screen, params) => {
+    navigateToNestedRoute(getScreenParent(screen), screen, params);
+  };
+
   const loginHanlder = () => {
     if (formData.email !== '' && formData.password !== '') {
       auth()
         .signInWithEmailAndPassword(formData.email, formData.password)
         .then(user => {
           console.log(user);
+          navigation.navigate('BottomStack');
           console.log('signed in succesfully');
         })
         .catch(error => {
@@ -83,10 +88,6 @@ export function Login({navigation}) {
           console.log(error);
         });
     }
-  };
-
-  const handleNavigation = (screen, params) => {
-    navigateToNestedRoute(getScreenParent(screen), screen, params);
   };
 
   return (
