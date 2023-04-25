@@ -11,3 +11,8 @@ export const formatCurrentDate = dt => {
   const today = `${str[2]} ${str[1]} ${str[3]}`;
   return today;
 };
+
+export const getTime = () => {
+  const date = new Date();
+  return date.getTime();
+};
