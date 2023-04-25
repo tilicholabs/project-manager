@@ -1,4 +1,5 @@
 import firestore from '@react-native-firebase/firestore';
+import {getTime} from '../utils/DataHelper';
 
 export class FireBaseModal {
   constructor(path) {
@@ -14,6 +15,7 @@ export class FireBaseModal {
         email: userData?.email || '',
         phone_number: userData?.phoneNumber || '',
         designation: userData?.designation || '',
+        created_at: getTime(),
       });
   };
 }
