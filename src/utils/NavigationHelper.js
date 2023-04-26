@@ -10,6 +10,7 @@ export const getScreenParent = route => {
     'Reports',
     'Calendar',
     'Tasks',
+    'CreateProject',
     'Project',
     'TaskView',
   ];
