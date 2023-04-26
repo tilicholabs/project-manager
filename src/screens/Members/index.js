@@ -21,57 +21,27 @@ import {AddIcon} from '../../components/AddIcon';
 import colors from '../../constants/colors';
 import {Modals} from '../../api/firebaseModal';
 import firestore from '@react-native-firebase/firestore';
-
-export const Modal = () => {
-  const [modalVisible, setModalVisible] = useState(false);
-  return (
-    <View style={styles1.centeredView}>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}>
-        <View style={styles1.centeredView}>
-          <View style={styles1.modalView}>
-            <Text style={styles1.modalText}>Hello World!</Text>
-            <Pressable
-              style={[styles1.button, styles1.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}>
-              <Text style={styles1.textStyle}>Hide Modal</Text>
-            </Pressable>
-          </View>
-        </View>
-      </Modal>
-    </View>
-  );
-};
+import Search from '../../components/Search';
 
 export function Members() {
   const {state, dispatch} = useContext(AppContext);
-  // const {members} = state;
   const [members, setMembers] = useState([]);
+  const [searchValue, setSearch] = useState('');
+  const [filteredList, setFilteredList] = useState([]);
 
-  // const getUsers = async () => {
-  //   const users = await Modals.users.getMembers();
-  //   setMembers();
-  //   console.log(users);
-  // };
+  useEffect(() => {
+    const filteredValue = members?.filter(user =>
+      user?._data?.name.toLowerCase().includes(searchValue.toLowerCase()),
+    );
 
-  // useEffect(() => {
-  //   getUsers();
-  // }, []);
+    setFilteredList(filteredValue);
+  }, [searchValue]);
 
   useEffect(() => {
     firestore()
       .collection('users')
       .onSnapshot(document => {
         setMembers(document.docs);
-        // let data = [];
-        // document.docs.map(item => {
-        //   data.push({[item.id]: item._data});
-        // });
       });
   }, []);
 
@@ -88,19 +58,22 @@ export function Members() {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* <TabScreenHeader
-        leftComponent={() => <Text style={styles.headerTitle}>Members</Text>}
-        isSearchBtnVisible={false}
-        isMoreBtnVisible={true}
-      /> */}
-      {members?.length ? (
+      <Search
+        {...{
+          placeholder: 'Search member',
+          value: searchValue,
+          onChangeText: setSearch,
+          backgroundColor: 'white',
+        }}
+      />
+      {filteredList?.length ? (
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.membersWrapper}>
-            {members.map((member, index) => (
+            {filteredList.map((member, index) => (
               <View
                 style={{
                   ...styles.singleMember,
-                  marginBottom: index === members.length - 1 ? 50 : 15,
+                  marginBottom: index === filteredList.length - 1 ? 50 : 15,
                 }}
                 key={shortid.generate()}>
                 {member?._data?.photo ? (

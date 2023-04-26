@@ -28,7 +28,14 @@ export function TaskInfo({task}) {
     <TouchableWithoutFeedback onPress={() => handleNavigation('TaskView')}>
       <View style={styles.container}>
         <View style={{position: 'absolute', left: 8, top: -8}}>
-          <Text style={{fontSize: 12, letterSpacing: 1, color: '#1c1c1c'}}>
+          <Text
+            style={{
+              fontSize: 12,
+              letterSpacing: 1,
+              color: '#1c1c1c',
+              fontStyle: 'italic',
+              fontWeight: '600',
+            }}>
             {task?.projectName}
           </Text>
         </View>
@@ -39,7 +46,7 @@ export function TaskInfo({task}) {
           </Text>
           {/* <ProgressBar
             progress={Number(task?.progress)}
-            color={task?.progress === 100 ? appTheme.COLOR2 : appTheme.COLOR1}
+            // color={task?.progress === 100 ? appTheme.COLOR2 : appTheme.COLOR1}
             style={styles.taskProgressBar}
           /> */}
         </View>

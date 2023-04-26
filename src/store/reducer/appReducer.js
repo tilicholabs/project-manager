@@ -30,6 +30,9 @@ export const appReducer = (state = initialState, action) => {
         members: members,
       };
     }
+    case 'setMembers': {
+      return {...state, members: action.payload};
+    }
     default:
       return state;
   }

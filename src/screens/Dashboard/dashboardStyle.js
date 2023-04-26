@@ -67,7 +67,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   tasksSection: {
-    paddingTop: 30,
     paddingBottom: 40,
   },
   tasksHeader: {

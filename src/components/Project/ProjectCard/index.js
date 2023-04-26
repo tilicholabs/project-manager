@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext, useRef} from 'react';
 import {View, Text, Image, TouchableOpacity} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import ProgressCircle from 'react-native-progress-circle';
@@ -7,10 +7,37 @@ import styles from './projectCardStyle';
 import appTheme from '../../../constants/colors';
 import {navigateToNestedRoute} from '../../../navigators/RootNavigation';
 import {getScreenParent} from '../../../utils/NavigationHelper';
+import {AppContext} from '../../../context';
+import {Modals} from '../../../api/firebaseModal';
 
 export function ProjectCard({project, navigation}) {
   const handleNavigation = (screen, params) => {
     navigateToNestedRoute(getScreenParent(screen), screen, params);
+  };
+  const {state, dispatch} = useContext(AppContext);
+
+  const {members} = state;
+
+  const p = useRef('');
+
+  const filterMembers = arr => {
+    const result = members.filter(item => {
+      let bool = false;
+
+      return arr?.find(ele => {
+        return item?._data?.id === ele;
+      });
+
+      if (bool) {
+        console.log(bool);
+      }
+
+      return bool;
+
+      //  return item?._data?.id === ele;
+    });
+
+    return result;
   };
 
   return (
@@ -23,26 +50,33 @@ export function ProjectCard({project, navigation}) {
           <Text style={styles.projectDescription}>{project?.description}</Text>
           <Text style={styles.projectTeamTitle}>Team</Text>
           <View style={styles.projectTeamWrapper}>
-            {project?.team?.map(member => (
-              <Image
-                key={shortid.generate()}
-                style={styles.projectMemberPhoto}
-                source={{uri: member?.photo}}
-              />
-            ))}
+            {filterMembers(project?.team_id)?.map(member => {
+              // let percent1 = 0;
+              // percent1 = percent();
+
+              return (
+                <Image
+                  key={shortid.generate()}
+                  style={styles.projectMemberPhoto}
+                  source={{
+                    uri: 'https://images.unsplash.com/photo-1609010697446-11f2155278f0?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80',
+                  }}
+                />
+              );
+            })}
             <TouchableOpacity style={styles.plusBtnContainer}>
               <MaterialCommunityIcons name="plus" size={22} color="#fff" />
             </TouchableOpacity>
           </View>
         </View>
         <ProgressCircle
-          percent={project?.progress}
+          percent={project?.percent}
           radius={40}
           borderWidth={8}
           color="#6AC67E"
           shadowColor="#f4f4f4"
           bgColor="#fff">
-          <Text style={styles.projectProgress}>{project?.progress}%</Text>
+          <Text style={styles.projectProgress}>{project?.percent}%</Text>
         </ProgressCircle>
       </View>
       <View style={styles.rowJustifyBetween}>
