@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {View, Text, TouchableOpacity, Image, ScrollView} from 'react-native';
 import shortid from 'shortid';
 import ProgressCircle from 'react-native-progress-circle';
@@ -18,10 +18,15 @@ import {
   MenuTrigger,
 } from 'react-native-popup-menu';
 import {statusColors, taskStatusOptions} from '../../constants/constants';
+import firestore from '@react-native-firebase/firestore';
+import {Modals} from '../../api/firebaseModal';
+import {dataFormatter} from '../../utils/DataFormatter';
 
 export function TaskView() {
-  const {state, dispatch, subTasks, setSubTasks} = useContext(AppContext);
+  const {state, dispatch, task} = useContext(AppContext);
   const {selectedTask} = state;
+  const [subTasks, setSubTasks] = useState({});
+  const [loading, setLoading] = useState(false);
 
   const handleCreateTask = () => {
     dispatch({
@@ -44,9 +49,24 @@ export function TaskView() {
     });
   };
 
-  return (
+  useEffect(() => {
+    firestore()
+      .collection('sub_tasks')
+      .onSnapshot(document => {
+        const data = dataFormatter(document);
+        setSubTasks(data);
+      });
+  }, []);
+
+  return loading ? (
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <Text>loading</Text>
+    </View>
+  ) : (
     <View style={{flex: 1, backgroundColor: '#fafafa'}}>
-      <ScrollView style={styles.container}>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={{paddingBottom: 50}}>
         <View style={styles.topWrapper}>
           <View style={styles.taskProgressWrapper}>
             <ProgressCircle
@@ -103,57 +123,65 @@ export function TaskView() {
           still in their infancy.
         </Text>
         <Text style={styles.subTaskText}>Sub-Tasks</Text>
-        {subTasks.map((task, index) => (
-          <View key={index} style={styles.subTasksStyle}>
-            <View>
-              <Text>{task?.title}</Text>
-            </View>
-            <Menu>
-              <MenuTrigger>
-                <View style={styles.checkBoxOuterView}>
-                  <View
-                    style={{
-                      ...styles.checkBoxInnerView,
-                      ...{backgroundColor: statusColors[task?.status]},
-                    }}></View>
+        {subTasks?.length > 0 ? (
+          subTasks.map((task, index) => {
+            return (
+              <View key={index} style={styles.subTasksStyle}>
+                <View>
+                  <Text>{task.title}</Text>
                 </View>
-              </MenuTrigger>
-              <MenuOptions>
-                {taskStatusOptions?.map((status, index1) => (
-                  <MenuOption
-                    style={{
-                      borderBottomWidth:
-                        index1 !== taskStatusOptions.length - 1 ? 1 : 0,
-                      borderBottomColor: 'gray',
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                    }}
-                    key={index1}
-                    onSelect={() =>
-                      setSubTasks(prev => {
-                        let previousItems = [...prev];
-                        previousItems[index].status = status.title;
-                        return previousItems;
-                      })
-                    }>
-                    <View
-                      style={{
-                        ...styles.checkBox,
-                        ...{backgroundColor: statusColors[status.title]},
-                      }}></View>
-                    <Text style={styles.menuOptionsText}>{status.title}</Text>
-                  </MenuOption>
-                ))}
-              </MenuOptions>
-            </Menu>
-          </View>
-        ))}
+                <Menu>
+                  <MenuTrigger>
+                    <View style={styles.checkBoxOuterView}>
+                      <View
+                        style={{
+                          ...styles.checkBoxInnerView,
+                          ...{
+                            backgroundColor: statusColors[task.status],
+                          },
+                        }}></View>
+                    </View>
+                  </MenuTrigger>
+                  <MenuOptions>
+                    {taskStatusOptions?.map((status, index1) => (
+                      <MenuOption
+                        style={{
+                          borderBottomWidth:
+                            index1 !== taskStatusOptions.length - 1 ? 1 : 0,
+                          borderBottomColor: 'gray',
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                        }}
+                        key={index1}
+                        onSelect={async () => {
+                          setLoading(true);
+                          await Modals.subTasks.update(task.id, status.title);
+                          setLoading(false);
+                        }}>
+                        <View
+                          style={{
+                            ...styles.checkBox,
+                            ...{backgroundColor: statusColors[status.title]},
+                          }}></View>
+                        <Text style={styles.menuOptionsText}>
+                          {status.title}
+                        </Text>
+                      </MenuOption>
+                    ))}
+                  </MenuOptions>
+                </Menu>
+              </View>
+            );
+          })
+        ) : (
+          <Text style={{textAlign: 'center', fontSize: 13}}>No Sub tasks</Text>
+        )}
       </ScrollView>
       <AddIcon
         style={{
           position: 'absolute',
-          bottom: 100,
-          right: 40,
+          bottom: 70,
+          right: 35,
           shadowColor: '#000',
           shadowOffset: {width: 0, height: 1},
           shadowOpacity: 0.5,
@@ -162,6 +190,7 @@ export function TaskView() {
           zIndex: 10,
         }}
         onPress={handleCreateTask}
+        bg={appTheme.PRIMARY_COLOR}
       />
       <View style={styles.bottomWrapper}>
         <TouchableOpacity style={styles.bottomContent} onPress={handleComments}>

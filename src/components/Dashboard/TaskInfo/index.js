@@ -11,13 +11,10 @@ import {navigateToNestedRoute} from '../../../navigators/RootNavigation';
 import {getScreenParent} from '../../../utils/NavigationHelper';
 
 export function TaskInfo({task}) {
-  const {state, dispatch} = useContext(AppContext);
+  const {state, dispatch, setTask} = useContext(AppContext);
 
   const handleNavigation = (screen, params) => {
-    dispatch({
-      type: 'viewTask',
-      payload: {selectedTask: task},
-    });
+    setTask(task);
     navigateToNestedRoute(getScreenParent(screen), screen, params);
   };
 
