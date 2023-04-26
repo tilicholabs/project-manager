@@ -71,7 +71,6 @@ export function Login({navigation}) {
       auth()
         .signInWithEmailAndPassword(formData.email, formData.password)
         .then(user => {
-          console.log(user);
           navigation.navigate('BottomStack');
           console.log('signed in succesfully');
         })

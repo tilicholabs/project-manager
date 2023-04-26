@@ -200,8 +200,6 @@ function AppStack() {
     return subscriber; // unsubscribe on unmount
   }, []);
 
-  console.log('inside');
-
   if (firstRender) return null;
 
   return (

@@ -28,16 +28,12 @@ export function Project({navigation, route}) {
 
   const [tasks, setTasks] = useState([]);
 
-  console.log(project, 'pro');
-
   // const tabs = ['Task List', 'File', 'Comments'];
   const tabs = ['All Tasks', 'Ongoing', 'Completed'];
 
   const [data, setData] = useState({
     activeTab: 'Task List',
   });
-
-  console.log(data);
 
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
@@ -85,13 +81,10 @@ export function Project({navigation, route}) {
     const data = await Modals.tasks.getProjectTasks(id);
 
     const formattedData = dataFormatter(data);
-    console.log(formattedData, 'dstas');
     setTasksFun(formattedData);
 
     return data;
   };
-
-  console.log(project?.team_id, 'tasks');
 
   //  const getProjects = () => {
   //    let {activeTab} = data;
@@ -118,8 +111,6 @@ export function Project({navigation, route}) {
   const filterMembers = arr => {
     const result = members.filter(item => {
       let bool = false;
-
-      console.log(item, 'item', arr);
 
       return arr?.find(ele => {
         return item?._data?.id === ele;
@@ -190,7 +181,6 @@ export function Project({navigation, route}) {
               <Text style={styles.projectTeamTitle}>Team</Text>
               <View style={styles.projectTeamWrapper}>
                 {filterMembers(project?.team_id)?.map(member => {
-                  console.log(member);
                   return (
                     // <View
                     //   style={{
@@ -250,7 +240,6 @@ export function Project({navigation, route}) {
                   isActiveTab(tab) ? styles.activeProjectTab : null,
                 ]}
                 onPress={() => {
-                  console.log(tab);
                   toggleTab(tab);
                 }}
                 key={shortid.generate()}>

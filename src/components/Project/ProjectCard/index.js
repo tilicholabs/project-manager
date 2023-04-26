@@ -24,8 +24,6 @@ export function ProjectCard({project, navigation}) {
     const result = members.filter(item => {
       let bool = false;
 
-      console.log(item, 'item', arr);
-
       return arr?.find(ele => {
         return item?._data?.id === ele;
       });
@@ -41,10 +39,6 @@ export function ProjectCard({project, navigation}) {
 
     return result;
   };
-
-  console.log(project);
-
-  // console.log(getTasks());
 
   return (
     <TouchableOpacity

@@ -33,10 +33,7 @@ export function Projects({navigation}) {
 
   const allProjectData = useRef(null);
 
-  console.log(allProjectData, 'fff');
-
   const toggleTab = tab => {
-    console.log(tab, 'tab');
     if (tab === 'Completed') {
       const result = allProjectData?.current.filter(item => {
         return item?.status === 'completed';
@@ -47,10 +44,8 @@ export function Projects({navigation}) {
       // return result;
     } else if (tab === 'Ongoing') {
       const result = allProjectData?.current.filter(item => {
-        console.log(item, ',,,aaa');
         return item?.status === 'ongoing';
       });
-      console.log(result, 'onging');
       setProjectData(result);
 
       // return result;
@@ -102,7 +97,6 @@ export function Projects({navigation}) {
 
   const getCompletedTasks = async id => {
     const data = (await Modals.tasks.getCompletedTasks(id)).docs;
-    console.log(data, 'fff');
     return data;
   };
 

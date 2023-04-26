@@ -31,8 +31,6 @@ export function CreateProject({navigation}) {
   });
   const [keyboardDetails] = useKeyboardDetails();
 
-  console.log(members);
-
   const addMembersToFirst = (team_id, members) => {
     const newMembers = members?.filter(item => {
       const foundIndex = team_id?.findIndex(a => a?.id === item?.id);
@@ -72,7 +70,6 @@ export function CreateProject({navigation}) {
     // let {newProject} = data;
     if (field === 'team_id') {
       let {team_id} = data;
-      console.log(team_id, value, 'value');
       const foundIndex = team_id?.findIndex(a => a === value);
       if (foundIndex === -1) {
         team_id.push(value);
@@ -88,7 +85,6 @@ export function CreateProject({navigation}) {
     setData({...data});
   };
 
-  console.log(data, 'dat');
   const isSelectedMember = member => {
     let value;
     let {team_id} = data;
