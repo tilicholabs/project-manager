@@ -4,33 +4,30 @@ import appTheme from '../../../constants/colors';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fafafa',
+    backgroundColor: 'white',
     display: 'flex',
     alignItems: 'center',
   },
   boldText: {
     fontWeight: 'bold',
     fontSize: 18,
-    marginLeft: 'auto',
-    marginRight: 'auto',
     marginBottom: 40,
   },
   textInput: {
     height: 40,
-    width: '90%',
+    width: '100%',
     borderRadius: 5,
     borderColor: appTheme.INACTIVE_COLOR,
     borderWidth: 1,
     marginBottom: 20,
     fontSize: 16,
     paddingVertical: 5,
-    paddingHorizontal: 7,
+    paddingHorizontal: 8,
   },
-  teamTextWrapper: {width: '90%', marginBottom: 10},
+  teamTextWrapper: {width: '100%', marginBottom: 20},
   teamText: {
     fontSize: 16,
     color: 'gray',
-    paddingLeft: 7,
   },
   btnWrapper: {
     marginTop: 'auto',
@@ -47,7 +44,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
   },
-  teamSection: {height: 150, width: '90%'},
+  teamSection: {height: 200, width: '100%', flex: 1, paddingHorizontal: 16},
   teamWrapper: {
     display: 'flex',
     flexDirection: 'row',
@@ -63,7 +60,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     paddingVertical: 5,
     borderRadius: 5,
-    marginHorizontal: 2.5
+    marginHorizontal: 2.5,
   },
   memberPhoto: {height: 40, width: 40, borderRadius: 50},
   memberName: {width: 60, textAlign: 'center', color: '#000', fontSize: 13},

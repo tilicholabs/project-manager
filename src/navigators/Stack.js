@@ -25,6 +25,7 @@ import {combineData} from '../utils/DataHelper';
 import {AppContext} from '../context';
 import {TaskView} from '../screens/TaskView';
 import auth from '@react-native-firebase/auth';
+import {CreateProject} from '../components';
 
 const Stack = createStackNavigator();
 const BottomTab = createBottomTabNavigator();
@@ -150,6 +151,11 @@ const SingleStack = () => {
       <Stack.Screen
         name="Tasks"
         component={Tasks}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="CreateProject"
+        component={CreateProject}
         options={{headerShown: false}}
       />
       <Stack.Screen

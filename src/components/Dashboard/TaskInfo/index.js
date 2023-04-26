@@ -25,7 +25,14 @@ export function TaskInfo({task}) {
     <TouchableWithoutFeedback onPress={() => handleNavigation('TaskView')}>
       <View style={styles.container}>
         <View style={{position: 'absolute', left: 8, top: -8}}>
-          <Text style={{fontSize: 12, letterSpacing: 1, color: '#1c1c1c'}}>
+          <Text
+            style={{
+              fontSize: 12,
+              letterSpacing: 1,
+              color: '#1c1c1c',
+              fontStyle: 'italic',
+              fontWeight: '600',
+            }}>
             {task?.projectName}
           </Text>
         </View>
