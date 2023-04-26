@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {
   View,
   Text,
@@ -17,38 +17,48 @@ import {TabScreenHeader, EmptyListComponent, TaskInfo} from '../../components';
 import {combineData} from '../../utils/DataHelper';
 import {AppContext} from '../../context';
 import appTheme from '../../constants/colors';
+import ActionButton from 'react-native-action-button';
+import {Modals} from '../../api/firebaseModal';
+import {dataFormatter} from '../../utils/DataFormatter';
 
 export function Project({navigation, route}) {
   const project = route.params;
   const {state, dispatch} = useContext(AppContext);
-  const {tasks} = state;
+  const {members} = state;
 
-  const tabs = ['Task List', 'File', 'Comments'];
+  const [tasks, setTasks] = useState([]);
+
+  console.log(project, 'pro');
+
+  // const tabs = ['Task List', 'File', 'Comments'];
+  const tabs = ['All Tasks', 'Ongoing', 'Completed'];
 
   const [data, setData] = useState({
     activeTab: 'Task List',
   });
 
+  console.log(data);
+
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([
-    {label: 'All Tasks', value: 'All Tasks'},
-    {label: 'Ongoing', value: 'Ongoing'},
+    {label: 'Reject', value: 'All Tasks'},
+    {label: 'OnProgress', value: 'Ongoing'},
     {label: 'Completed', value: 'Completed'},
   ]);
 
-  const getTasks = () => {
-    let tasksToRender = [];
-    if (!value || value === 'All Tasks') {
-      tasksToRender = tasks;
-    } else if (value === 'Ongoing') {
-      tasksToRender = tasks.filter(task => task.progress < 100) || [];
-    } else if (value === 'Completed') {
-      tasksToRender = tasks.filter(task => task.progress === 100) || [];
-    }
+  // const getTasks = () => {
+  //   let tasksToRender = [];
+  //   if (!value || value === 'All Tasks') {
+  //     tasksToRender = tasks;
+  //   } else if (value === 'Ongoing') {
+  //     tasksToRender = tasks.filter(task => task.progress < 100) || [];
+  //   } else if (value === 'Completed') {
+  //     tasksToRender = tasks.filter(task => task.progress === 100) || [];
+  //   }
 
-    return tasksToRender;
-  };
+  //   return tasksToRender;
+  // };
 
   const handleBackButton = () => {
     navigation?.goBack();
@@ -56,6 +66,7 @@ export function Project({navigation, route}) {
 
   const toggleTab = tab => {
     setData(combineData(data, {activeTab: tab}));
+    setValue(tab);
   };
 
   const isActiveTab = tab => {
@@ -70,10 +81,75 @@ export function Project({navigation, route}) {
     });
   };
 
+  const getProjectTasks = async id => {
+    const data = await Modals.tasks.getProjectTasks(id);
+
+    const formattedData = dataFormatter(data);
+    console.log(formattedData, 'dstas');
+    setTasksFun(formattedData);
+
+    return data;
+  };
+
+  console.log(project?.team_id, 'tasks');
+
+  //  const getProjects = () => {
+  //    let {activeTab} = data;
+  //    let projectsToRender = [];
+  //    if (activeTab === 'All') {
+  //      projectsToRender = projects;
+  //    } else {
+  //      projectsToRender =
+  //        projects?.filter(
+  //          project => project.status === activeTab?.toLowerCase(),
+  //        ) || [];
+  //    }
+
+  //    return projectsToRender;
+  //  };
+
+  const setTasksFun = data => {
+    setTasks(data);
+  };
+
+  useEffect(() => {
+    getProjectTasks(project?.id);
+  }, []);
+  const filterMembers = arr => {
+    const result = members.filter(item => {
+      let bool = false;
+
+      console.log(item, 'item', arr);
+
+      return arr?.find(ele => {
+        return item?._data?.id === ele;
+      });
+
+      if (bool) {
+        console.log(bool);
+      }
+
+      return bool;
+
+      //  return item?._data?.id === ele;
+    });
+
+    return result;
+  };
   const handleChangeTaskStatus = value => {};
 
   return (
     <SafeAreaView style={styles.container}>
+      <ActionButton
+        buttonColor={appTheme?.PRIMARY_COLOR}
+        style={{zIndex: 1}}
+        onPress={() => {
+          dispatch({
+            type: 'toggleBottomModal',
+            payload: {bottomModal: 'CreateTask'},
+          });
+        }}
+      />
       <TabScreenHeader
         leftComponent={() => (
           <TouchableOpacity
@@ -101,31 +177,68 @@ export function Project({navigation, route}) {
           <View style={styles.projectTeamAndProgress}>
             <View style={styles.projectProgressWrapper}>
               <ProgressCircle
-                percent={project?.progress}
+                percent={0}
                 radius={50}
                 borderWidth={10}
                 color="#6AC67E"
                 shadowColor="#f4f4f4"
                 bgColor="#fff">
-                <Text style={styles.projectProgress}>{project?.progress}%</Text>
+                <Text style={styles.projectProgress}>{project?.percent}%</Text>
               </ProgressCircle>
             </View>
             <View>
               <Text style={styles.projectTeamTitle}>Team</Text>
               <View style={styles.projectTeamWrapper}>
-                {project?.team?.map(member => (
-                  <Image
-                    key={shortid.generate()}
-                    style={styles.projectMemberPhoto}
-                    source={{uri: member?.photo}}
-                  />
-                ))}
+                {filterMembers(project?.team_id)?.map(member => {
+                  console.log(member);
+                  return (
+                    // <View
+                    //   style={{
+                    //     // ...styles.singleMemberText,
+                    //     backgroundColor: `#${Math.floor(
+                    //       Math.random() * 16777215,
+                    //     ).toString(16)}`,
+                    //   }}>
+                    <Image
+                      key={shortid.generate()}
+                      style={styles.projectMemberPhoto}
+                      source={{
+                        uri: 'https://images.unsplash.com/photo-1609010697446-11f2155278f0?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80',
+                      }}
+                    />
+                    // </View>
+                  );
+                })}
                 <TouchableOpacity style={styles.plusBtnContainer}>
                   <MaterialCommunityIcons name="plus" size={22} color="#fff" />
                 </TouchableOpacity>
               </View>
             </View>
           </View>
+          <DropDownPicker
+            placeholder="All Tasks"
+            placeholderStyle={{fontSize: 15}}
+            open={open}
+            value={value}
+            items={items}
+            setOpen={setOpen}
+            setValue={setValue}
+            setItems={setItems}
+            containerStyle={{
+              width: 130,
+            }}
+            style={{
+              borderColor: 'transparent',
+              backgroundColor: 'transparent',
+            }}
+            dropDownContainerStyle={{
+              backgroundColor: '#fff',
+              borderColor: 'transparent',
+            }}
+            labelStyle={{
+              fontSize: 15,
+            }}
+          />
           <Text style={styles.projectStatus}>{project?.status}</Text>
         </View>
         <View style={styles.projectBody}>
@@ -136,7 +249,10 @@ export function Project({navigation, route}) {
                   styles.projectTab,
                   isActiveTab(tab) ? styles.activeProjectTab : null,
                 ]}
-                onPress={() => toggleTab(tab)}
+                onPress={() => {
+                  console.log(tab);
+                  toggleTab(tab);
+                }}
                 key={shortid.generate()}>
                 <Text
                   style={[
@@ -150,7 +266,7 @@ export function Project({navigation, route}) {
               </TouchableOpacity>
             ))}
           </View>
-          {data?.activeTab === 'Task List' ? (
+          {/* {data?.activeTab === 'Task List' ? (
             <>
               <View style={styles.tasksHeader}>
                 <TouchableOpacity
@@ -202,7 +318,53 @@ export function Project({navigation, route}) {
             </>
           ) : data?.activeTab === 'File' ? (
             <></>
-          ) : null}
+          ) : null} */}
+
+          <>
+            <View style={styles.tasksHeader}>
+              {/* <TouchableOpacity
+                style={styles.tasksRow}
+                onPress={() => handleCreateTask()}>
+                <Text style={styles.tasksLeftText}>Add Task</Text>
+                <View style={styles.plusBtnContainer2}>
+                  <MaterialCommunityIcons name="plus" size={19} color="#fff" />
+                </View>
+              </TouchableOpacity> */}
+              {/* <DropDownPicker
+                placeholder="All Tasks"
+                placeholderStyle={{fontSize: 15}}
+                open={open}
+                value={value}
+                items={items}
+                setOpen={setOpen}
+                setValue={setValue}
+                setItems={setItems}
+                containerStyle={{
+                  width: 130,
+                }}
+                style={{
+                  borderColor: 'transparent',
+                  backgroundColor: 'transparent',
+                }}
+                dropDownContainerStyle={{
+                  backgroundColor: '#fff',
+                  borderColor: 'transparent',
+                }}
+                labelStyle={{
+                  fontSize: 15,
+                }}
+              /> */}
+            </View>
+            <View style={styles.bottomContainer}>
+              <ScrollView showsVerticalScrollIndicator={false}>
+                <View style={styles.bottomContent}>
+                  {tasks?.map(task => (
+                    <TaskInfo task={task} key={shortid.generate()} />
+                  ))}
+                </View>
+              </ScrollView>
+            </View>
+          </>
         </View>
       </View>
     </SafeAreaView>

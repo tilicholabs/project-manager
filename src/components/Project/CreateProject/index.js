@@ -17,6 +17,7 @@ import {useKeyboardDetails} from '../../../hooks/useKeyboardDetails';
 import {TabScreenHeader} from '../../Global';
 import {onChange} from 'react-native-reanimated';
 import CustomTextInput from '../../Global/CustomTextInput';
+import {Modals} from '../../../api/firebaseModal';
 
 export function CreateProject({navigation}) {
   const {state, dispatch} = useContext(AppContext);
@@ -24,51 +25,74 @@ export function CreateProject({navigation}) {
   const [members, setMembers] = useState(state?.members);
   const [searchFocused, setSearchFocused] = useState(false);
   const [data, setData] = useState({
-    newProject: {title: '', description: '', selectedMembers: []},
+    title: '',
+    description: '',
+    team_id: [],
   });
   const [keyboardDetails] = useKeyboardDetails();
 
-  const addMembersToFirst = (selectedMembers, members) => {
+  console.log(members);
+
+  const addMembersToFirst = (team_id, members) => {
     const newMembers = members?.filter(item => {
-      const foundIndex = selectedMembers?.findIndex(a => a?.id === item?.id);
+      const foundIndex = team_id?.findIndex(a => a?.id === item?.id);
       if (foundIndex === -1) {
         return true;
       }
       return false;
     });
-    setMembers([...selectedMembers, ...newMembers]);
+    setMembers([...team_id, ...newMembers]);
   };
+
+  // const handleSetValue = (field, value) => {
+  //   let {newProject} = data;
+  //   if (field === 'team_id') {
+  //     let {team_id} = newProject;
+  //     const foundIndex = team_id?.findIndex(a => a?.id === value?.id);
+
+  //     if (foundIndex === -1) {
+  //       team_id.push(value);
+  //     } else {
+  //       team_id = team_id.filter(a => a?.id !== value?.id);
+  //     }
+  //     newProject['team_id'] = team_id;
+  //     addMembersToFirst(team_id, members);
+  //   } else {
+  //     newProject[field] = value;
+  //   }
+  //   addMembersToFirst;
+  //   setData(
+  //     combineData(data, {
+  //       newProject,
+  //     }),
+  //   );
+  // };
 
   const handleSetValue = (field, value) => {
-    let {newProject} = data;
-    if (field === 'selectedMembers') {
-      let {selectedMembers} = newProject;
-      const foundIndex = selectedMembers?.findIndex(a => a?.id === value?.id);
-
+    // let {newProject} = data;
+    if (field === 'team_id') {
+      let {team_id} = data;
+      console.log(team_id, value, 'value');
+      const foundIndex = team_id?.findIndex(a => a === value);
       if (foundIndex === -1) {
-        selectedMembers.push(value);
+        team_id.push(value);
       } else {
-        selectedMembers = selectedMembers.filter(a => a?.id !== value?.id);
+        team_id = team_id.filter(a => a !== value);
       }
-      newProject['selectedMembers'] = selectedMembers;
-      addMembersToFirst(selectedMembers, members);
+      data['team_id'] = team_id;
+      // addMembersToFirst(team_id, members);
     } else {
-      newProject[field] = value;
+      data[field] = value;
     }
-    addMembersToFirst;
-    setData(
-      combineData(data, {
-        newProject,
-      }),
-    );
+
+    setData({...data});
   };
 
+  console.log(data, 'dat');
   const isSelectedMember = member => {
     let value;
-    let {selectedMembers} = data?.newProject;
-    const foundIndex = selectedMembers?.findIndex(
-      a => a?.id?.toLowerCase() == member?.id?.toLowerCase(),
-    );
+    let {team_id} = data;
+    const foundIndex = team_id?.findIndex(a => a == member);
     if (foundIndex > -1) {
       value = true;
     }
@@ -82,7 +106,7 @@ export function CreateProject({navigation}) {
     const result = state?.members?.filter(item =>
       item?.name?.toLowerCase()?.includes(text?.toLowerCase()),
     );
-    addMembersToFirst(data?.newProject?.selectedMembers, result);
+    addMembersToFirst(data?.team_id, result);
     setSearch(text);
   };
 
@@ -98,14 +122,14 @@ export function CreateProject({navigation}) {
               keyboardDetails?.isVisible && searchFocused ? 'none' : 'flex',
           }}>
           <CustomTextInput
-            value={data?.newProject?.title}
+            value={data?.title}
             placeholder="Title"
             placeholderTextColor="gray"
             style={styles.textInput}
             onChangeText={text => handleSetValue('title', text)}
           />
           <CustomTextInput
-            value={data?.newProject?.description}
+            value={data?.description}
             placeholder="Description"
             placeholderTextColor="gray"
             style={styles.textInput}
@@ -133,9 +157,11 @@ export function CreateProject({navigation}) {
                   key={shortid.generate()}
                   style={[
                     styles.memberWrapper,
-                    isSelectedMember(member) ? styles.activeTeamWrapper : null,
+                    isSelectedMember(member?.id)
+                      ? styles.activeTeamWrapper
+                      : null,
                   ]}
-                  onPress={() => handleSetValue('selectedMembers', member)}>
+                  onPress={() => handleSetValue('team_id', member?.id)}>
                   <Image
                     style={styles.memberPhoto}
                     source={{uri: member?.photo}}
@@ -147,15 +173,27 @@ export function CreateProject({navigation}) {
                     ]}
                     numberOfLines={2}
                     ellipsizeMode="tail">
-                    {member?.name}
+                    {member?._data?.name}
                   </Text>
                 </TouchableOpacity>
               ))}
             </View>
           </ScrollView>
         </View>
-        <TouchableOpacity style={styles.btnWrapper} onPress={goBack}>
-          <Text style={styles.btnText}>Create</Text>
+        <TouchableOpacity
+          style={styles.btnWrapper}
+          onPress={async () => {
+            await Modals.projects.createProject({
+              ...data,
+              created_at: new Date().getTime(),
+            });
+            // dispatch({
+            //   type: 'toggleBottomModal',
+            //   payload: {bottomModal: null},
+            // });
+            goBack();
+          }}>
+          <Text style={styles.btnText}>Add Project</Text>
         </TouchableOpacity>
       </View>
     </Fragment>

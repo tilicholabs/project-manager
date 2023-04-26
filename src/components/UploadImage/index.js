@@ -10,7 +10,8 @@ import {
   PermissionsAndroid,
 } from 'react-native';
 
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+// import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import * as ImagePicker from 'react-native-image-picker';
 
 export const UploadImage = () => {
   const [filePath, setFilePath] = useState({});
@@ -138,19 +139,32 @@ export const UploadImage = () => {
       includeBase64: true,
     };
 
-    launchImageLibrary(options, response => {
-      console.log(response);
-      if (response.didCancel) {
-        console.log('user cancelled image picker');
-      } else if (response.error) {
-        console.log('Image picker error', response.error);
-      } else if (response.customButton) {
-        console.log('user tapped custom button', response.customButton);
-      } else {
-        const source = {uri: 'data:image/jpeg;base64' + response.base64};
-        setFilePath(source);
-      }
-    });
+    ImagePicker.launchImageLibrary(
+      {
+        mediaType: 'photo',
+        includeBase64: false,
+        maxHeight: 200,
+        maxWidth: 200,
+      },
+      response => {
+        console.log(response);
+        // this.setState({resourcePath: response});
+      },
+    );
+
+    // ImagePicker.launchImageLibrary(options, response => {
+    //   console.log(response);
+    //   if (response.didCancel) {
+    //     console.log('user cancelled image picker');
+    //   } else if (response.error) {
+    //     console.log('Image picker error', response.error);
+    //   } else if (response.customButton) {
+    //     console.log('user tapped custom button', response.customButton);
+    //   } else {
+    //     const source = {uri: 'data:image/jpeg;base64' + response.base64};
+    //     setFilePath(source);
+    //   }
+    // });
   };
 
   return (

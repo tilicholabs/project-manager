@@ -36,20 +36,20 @@ export function TaskInfo({task}) {
         <AntDesign
           name="checksquareo"
           size={20}
-          color={
-            task?.progress === 100 ? appTheme.COLOR2 : appTheme.INACTIVE_COLOR
-          }
+          // color={
+          //   task?.progress === 100 ? appTheme.COLOR2 : appTheme.INACTIVE_COLOR
+          // }
           style={styles.taskProgressIndicator}
         />
         <View style={styles.taskMiddleColumn}>
           <Text style={styles.taskTitle} numberOfLines={1} ellipsizeMode="tail">
             {task?.title}
           </Text>
-          <ProgressBar
+          {/* <ProgressBar
             progress={Number(task?.progress)}
-            color={task?.progress === 100 ? appTheme.COLOR2 : appTheme.COLOR1}
+            // color={task?.progress === 100 ? appTheme.COLOR2 : appTheme.COLOR1}
             style={styles.taskProgressBar}
-          />
+          /> */}
         </View>
         <View style={styles.teamWrapper}>
           <Text>due 20 days </Text>
