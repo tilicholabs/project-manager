@@ -1,9 +1,11 @@
 import {StyleSheet} from 'react-native';
+import colors from '../../constants/colors';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fafafa',
+    // backgroundColor: 'red',
   },
   chatHeader: {
     display: 'flex',
@@ -24,7 +26,7 @@ const styles = StyleSheet.create({
     shadowOffset: {width: 0, height: 1},
     shadowOpacity: 0.5,
     shadowRadius: 1,
-    elevation: 1,
+    elevation: 3,
     margin: 1,
     marginBottom: 15,
     display: 'flex',
@@ -36,6 +38,14 @@ const styles = StyleSheet.create({
     width: 50,
     borderRadius: 10,
     marginRight: 15,
+  },
+  singleMemberText: {
+    height: 50,
+    width: 50,
+    borderRadius: 10,
+    marginRight: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   singleMemberInfo: {
     width: '65%',

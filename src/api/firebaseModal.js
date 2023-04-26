@@ -20,6 +20,10 @@ export class FireBaseModal {
   update = async (id, data) => {
     await firestore().collection(this.basePath).doc(id).update(data);
   };
+
+  delete = async id => {
+    await firestore().collection(this.basePath).doc(id).delete();
+  };
 }
 
 export const Modals = {
