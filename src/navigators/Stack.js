@@ -102,10 +102,26 @@ export const customHeader = ({title = '', bg = '#fafafa'}) => {
 const BottomStack = () => {
   return (
     <BottomTab.Navigator tabBar={props => <CustomTabBar {...props} />}>
-      <BottomTab.Screen name="Dashboard" component={Dashboard} />
-      <BottomTab.Screen name="Projects" component={Projects} />
-      <BottomTab.Screen name="Members" component={Members} />
-      <BottomTab.Screen name="Profile" component={Profile} />
+      <BottomTab.Screen
+        name="Dashboard"
+        component={Dashboard}
+        options={{headerShown: false}}
+      />
+      <BottomTab.Screen
+        name="Projects"
+        component={Projects}
+        options={{headerShown: false}}
+      />
+      <BottomTab.Screen
+        name="Members"
+        component={Members}
+        options={{headerShown: false}}
+      />
+      <BottomTab.Screen
+        name="Profile"
+        component={Profile}
+        options={{headerShown: false}}
+      />
     </BottomTab.Navigator>
   );
 };

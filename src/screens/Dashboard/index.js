@@ -25,21 +25,16 @@ export function Dashboard({navigation}) {
   const {state, dispatch} = useContext(AppContext);
   let {tasks} = state;
   const [open, setOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(0);
-  const [value, setValue] = useState(null);
+
+  const [value, setValue] = useState('All Tasks');
   const [searchValue, setSearch] = useState('');
   const [keyboardDetails] = useKeyboardDetails();
-  const [items, setItems] = useState([
-    {label: 'All Tasks', value: 'All Tasks'},
-    {label: 'Ongoing', value: 'Ongoing'},
-    {label: 'Completed', value: 'Completed'},
-  ]);
 
   const getTasks = () => {
     let tasksToRender = [];
     if (!value || value === 'All Tasks') {
       tasksToRender = tasks;
-    } else if (value === 'Ongoing') {
+    } else if (value === 'In progress') {
       tasksToRender = tasks.filter(task => task.progress < 100) || [];
     } else if (value === 'Completed') {
       tasksToRender = tasks.filter(task => task.progress === 100) || [];
@@ -104,6 +99,12 @@ export function Dashboard({navigation}) {
     return <Image source={logo} style={{width: 50, height: 30}} />;
   };
 
+  const findFilterValue = tasks => {
+    return tasks?.filter(item =>
+      item?.title?.toLowerCase()?.includes(searchValue?.toLowerCase()),
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <TabScreenHeader {...{leftComponent, isBackButtonPresent: false}} />
@@ -140,9 +141,11 @@ export function Dashboard({navigation}) {
               {dashboardDetails?.map((items, index) => {
                 return (
                   <Card
-                    selected={index === selectedItem}
+                    selected={items?.status == value}
                     {...{...items}}
-                    onPress={() => setSelectedItem(index)}
+                    onPress={() => {
+                      setValue(items?.status);
+                    }}
                   />
                 );
               })}
@@ -157,7 +160,7 @@ export function Dashboard({navigation}) {
           <View style={styles.tasksBody}>
             <ScrollView showsVerticalScrollIndicator={false}>
               <View style={styles.tasksList}>
-                {getTasks()?.map(task => (
+                {findFilterValue(getTasks())?.map(task => (
                   <TaskInfo task={task} key={shortid.generate()} />
                 ))}
               </View>

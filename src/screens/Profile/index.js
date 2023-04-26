@@ -45,11 +45,6 @@ export function Profile({navigation}) {
       <TabScreenHeader
         leftComponent={() => (
           <View style={styles.leftHeaderWrapper}>
-            <TouchableOpacity
-              onPress={() => handleBackButton('Members')}
-              style={styles.backButton}>
-              <Ionicons name="arrow-back-outline" size={25} color="#000" />
-            </TouchableOpacity>
             <Text style={styles.headerTitle}>Profile</Text>
           </View>
         )}
