@@ -21,8 +21,7 @@ import {navigateToNestedRoute} from '../../navigators/RootNavigation';
 import {getScreenParent} from '../../utils/NavigationHelper';
 import {TextInput} from 'react-native-paper';
 import {FontAwesome} from 'react-native-vector-icons/FontAwesome';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker'; // Migration from 2.x.x to 3.x.x => showImagePicker API is removed.
-import * as ImagePicker from 'react-native-image-picker';
+import ImagePicker from 'react-native-image-picker';
 
 export function Profile({navigation}) {
   const {state, dispatch} = useContext(AuthContext);
@@ -49,8 +48,38 @@ export function Profile({navigation}) {
         PermissionsAndroid.PERMISSIONS.CAMERA,
       );
       if (granted == PermissionsAndroid.RESULTS.GRANTED) {
-        const result = await launchCamera(options);
-        setCameraPhoto(result.assets[0].uri);
+        let options = {
+          title: 'Select Image',
+          customButtons: [
+            {
+              name: 'customOptionKey',
+              title: 'Choose Photo from Custom Option',
+            },
+          ],
+          storageOptions: {
+            skipBackup: true,
+            path: 'images',
+          },
+        };
+        ImagePicker.showImagePicker(options, response => {
+          console.log('Response = ', response);
+
+          if (response.didCancel) {
+            console.log('User cancelled image picker');
+          } else if (response.error) {
+            console.log('ImagePicker Error: ', response.error);
+          } else if (response.customButton) {
+            console.log('User tapped custom button: ', response.customButton);
+            alert(response.customButton);
+          } else {
+            let source = response;
+            // You can also display the image using data:
+            // let source = {
+            //   uri: 'data:image/jpeg;base64,' + response.data
+            // };
+            setFilePath(source);
+          }
+        });
       }
     } catch (e) {
       console.log(e);
@@ -92,12 +121,12 @@ export function Profile({navigation}) {
                     color={'blue'}
                   />
                 </TouchableOpacity>
-                {/* <Image
+                <Image
                   style={styles.profilePhoto}
                   source={{
                     uri: cameraPhoto,
                   }}
-                /> */}
+                />
               </View>
               <View style={styles.statisticsContainer}>
                 <Text style={styles.statisticsText}>20</Text>
