@@ -33,7 +33,6 @@ export function CreateProject() {
     } else {
       newProject[field] = value;
     }
-
     setData(
       combineData(data, {
         newProject,

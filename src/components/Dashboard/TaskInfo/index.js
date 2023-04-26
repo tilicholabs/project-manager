@@ -9,13 +9,19 @@ import appTheme from '../../../constants/colors';
 import {AppContext} from '../../../context';
 import {navigateToNestedRoute} from '../../../navigators/RootNavigation';
 import {getScreenParent} from '../../../utils/NavigationHelper';
+import {StatusPopUp} from '../../StatusPopUp';
+import {Modals} from '../../../api/firebaseModal';
 
 export function TaskInfo({task}) {
-  const {state, dispatch, setTask} = useContext(AppContext);
+  const {setSelectedTask} = useContext(AppContext);
 
   const handleNavigation = (screen, params) => {
-    setTask(task);
+    setSelectedTask(task);
     navigateToNestedRoute(getScreenParent(screen), screen, params);
+  };
+
+  const statusUpateHandler = async (id, status) => {
+    await Modals.tasks.update(id, {status: status});
   };
 
   return (
@@ -26,23 +32,16 @@ export function TaskInfo({task}) {
             {task?.projectName}
           </Text>
         </View>
-        <AntDesign
-          name="checksquareo"
-          size={20}
-          color={
-            task?.progress === 100 ? appTheme.COLOR2 : appTheme.INACTIVE_COLOR
-          }
-          style={styles.taskProgressIndicator}
-        />
+        <StatusPopUp task={task} onSelect={statusUpateHandler} />
         <View style={styles.taskMiddleColumn}>
           <Text style={styles.taskTitle} numberOfLines={1} ellipsizeMode="tail">
             {task?.title}
           </Text>
-          <ProgressBar
+          {/* <ProgressBar
             progress={Number(task?.progress)}
             color={task?.progress === 100 ? appTheme.COLOR2 : appTheme.COLOR1}
             style={styles.taskProgressBar}
-          />
+          /> */}
         </View>
         <View style={styles.teamWrapper}>
           <Text>due 20 days </Text>

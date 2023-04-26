@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -15,32 +15,32 @@ import appTheme from '../../constants/colors';
 import {dashboardDetails} from '../../constants/all';
 import ActionButton from 'react-native-action-button';
 import Search from '../../components/Search';
+import {Modals} from '../../api/firebaseModal';
+import firestore from '@react-native-firebase/firestore';
+import {dataFormatter} from '../../utils/DataFormatter';
 
 export function Dashboard() {
-  const {state, dispatch} = useContext(AppContext);
-  let {tasks} = state;
+  const {state, dispatch, setMembers, members} = useContext(AppContext);
   const [open, setOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(0);
   const [value, setValue] = useState(null);
   const [searchValue, setSearch] = useState('');
-  const [items, setItems] = useState([
-    {label: 'All Tasks', value: 'All Tasks'},
-    {label: 'Ongoing', value: 'Ongoing'},
-    {label: 'Completed', value: 'Completed'},
-  ]);
+  const [tasks, setTasks] = useState([]);
 
-  const getTasks = () => {
-    let tasksToRender = [];
-    if (!value || value === 'All Tasks') {
-      tasksToRender = tasks;
-    } else if (value === 'Ongoing') {
-      tasksToRender = tasks.filter(task => task.progress < 100) || [];
-    } else if (value === 'Completed') {
-      tasksToRender = tasks.filter(task => task.progress === 100) || [];
-    }
-
-    return tasksToRender;
+  const getTasks = async () => {
+    const data = await Modals.tasks.get();
+    setTasks(data);
+    firestore()
+      .collection('tasks')
+      .onSnapshot(document => {
+        const data = dataFormatter(document);
+        setTasks(data);
+      });
   };
+
+  useEffect(() => {
+    getTasks();
+  }, []);
 
   const handleCreateTask = () => {
     dispatch({
@@ -48,6 +48,7 @@ export function Dashboard() {
       payload: {bottomModal: 'CreateTask'},
     });
   };
+
   const handleCreateProject = () => {
     dispatch({
       type: 'toggleBottomModal',
@@ -144,7 +145,7 @@ export function Dashboard() {
           <View style={styles.tasksBody}>
             <ScrollView showsVerticalScrollIndicator={false}>
               <View style={styles.tasksList}>
-                {getTasks()?.map(task => (
+                {tasks?.map(task => (
                   <TaskInfo task={task} key={shortid.generate()} />
                 ))}
               </View>

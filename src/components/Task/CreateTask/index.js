@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {
   View,
   Text,
@@ -14,23 +14,22 @@ import {AppContext} from '../../../context';
 import {SelectedMembers} from '../../SelectMembers';
 import {Modals} from '../../../api/firebaseModal';
 import {ProjectsListing} from '../../ProjectsListing';
+import appTheme from '../../../constants/colors';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 export function CreateTask({subTask = false}) {
   const {
-    state,
     dispatch,
-    setSubTasks,
     task,
     selectedMembers,
     setSelectedMembers,
+    selectedProject,
+    setSelectedProject,
   } = useContext(AppContext);
   const [data, setData] = useState({
     title: '',
+    description: '',
   });
-
-  const handleSetValue = text => {
-    setData(prev => ({...prev, title: text}));
-  };
 
   const taskCreateHandler = async () => {
     if (subTask) {
@@ -42,13 +41,37 @@ export function CreateTask({subTask = false}) {
         created_at: getTime(),
       });
     } else {
+      await Modals.tasks.set({
+        title: data?.title || '',
+        description: data?.description || '',
+        project_id: selectedProject?.id,
+        team: selectedMembers || [],
+        status: 'Not started',
+        due_date: 0,
+        created_at: getTime(),
+      });
     }
     setSelectedMembers([]);
+    setSelectedProject();
     dispatch({
       type: 'toggleBottomModal',
       payload: {bottomModal: ''},
     });
   };
+
+  const buttonEnableCondition = subTask
+    ? data?.title !== '' && selectedMembers?.length > 0
+    : data?.title !== '' &&
+      selectedMembers?.length > 0 &&
+      data?.description !== '' &&
+      selectedProject;
+
+  useEffect(() => {
+    return () => {
+      setSelectedMembers([]);
+      setSelectedProject();
+    };
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -59,11 +82,19 @@ export function CreateTask({subTask = false}) {
         placeholder="Task"
         placeholderTextColor="gray"
         style={styles.textInput}
-        onChangeText={text => handleSetValue(text)}
+        onChangeText={text => setData(prev => ({...prev, title: text}))}
       />
       {!subTask && (
+        <TextInput
+          placeholder="Description"
+          placeholderTextColor="gray"
+          style={styles.textInput}
+          onChangeText={text => setData(prev => ({...prev, description: text}))}
+        />
+      )}
+      {!subTask && !selectedProject && (
         <View style={styles.teamTextWrapper}>
-          <Text style={styles.teamText}>Projects</Text>
+          <Text style={styles.teamText}>Select Project</Text>
           <ProjectsListing />
         </View>
       )}
@@ -73,7 +104,17 @@ export function CreateTask({subTask = false}) {
       <View style={styles.teamSection}>
         <SelectedMembers />
       </View>
-      <TouchableOpacity style={styles.btnWrapper} onPress={taskCreateHandler}>
+      <TouchableOpacity
+        style={{
+          ...styles.btnWrapper,
+          ...{
+            backgroundColor: buttonEnableCondition
+              ? appTheme.PRIMARY_COLOR
+              : appTheme.INACTIVE_COLOR,
+          },
+        }}
+        disabled={!buttonEnableCondition}
+        onPress={taskCreateHandler}>
         <Text style={styles.btnText}>Create</Text>
       </TouchableOpacity>
     </View>
