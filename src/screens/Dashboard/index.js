@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
   ScrollView,
+  Image,
 } from 'react-native';
 import shortid from 'shortid';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -15,25 +16,25 @@ import appTheme from '../../constants/colors';
 import {dashboardDetails} from '../../constants/all';
 import ActionButton from 'react-native-action-button';
 import Search from '../../components/Search';
+import {useKeyboardDetails} from '../../hooks/useKeyboardDetails';
+import {navigateToNestedRoute} from '../../navigators/RootNavigation';
+import {getScreenParent} from '../../utils/NavigationHelper';
+import logo from '../../assets/logo.png';
 
-export function Dashboard() {
+export function Dashboard({navigation}) {
   const {state, dispatch} = useContext(AppContext);
   let {tasks} = state;
   const [open, setOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(0);
-  const [value, setValue] = useState(null);
+
+  const [value, setValue] = useState('All Tasks');
   const [searchValue, setSearch] = useState('');
-  const [items, setItems] = useState([
-    {label: 'All Tasks', value: 'All Tasks'},
-    {label: 'Ongoing', value: 'Ongoing'},
-    {label: 'Completed', value: 'Completed'},
-  ]);
+  const [keyboardDetails] = useKeyboardDetails();
 
   const getTasks = () => {
     let tasksToRender = [];
     if (!value || value === 'All Tasks') {
       tasksToRender = tasks;
-    } else if (value === 'Ongoing') {
+    } else if (value === 'In progress') {
       tasksToRender = tasks.filter(task => task.progress < 100) || [];
     } else if (value === 'Completed') {
       tasksToRender = tasks.filter(task => task.progress === 100) || [];
@@ -49,10 +50,11 @@ export function Dashboard() {
     });
   };
   const handleCreateProject = () => {
-    dispatch({
-      type: 'toggleBottomModal',
-      payload: {bottomModal: 'CreateProject'},
-    });
+    navigateToNestedRoute(
+      getScreenParent('CreateProject'),
+      'CreateProject',
+      {},
+    );
   };
 
   const Card = ({
@@ -94,12 +96,18 @@ export function Dashboard() {
   };
 
   const leftComponent = () => {
-    return <Text>POC logo</Text>;
+    return <Image source={logo} style={{width: 50, height: 30}} />;
+  };
+
+  const findFilterValue = tasks => {
+    return tasks?.filter(item =>
+      item?.title?.toLowerCase()?.includes(searchValue?.toLowerCase()),
+    );
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <TabScreenHeader {...{leftComponent}} />
+      <TabScreenHeader {...{leftComponent, isBackButtonPresent: false}} />
       <ActionButton buttonColor={appTheme?.PRIMARY_COLOR} style={{zIndex: 1}}>
         <ActionButton.Item
           buttonColor="#9b59b6"
@@ -127,24 +135,32 @@ export function Dashboard() {
         />
       </View>
       <ScrollView style={{paddingHorizontal: 16}}>
-        <View style={styles.statisticsSection}>
-          <View style={styles.statisticsContainer}>
-            {dashboardDetails?.map((items, index) => {
-              return (
-                <Card
-                  selected={index === selectedItem}
-                  {...{...items}}
-                  onPress={() => setSelectedItem(index)}
-                />
-              );
-            })}
+        {!keyboardDetails?.isVisible && (
+          <View style={styles.statisticsSection}>
+            <View style={styles.statisticsContainer}>
+              {dashboardDetails?.map((items, index) => {
+                return (
+                  <Card
+                    selected={items?.status == value}
+                    {...{...items}}
+                    onPress={() => {
+                      setValue(items?.status);
+                    }}
+                  />
+                );
+              })}
+            </View>
           </View>
-        </View>
-        <View style={styles.tasksSection}>
+        )}
+        <View
+          style={{
+            ...styles.tasksSection,
+            paddingTop: !keyboardDetails?.isVisible ? 30 : 0,
+          }}>
           <View style={styles.tasksBody}>
             <ScrollView showsVerticalScrollIndicator={false}>
               <View style={styles.tasksList}>
-                {getTasks()?.map(task => (
+                {findFilterValue(getTasks())?.map(task => (
                   <TaskInfo task={task} key={shortid.generate()} />
                 ))}
               </View>
