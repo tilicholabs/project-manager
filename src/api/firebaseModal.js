@@ -6,17 +6,18 @@ export class FireBaseModal {
     this.basePath = path;
   }
 
-  registerUser = async (userId, userData) => {
-    await firestore()
-      .collection(this.basePath)
-      .doc(userId)
-      .set({
-        id: userId || '',
-        email: userData?.email || '',
-        phone_number: userData?.phoneNumber || '',
-        designation: userData?.designation || '',
-        created_at: getTime(),
-      });
+  registerUser = userData => {
+    const ref = firestore().collection(this.basePath).doc();
+    ref.set({id: ref.id, ...userData});
+  };
+
+  getMembers = async () => {
+    const data = await firestore().collection(this.basePath).get();
+    return data.docs;
+  };
+
+  deleteUser = async userId => {
+    await firestore().collection(this.basePath).doc(userId).delete();
   };
 }
 

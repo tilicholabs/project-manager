@@ -6,6 +6,7 @@ import styles from './bottomModalContainerStyle';
 import {AppContext} from '../../context';
 import {SelectedMembers} from '../SelectMembers';
 import {Comments} from '../Comments';
+import {AddMember} from '../AddMember';
 
 export function BottomModalContainer() {
   const {state, dispatch} = useContext(AppContext);
@@ -22,7 +23,8 @@ export function BottomModalContainer() {
     <Modal
       animationType="slide"
       transparent={true}
-      onRequestClose={() => handleBottomModal(null)}>
+      onRequestClose={() => handleBottomModal(null)}
+      style={{backgroundColor: 'red'}}>
       <SafeAreaView style={styles.modalContainer}>
         <TouchableOpacity
           style={styles.closeButton}
@@ -51,6 +53,8 @@ export function BottomModalContainer() {
             </>
           ) : bottomModal === 'Comments' ? (
             <Comments />
+          ) : bottomModal === 'AddMember' ? (
+            <AddMember />
           ) : null}
         </View>
       </SafeAreaView>
