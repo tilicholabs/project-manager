@@ -15,7 +15,7 @@ import Fontisto from 'react-native-vector-icons/Fontisto';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import styles from './profileStyle';
 import appTheme from '../../constants/colors';
-import {AuthContext} from '../../context';
+import {AppContext} from '../../context';
 import {TabScreenHeader} from '../../components';
 import {navigateToNestedRoute} from '../../navigators/RootNavigation';
 import {getScreenParent} from '../../utils/NavigationHelper';
@@ -90,11 +90,6 @@ export function Profile({navigation}) {
       <TabScreenHeader
         leftComponent={() => (
           <View style={styles.leftHeaderWrapper}>
-            <TouchableOpacity
-              onPress={() => handleBackButton('Members')}
-              style={styles.backButton}>
-              <Ionicons name="arrow-back-outline" size={25} color="#000" />
-            </TouchableOpacity>
             <Text style={styles.headerTitle}>Profile</Text>
           </View>
         )}

@@ -24,6 +24,8 @@ import {
   userNameValidator,
 } from '../../utils/FormValidator';
 import auth from '@react-native-firebase/auth';
+import {Modals} from '../../api/firebaseModal';
+import {getTime} from '../../utils/DataHelper';
 
 export function SignUp({navigation}) {
   const handleBackButton = () => {
@@ -35,24 +37,32 @@ export function SignUp({navigation}) {
     email: '',
     phoneNumber: '',
     password: '',
+    designation: '',
+    role: '',
+    location: '',
+    department: '',
   });
   const [error, setError] = useState({
     userName: false,
     email: false,
     phoneNumber: false,
     password: false,
+    designation: false,
+    role: false,
+    location: false,
   });
 
   const handleNavigation = (screen, params) => {
     navigateToNestedRoute(getScreenParent(screen), screen, params);
   };
 
-  const userNameHandler = text => {
+  const textValidator = (type, text) => {
     if (userNameValidator(text)) {
-      setFormData(prev => ({...prev, userName: text}));
-      setError(prev => ({...prev, userName: false}));
+      setFormData(prev => ({...prev, [type]: text}));
+      setError(prev => ({...prev, [type]: false}));
     } else {
-      setError(prev => ({...prev, userName: true}));
+      setFormData(prev => ({...prev, [type]: ''}));
+      setError(prev => ({...prev, [type]: true}));
     }
   };
 
@@ -61,6 +71,7 @@ export function SignUp({navigation}) {
       setFormData(prev => ({...prev, email}));
       setError(prev => ({...prev, email: false}));
     } else {
+      setFormData(prev => ({...prev, email: ''}));
       setError(prev => ({...prev, email: true}));
     }
   };
@@ -70,6 +81,7 @@ export function SignUp({navigation}) {
       setFormData(prev => ({...prev, phoneNumber: number}));
       setError(prev => ({...prev, phoneNumber: false}));
     } else {
+      setFormData(prev => ({...prev, phoneNumber: ''}));
       setError(prev => ({...prev, phoneNumber: true}));
     }
   };
@@ -79,6 +91,7 @@ export function SignUp({navigation}) {
       setFormData(prev => ({...prev, password}));
       setError(prev => ({...prev, password: false}));
     } else {
+      setFormData(prev => ({...prev, password: ''}));
       setError(prev => ({...prev, password: true}));
     }
   };
@@ -88,16 +101,50 @@ export function SignUp({navigation}) {
       (formData.userName !== '' &&
         formData.email !== '' &&
         formData.phoneNumber !== '',
-      formData.password !== '')
+      formData.password !== '' &&
+        formData.designation !== '' &&
+        formData.role !== '' &&
+        formData.location)
     ) {
       auth()
         .createUserWithEmailAndPassword(formData.email, formData.password)
-        .then(userCredential => {
+        .then(async userCredential => {
           userCredential.user.updateProfile({
             displayName: formData.userName,
           });
-          // userCredential.user.updatePhoneNumber(formData.phoneNumber);s
-          Alert.alert('Account Created Succesfully');
+          const userData = {
+            id: userCredential?.user?.uid,
+            user_name: formData.userName,
+            phone_number: formData.phoneNumber,
+            email: formData.email,
+            designation: formData.designation,
+            role: formData.role,
+            location: formData.location,
+            department: formData.department,
+            created_at: getTime(),
+            permissions: {
+              users: {
+                create: true,
+                read: true,
+                update: true,
+                delete: true,
+              },
+              projects: {
+                create: true,
+                read: true,
+                update: true,
+                delete: true,
+              },
+              tasks: {
+                create: true,
+                read: true,
+                update: true,
+                delete: true,
+              },
+            },
+          };
+          await Modals.users.registerUser(userCredential?.user?.uid, userData);
+          navigation.navigate('BottomStack');
           console.log('User account created & signed in!');
         })
         .catch(error => {
@@ -115,7 +162,7 @@ export function SignUp({navigation}) {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <>
       <View>
         <TouchableOpacity
           style={styles.backButton}
@@ -124,89 +171,164 @@ export function SignUp({navigation}) {
           <Text style={styles.backText}>Back</Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.bodyContent}>
-        <Text style={styles.largeText}>Sign Up</Text>
-        <Text style={styles.smallText}>
-          Log into your account &amp; manage {'\n'}your tasks
-        </Text>
-        <View
-          style={{
-            ...styles.inputRow,
-            ...{
-              borderBottomColor: error.userName ? 'red' : 'gray',
-            },
-          }}>
-          <Ionicons name="person-outline" size={20} color="gray" />
-          <TextInput
-            placeholder="Username"
-            placeholderTextColor="gray"
-            style={styles.textInput}
-            onChangeText={text => userNameHandler(text)}
-          />
-        </View>
-        <View
-          style={{
-            ...styles.inputRow,
-            ...{
-              borderBottomColor: error.email ? 'red' : 'gray',
-            },
-          }}>
-          <MaterialCommunityIcons name="email-outline" size={20} color="gray" />
-          <TextInput
-            placeholder="Email"
-            placeholderTextColor="gray"
-            style={styles.textInput}
-            onChangeText={text => emailHandler(text)}
-          />
-        </View>
-        <View
-          style={{
-            ...styles.inputRow,
-            ...{
-              borderBottomColor: error.phoneNumber ? 'red' : 'gray',
-            },
-          }}>
-          <MaterialCommunityIcons name="phone-outline" size={20} color="gray" />
-          <TextInput
-            placeholder="Phone number"
-            placeholderTextColor="gray"
-            style={styles.textInput}
-            keyboardType="decimal-pad"
-            onChangeText={text => phoneNumberHandler(text)}
-          />
-        </View>
-        <View
-          style={{
-            ...styles.inputRow,
-            ...{
-              borderBottomColor: error.password ? 'red' : 'gray',
-            },
-          }}>
-          <MaterialIcons name="lock-outline" size={20} color="gray" />
-          <TextInput
-            placeholder="Password"
-            placeholderTextColor="gray"
-            secureTextEntry={!showPassword}
-            style={styles.textInput}
-            onChangeText={text => passwordHandler(text)}
-          />
-          <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-            {showPassword ? (
-              <MaterialCommunityIcons
-                name="eye-outline"
-                size={20}
-                color="gray"
-              />
-            ) : (
-              <MaterialCommunityIcons
-                name="eye-off-outline"
-                size={20}
-                color="gray"
-              />
-            )}
-          </TouchableOpacity>
-        </View>
-        {/* <View style={styles.savePwdRow}>
+      <ScrollView style={styles.container}>
+        <View style={styles.bodyContent}>
+          <Text style={styles.largeText}>Sign Up</Text>
+          <Text style={styles.smallText}>
+            Log into your account &amp; manage {'\n'}your tasks
+          </Text>
+          <View
+            style={{
+              ...styles.inputRow,
+              ...{
+                borderBottomColor: error.userName ? 'red' : 'gray',
+              },
+            }}>
+            <Ionicons name="person-outline" size={20} color="gray" />
+            <TextInput
+              placeholder="Username"
+              placeholderTextColor="gray"
+              style={styles.textInput}
+              onChangeText={text => textValidator('userName', text)}
+            />
+          </View>
+          <View
+            style={{
+              ...styles.inputRow,
+              ...{
+                borderBottomColor: error.email ? 'red' : 'gray',
+              },
+            }}>
+            <MaterialCommunityIcons
+              name="email-outline"
+              size={20}
+              color="gray"
+            />
+            <TextInput
+              placeholder="Email"
+              placeholderTextColor="gray"
+              style={styles.textInput}
+              onChangeText={text => emailHandler(text)}
+            />
+          </View>
+          <View
+            style={{
+              ...styles.inputRow,
+              ...{
+                borderBottomColor: error.phoneNumber ? 'red' : 'gray',
+              },
+            }}>
+            <MaterialCommunityIcons
+              name="phone-outline"
+              size={20}
+              color="gray"
+            />
+            <TextInput
+              placeholder="Phone number"
+              placeholderTextColor="gray"
+              style={styles.textInput}
+              keyboardType="decimal-pad"
+              onChangeText={text => phoneNumberHandler(text)}
+            />
+          </View>
+          <View
+            style={{
+              ...styles.inputRow,
+              ...{
+                borderBottomColor: error.designation ? 'red' : 'gray',
+              },
+            }}>
+            <MaterialCommunityIcons name="account-tie" size={20} color="gray" />
+            <TextInput
+              placeholder="Designation"
+              placeholderTextColor="gray"
+              style={styles.textInput}
+              onChangeText={text => textValidator('designation', text)}
+            />
+          </View>
+          <View
+            style={{
+              ...styles.inputRow,
+              ...{
+                borderBottomColor: error.role ? 'red' : 'gray',
+              },
+            }}>
+            <MaterialCommunityIcons name="account-cog" size={20} color="gray" />
+            <TextInput
+              placeholder="Role"
+              placeholderTextColor="gray"
+              style={styles.textInput}
+              onChangeText={text => textValidator('role', text)}
+            />
+          </View>
+          <View
+            style={{
+              ...styles.inputRow,
+              ...{
+                borderBottomColor: error.location ? 'red' : 'gray',
+              },
+            }}>
+            <MaterialCommunityIcons
+              name="map-marker-radius"
+              size={20}
+              color="gray"
+            />
+            <TextInput
+              placeholder="Location"
+              placeholderTextColor="gray"
+              style={styles.textInput}
+              onChangeText={text => textValidator('location', text)}
+            />
+          </View>
+          <View
+            style={{
+              ...styles.inputRow,
+              ...{
+                borderBottomColor: error.phoneNumber ? 'red' : 'gray',
+              },
+            }}>
+            <MaterialCommunityIcons name="domain" size={20} color="gray" />
+            <TextInput
+              placeholder="Department (Optional)"
+              placeholderTextColor="gray"
+              style={styles.textInput}
+              onChangeText={text =>
+                setFormData(prev => ({...prev, department: text}))
+              }
+            />
+          </View>
+          <View
+            style={{
+              ...styles.inputRow,
+              ...{
+                borderBottomColor: error.password ? 'red' : 'gray',
+              },
+            }}>
+            <MaterialIcons name="lock-outline" size={20} color="gray" />
+            <TextInput
+              placeholder="Password"
+              placeholderTextColor="gray"
+              secureTextEntry={!showPassword}
+              style={styles.textInput}
+              onChangeText={text => passwordHandler(text)}
+            />
+            <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+              {showPassword ? (
+                <MaterialCommunityIcons
+                  name="eye-outline"
+                  size={20}
+                  color="gray"
+                />
+              ) : (
+                <MaterialCommunityIcons
+                  name="eye-off-outline"
+                  size={20}
+                  color="gray"
+                />
+              )}
+            </TouchableOpacity>
+          </View>
+          {/* <View style={styles.savePwdRow}>
           <Text style={styles.savePwdText}>Save Password</Text>
           <Switch
             trackColor={{false: appTheme.INACTIVE_COLOR, true: appTheme.COLOR2}}
@@ -214,19 +336,20 @@ export function SignUp({navigation}) {
             value={true}
           />
         </View> */}
-        <TouchableOpacity
-          style={styles.signUpBtnWrapper}
-          onPress={signUpHandler}>
-          <Text style={styles.signUpBtnText}>SIGN UP</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.loginBtnWrapper}
-          onPress={() => handleNavigation('Login')}>
-          <Text style={styles.loginBtnText}>
-            Already have an account? LOGIN
-          </Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+          <TouchableOpacity
+            style={styles.signUpBtnWrapper}
+            onPress={signUpHandler}>
+            <Text style={styles.signUpBtnText}>SIGN UP</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.loginBtnWrapper}
+            onPress={() => handleNavigation('Login')}>
+            <Text style={styles.loginBtnText}>
+              Already have an account? LOGIN
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </>
   );
 }

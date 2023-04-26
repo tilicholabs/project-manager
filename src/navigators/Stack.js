@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -22,13 +22,16 @@ import {
 } from '../screens';
 import appTheme from '../constants/colors';
 import {combineData} from '../utils/DataHelper';
-import {AuthContext} from '../context';
+import {AppContext} from '../context';
+import {TaskView} from '../screens/TaskView';
+import auth from '@react-native-firebase/auth';
+import {CreateProject} from '../components';
 
 const Stack = createStackNavigator();
 const BottomTab = createBottomTabNavigator();
 
-function CustomTabBar(props) {
-  const {state, dispatch} = useContext(AuthContext);
+const CustomTabBar = props => {
+  const {state, dispatch} = useContext(AppContext);
   const [data, setData] = useState({activeNavTab: 'Dashboard'});
 
   const handleNavigation = route => {
@@ -66,11 +69,7 @@ function CustomTabBar(props) {
             color={getColor('Projects')}
           />
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.plusBtnContainer}
-          onPress={() => handleBottomModal('CreateProject')}>
-          <MaterialCommunityIcons name="plus" size={25} color="#fff" />
-        </TouchableOpacity>
+
         <TouchableOpacity onPress={() => handleNavigation('Members')}>
           <Feather name="send" size={25} color={getColor('Members')} />
         </TouchableOpacity>
@@ -84,15 +83,45 @@ function CustomTabBar(props) {
       </View>
     </View>
   );
-}
+};
+
+export const customHeader = ({title = '', bg = '#fafafa'}) => {
+  return {
+    title: title,
+    headerStyle: {
+      backgroundColor: bg,
+    },
+    headerTitleStyle: {
+      fontSize: 18,
+      paddingVertical: 10,
+      paddingHorizontal: 20,
+    },
+  };
+};
 
 const BottomStack = () => {
   return (
     <BottomTab.Navigator tabBar={props => <CustomTabBar {...props} />}>
-      <BottomTab.Screen name="Dashboard" component={Dashboard} options={{}} />
-      <BottomTab.Screen name="Projects" component={Projects} />
-      <BottomTab.Screen name="Members" component={Members} />
-      <BottomTab.Screen name="Profile" component={Profile} />
+      <BottomTab.Screen
+        name="Dashboard"
+        component={Dashboard}
+        options={{headerShown: false}}
+      />
+      <BottomTab.Screen
+        name="Projects"
+        component={Projects}
+        options={{headerShown: false}}
+      />
+      <BottomTab.Screen
+        name="Members"
+        component={Members}
+        options={{headerShown: false}}
+      />
+      <BottomTab.Screen
+        name="Profile"
+        component={Profile}
+        options={{headerShown: false}}
+      />
     </BottomTab.Navigator>
   );
 };
@@ -140,11 +169,39 @@ const SingleStack = () => {
         component={Tasks}
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        name="CreateProject"
+        component={CreateProject}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="TaskView"
+        component={TaskView}
+        options={() => customHeader({title: ''})}
+      />
     </Stack.Navigator>
   );
 };
 
 function AppStack() {
+  const [userIn, setUserIn] = useState(false);
+  const [firstRender, setFirstRender] = useState(true);
+  function userState(User) {
+    if (User) {
+      setUserIn(true);
+    } else {
+      setUserIn(false);
+    }
+    setFirstRender(false);
+  }
+
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(userState);
+    return subscriber; // unsubscribe on unmount
+  });
+
+  if (firstRender) return null;
+
   return (
     <Stack.Navigator initialRouteName="BottomStack">
       <Stack.Screen
@@ -152,11 +209,13 @@ function AppStack() {
         component={SingleStack}
         options={{headerShown: false}}
       />
-      <Stack.Screen
-        name="BottomStack"
-        component={BottomStack}
-        options={{headerShown: false}}
-      />
+      {userIn && (
+        <Stack.Screen
+          name="BottomStack"
+          component={BottomStack}
+          options={{headerShown: false}}
+        />
+      )}
     </Stack.Navigator>
   );
 }

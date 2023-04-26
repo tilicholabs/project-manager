@@ -6,26 +6,33 @@ import {ProgressBar} from 'react-native-paper';
 import shortid from 'shortid';
 import styles from './taskInfoStyle';
 import appTheme from '../../../constants/colors';
-import {AuthContext} from '../../../context';
+import {AppContext} from '../../../context';
+import {navigateToNestedRoute} from '../../../navigators/RootNavigation';
+import {getScreenParent} from '../../../utils/NavigationHelper';
 
 export function TaskInfo({task}) {
-  const {state, dispatch} = useContext(AuthContext);
+  const {state, dispatch, setTask} = useContext(AppContext);
 
-  const handleBottomModal = () => {
-    dispatch({
-      type: 'toggleBottomModal',
-      payload: {bottomModal: 'TaskView'},
-    });
-
-    dispatch({
-      type: 'viewTask',
-      payload: {selectedTask: task},
-    });
+  const handleNavigation = (screen, params) => {
+    setTask(task);
+    navigateToNestedRoute(getScreenParent(screen), screen, params);
   };
 
   return (
-    <TouchableWithoutFeedback onPress={() => handleBottomModal()}>
+    <TouchableWithoutFeedback onPress={() => handleNavigation('TaskView')}>
       <View style={styles.container}>
+        <View style={{position: 'absolute', left: 8, top: -8}}>
+          <Text
+            style={{
+              fontSize: 12,
+              letterSpacing: 1,
+              color: '#1c1c1c',
+              fontStyle: 'italic',
+              fontWeight: '600',
+            }}>
+            {task?.projectName}
+          </Text>
+        </View>
         <AntDesign
           name="checksquareo"
           size={20}
@@ -45,13 +52,7 @@ export function TaskInfo({task}) {
           />
         </View>
         <View style={styles.teamWrapper}>
-          {task?.members?.slice(0, 2)?.map(member => (
-            <Image
-              key={shortid.generate()}
-              style={styles.memberPhoto}
-              source={{uri: member?.photo}}
-            />
-          ))}
+          <Text>due 20 days </Text>
         </View>
         <MaterialIcons
           name="keyboard-arrow-right"

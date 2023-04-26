@@ -15,12 +15,12 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import styles from './projectStyle';
 import {TabScreenHeader, EmptyListComponent, TaskInfo} from '../../components';
 import {combineData} from '../../utils/DataHelper';
-import {AuthContext} from '../../context';
+import {AppContext} from '../../context';
 import appTheme from '../../constants/colors';
 
 export function Project({navigation, route}) {
   const project = route.params;
-  const {state, dispatch} = useContext(AuthContext);
+  const {state, dispatch} = useContext(AppContext);
   const {tasks} = state;
 
   const tabs = ['Task List', 'File', 'Comments'];

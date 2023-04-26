@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import shortid from 'shortid';
 import styles from './projectsStyle';
-import {AuthContext} from '../../context';
+import {AppContext} from '../../context';
 import {
   TabScreenHeader,
   ProjectCard,
@@ -19,7 +19,7 @@ import {combineData} from '../../utils/DataHelper';
 export function Projects({navigation}) {
   const tabs = ['All', 'Ongoing', 'Completed'];
 
-  const {state, dispatch} = useContext(AuthContext);
+  const {state, dispatch} = useContext(AppContext);
   const {projects} = state;
 
   const [data, setData] = useState({activeTab: 'All'});

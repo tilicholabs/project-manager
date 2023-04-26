@@ -1,4 +1,4 @@
-import React, {useReducer} from 'react';
+import React, {useReducer, useState} from 'react';
 import {SafeAreaView, StyleSheet, StatusBar} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {Provider as PaperProvider} from 'react-native-paper';
@@ -7,17 +7,25 @@ import {BottomModalContainer} from './components';
 import AppStack from './navigators/Stack';
 import initialState from './store/state';
 import reducer from './store/reducer';
-import {AuthContext} from './context';
+import {AppContext} from './context';
 import {navigationRef} from './navigators/RootNavigation';
 
 const App = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
-
+  const [subTasks, setSubTasks] = useState([]);
+  const [selectedMembers, setSelectedMembers] = useState([]);
+  const [task, setTask] = useState();
   return (
-    <AuthContext.Provider
+    <AppContext.Provider
       value={{
         state,
         dispatch,
+        subTasks,
+        setSubTasks,
+        selectedMembers,
+        setSelectedMembers,
+        task,
+        setTask,
       }}>
       <PaperProvider>
         <MenuProvider>
@@ -30,7 +38,7 @@ const App = () => {
           </SafeAreaView>
         </MenuProvider>
       </PaperProvider>
-    </AuthContext.Provider>
+    </AppContext.Provider>
   );
 };
 

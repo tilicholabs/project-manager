@@ -13,6 +13,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingVertical: 16,
     paddingHorizontal: 20,
+    backgroundColor: '#fff',
   },
   backText: {
     fontSize: 17,
@@ -62,6 +63,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     height: 45,
     borderRadius: 7,
+    marginBottom: 30,
   },
   loginBtnText: {fontWeight: 'bold', fontSize: 16, color: '#000000aa'},
   signUpBtnWrapper: {
