@@ -1,23 +1,28 @@
 import firestore from '@react-native-firebase/firestore';
-import {getTime} from '../utils/DataHelper';
+import {dataFormatter} from '../utils/DataFormatter';
 
 export class FireBaseModal {
   constructor(path) {
     this.basePath = path;
   }
 
-  registerUser = userData => {
-    const ref = firestore().collection(this.basePath).doc();
-    ref.set({id: ref.id, ...userData});
-  };
-
-  getMembers = async () => {
+  get = async () => {
     const data = await firestore().collection(this.basePath).get();
-    return data.docs;
+    const formattedData = dataFormatter(data);
+    return formattedData;
   };
 
-  deleteUser = async userId => {
-    await firestore().collection(this.basePath).doc(userId).delete();
+  set = async data => {
+    const ref = firestore().collection(this.basePath).doc();
+    await ref.set({id: ref.id, ...data});
+  };
+
+  update = async (id, data) => {
+    await firestore().collection(this.basePath).doc(id).update(data);
+  };
+
+  delete = async id => {
+    await firestore().collection(this.basePath).doc(id).delete();
   };
 }
 

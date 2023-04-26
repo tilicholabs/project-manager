@@ -14,6 +14,7 @@ const App = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [subTasks, setSubTasks] = useState([]);
   const [selectedMembers, setSelectedMembers] = useState([]);
+  const [task, setTask] = useState();
   return (
     <AppContext.Provider
       value={{
@@ -23,6 +24,8 @@ const App = () => {
         setSubTasks,
         selectedMembers,
         setSelectedMembers,
+        task,
+        setTask,
       }}>
       <PaperProvider>
         <MenuProvider>

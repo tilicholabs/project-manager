@@ -7,7 +7,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fafafa',
     paddingHorizontal: 16,
     paddingVertical: 10,
-    // marginBottom: 30,
   },
   topWrapper: {
     display: 'flex',
