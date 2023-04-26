@@ -30,6 +30,10 @@ export const appReducer = (state = initialState, action) => {
         members: members,
       };
     }
+    case 'setMembers': {
+      console.log('inside', action.payload);
+      return {...state, members: action.payload};
+    }
     default:
       return state;
   }

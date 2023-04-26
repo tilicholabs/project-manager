@@ -198,7 +198,9 @@ function AppStack() {
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(userState);
     return subscriber; // unsubscribe on unmount
-  });
+  }, []);
+
+  console.log('inside');
 
   if (firstRender) return null;
 
