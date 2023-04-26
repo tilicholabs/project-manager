@@ -12,12 +12,12 @@ export const SelectedMembers = ({doneButton = false}) => {
   const handleSetValue = value => {
     setSelectedMembers(prev => {
       let previousItems = [...prev];
-      const foundIndex = previousItems?.findIndex(a => a?.id === value?.id);
+      const foundIndex = previousItems?.findIndex(a => a === value?.id);
       if (foundIndex === -1) {
-        previousItems.push(value);
+        previousItems.push(value?.id);
         return previousItems;
       } else {
-        return previousItems.filter(a => a?.id !== value?.id);
+        return previousItems.filter(a => a !== value?.id);
       }
     });
   };
@@ -25,7 +25,7 @@ export const SelectedMembers = ({doneButton = false}) => {
   const isSelectedMember = member => {
     let value = false;
     const foundIndex = selectedMembers?.findIndex(
-      a => a?.id?.toLowerCase() == member?.id?.toLowerCase(),
+      a => a?.toLowerCase() == member?.id?.toLowerCase(),
     );
     if (foundIndex > -1) {
       value = true;

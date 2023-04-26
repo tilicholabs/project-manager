@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
+  Linking,
+  StyleSheet,
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import shortid from 'shortid';
@@ -15,59 +17,185 @@ import {TabScreenHeader, EmptyListComponent} from '../../components';
 import {AppContext} from '../../context';
 import {navigateToNestedRoute} from '../../navigators/RootNavigation';
 import {getScreenParent} from '../../utils/NavigationHelper';
+import {AddIcon} from '../../components/AddIcon';
+import colors from '../../constants/colors';
+import {Modals} from '../../api/firebaseModal';
+import firestore from '@react-native-firebase/firestore';
+import Search from '../../components/Search';
 
 export function Members() {
   const {state, dispatch} = useContext(AppContext);
-  const {members} = state;
+  const [members, setMembers] = useState([]);
+  const [searchValue, setSearch] = useState('');
+  const [filteredList, setFilteredList] = useState([]);
+
+  useEffect(() => {
+    const filteredValue = members?.filter(user =>
+      user?._data?.name.toLowerCase().includes(searchValue.toLowerCase()),
+    );
+
+    setFilteredList(filteredValue);
+  }, [searchValue]);
+
+  useEffect(() => {
+    firestore()
+      .collection('users')
+      .onSnapshot(document => {
+        setMembers(document.docs);
+      });
+  }, []);
 
   const handleNavigation = (screen, params) => {
     navigateToNestedRoute(getScreenParent(screen), screen, params);
   };
 
+  const handleAddMember = () => {
+    dispatch({
+      type: 'toggleBottomModal',
+      payload: {bottomModal: 'AddMember'},
+    });
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <TabScreenHeader
-        leftComponent={() => <Text style={styles.headerTitle}>Members</Text>}
-        isSearchBtnVisible={false}
-        isMoreBtnVisible={true}
+      <Search
+        {...{
+          placeholder: 'Search member',
+          value: searchValue,
+          onChangeText: setSearch,
+          backgroundColor: 'white',
+        }}
       />
-      {members?.length ? (
+      {filteredList?.length ? (
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.membersWrapper}>
-            {members.map(member => (
-              <TouchableOpacity
-                style={styles.singleMember}
-                onPress={() => handleNavigation('Chat', member)}
+            {filteredList.map((member, index) => (
+              <View
+                style={{
+                  ...styles.singleMember,
+                  marginBottom: index === filteredList.length - 1 ? 50 : 15,
+                }}
                 key={shortid.generate()}>
-                <Image
-                  style={styles.singleMemberPhoto}
-                  source={{
-                    uri: member?.photo,
-                  }}
-                />
+                {member?._data?.photo ? (
+                  <Image
+                    style={styles.singleMemberPhoto}
+                    source={{
+                      uri: member?._data?.photo,
+                    }}
+                  />
+                ) : (
+                  <View
+                    style={{
+                      ...styles.singleMemberText,
+                      backgroundColor: `#${Math.floor(
+                        Math.random() * 16777215,
+                      ).toString(16)}`,
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: 30,
+                        lineHeight: 32,
+                        color: 'white',
+                      }}>
+                      {member?._data?.name[0]}
+                    </Text>
+                  </View>
+                )}
                 <View style={styles.singleMemberInfo}>
                   <Text
                     style={styles.selectedMemberName}
                     numberOfLines={1}
                     ellipsizeMode="tail">
-                    {member?.name}
+                    {member?._data?.name}
                   </Text>
                   <Text style={styles.selectedMemberLastSeen}>
-                    {member?.designation}
+                    {member?._data?.designation}
                   </Text>
                 </View>
-                <MaterialCommunityIcons
-                  name="message"
-                  size={17}
-                  color={appTheme.PRIMARY_COLOR}
-                />
-              </TouchableOpacity>
+                <TouchableOpacity
+                  style={{marginRight: 5}}
+                  onPress={() => {
+                    Linking.openURL(
+                      `whatsapp://send?phone=${member?._data?.phoneNumber}`,
+                    );
+                  }}>
+                  <Image
+                    source={require('../../assets/whatsappIcon.png')}
+                    style={{width: 30, height: 30}}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    Modals.users.deleteUser(member?._data?.id);
+                  }}>
+                  <MaterialCommunityIcons
+                    name="delete"
+                    size={25}
+                    color={appTheme.SECONDARY_COLOR}
+                  />
+                </TouchableOpacity>
+              </View>
             ))}
           </View>
         </ScrollView>
       ) : (
         <EmptyListComponent />
       )}
+      <AddIcon
+        style={{
+          position: 'absolute',
+          bottom: 10,
+          right: 20,
+          zIndex: 100,
+          elevation: 2,
+          backgroundColor: colors.PRIMARY_COLOR,
+        }}
+        onPress={handleAddMember}
+      />
     </SafeAreaView>
   );
 }
+
+const styles1 = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: '#F194FF',
+  },
+  buttonClose: {
+    backgroundColor: '#2196F3',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+});
