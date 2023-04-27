@@ -45,30 +45,6 @@ export function CreateProject({navigation}) {
     setUpdatedMembers([...newSelectedMembers, ...newMembers]);
   };
 
-  // const handleSetValue = (field, value) => {
-  //   let {newProject} = data;
-  //   if (field === 'selectedMembers') {
-  //     let {selectedMembers} = newProject;
-  //     const foundIndex = selectedMembers?.findIndex(a => a?.id === value?.id);
-
-  //     if (foundIndex === -1) {
-  //       selectedMembers.push(value);
-  //     } else {
-  //       selectedMembers = selectedMembers.filter(a => a?.id !== value?.id);
-  //     }
-  //     newProject['selectedMembers'] = selectedMembers;
-  //     addMembersToFirst(selectedMembers, members);
-  //   } else {
-  //     newProject[field] = value;
-  //   }
-  //   addMembersToFirst;
-  //   setData(
-  //     combineData(data, {
-  //       newProject,
-  //     }),
-  //   );
-  // };
-
   const handleSetValue = (field, value) => {
     // let {newProject} = data;
     if (field === 'selectedMembers') {
