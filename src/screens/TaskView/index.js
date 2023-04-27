@@ -1,5 +1,15 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {View, Text, TouchableOpacity, Image, ScrollView} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+  Modal,
+  Button,
+  TouchableHighlight,
+  Pressable,
+} from 'react-native';
 import shortid from 'shortid';
 import ProgressCircle from 'react-native-progress-circle';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
@@ -21,21 +31,20 @@ import {statusColors, taskStatusOptions} from '../../constants/constants';
 import firestore from '@react-native-firebase/firestore';
 import {Modals} from '../../api/firebaseModal';
 import {dataFormatter} from '../../utils/DataFormatter';
+import DatePicker from 'react-native-date-picker';
+import {CustomDatePicker} from '../../components/CustomDatePicker';
 
 export function TaskView() {
-  const [date, setDate] = useState(new Date(1598051730000));
-  const [mode, setMode] = useState('date');
-  const [show, setShow] = useState(false);
-  const {state, dispatch, task} = useContext(AppContext);
-  const {selectedTask} = state;
+  const {state, dispatch, selectedTask, setSelectedTask} =
+    useContext(AppContext);
+
   const [subTasks, setSubTasks] = useState({});
+  const [modalOpen, setModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [datePickerOpen, setDatePicker] = useState(false);
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate;
     setShow(false);
-    setDate(currentDate);
   };
 
   const handleCreateTask = () => {
@@ -59,6 +68,12 @@ export function TaskView() {
     });
   };
 
+  const dateHandler = date => {
+    const due_date = JSON?.stringify(date);
+    setSelectedTask(prv => ({...prv, due_date}));
+    Modals?.tasks?.update(selectedTask?.id, {due_date});
+  };
+
   useEffect(() => {
     firestore()
       .collection('sub_tasks')
@@ -67,6 +82,12 @@ export function TaskView() {
         setSubTasks(data);
       });
   }, []);
+
+  const findDate = new Date(JSON?.parse(selectedTask?.due_date));
+
+  const date = `${findDate?.getDate()}-${
+    findDate?.getMonth() + 1
+  }-${findDate?.getFullYear()}`;
 
   return loading ? (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -120,8 +141,8 @@ export function TaskView() {
               color={appTheme.INACTIVE_COLOR}
             />
 
-            <TouchableOpacity onPress={() => setDatePicker(true)}>
-              <Text style={styles.scheduleText}>June 13 2021</Text>
+            <TouchableOpacity onPress={() => setModalOpen(true)}>
+              <Text style={styles.scheduleText}>{date}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -215,6 +236,12 @@ export function TaskView() {
           <Text style={styles.bottomText}>2 attachments</Text>
         </TouchableOpacity>
       </View>
+      <CustomDatePicker
+        open={modalOpen}
+        intialDate={findDate || new Date()}
+        onClose={() => setModalOpen(false)}
+        {...{newDateCallBack: dateHandler}}
+      />
     </View>
   );
 }
