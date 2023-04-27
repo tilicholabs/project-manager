@@ -1,4 +1,10 @@
-import React, {useState, useContext, useEffect, useRef} from 'react';
+import React, {
+  useState,
+  useContext,
+  useEffect,
+  useRef,
+  useLayoutEffect,
+} from 'react';
 import {
   View,
   Text,
@@ -20,6 +26,9 @@ import ActionButton from 'react-native-action-button';
 import appTheme from '../../constants/colors';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Modals} from '../../api/firebaseModal';
+import {navigateToNestedRoute} from '../../navigators/RootNavigation';
+import {getScreenParent} from '../../utils/NavigationHelper';
+import {useFocusEffect} from '@react-navigation/core';
 
 export function Projects({navigation}) {
   const tabs = ['All', 'Ongoing', 'Completed'];
@@ -165,6 +174,11 @@ export function Projects({navigation}) {
     }
   }, [bottomModal]);
 
+  useFocusEffect(() => {
+    // console.log('inside');
+    getProjectsData();
+  });
+
   return (
     <SafeAreaView style={styles.container}>
       {/* <ActionButton buttonColor={appTheme?.PRIMARY_COLOR} style={{zIndex: 1}}>
@@ -188,10 +202,19 @@ export function Projects({navigation}) {
         buttonColor={appTheme?.PRIMARY_COLOR}
         style={{zIndex: 1}}
         onPress={() => {
-          dispatch({
-            type: 'toggleBottomModal',
-            payload: {bottomModal: 'CreateProject'},
-          });
+          // dispatch({
+          //   type: 'toggleBottomModal',
+          //   payload: {bottomModal: 'CreateProject'},
+          // });
+          navigateToNestedRoute(
+            getScreenParent('CreateProject'),
+            'CreateProject',
+            {},
+          );
+
+          // const handleCreateProject = () => {
+
+          // };
         }}
       />
 
