@@ -33,7 +33,7 @@ import {useFocusEffect} from '@react-navigation/core';
 export function Projects({navigation}) {
   const tabs = ['All', 'Ongoing', 'Completed'];
 
-  const {state, dispatch} = useContext(AppContext);
+  const {state, dispatch, user} = useContext(AppContext);
   const {projects, bottomModal} = state;
 
   const [data, setData] = useState({activeTab: 'All'});
@@ -130,7 +130,8 @@ export function Projects({navigation}) {
   };
 
   const getProjects = async () => {
-    const data = await Modals.projects.get();
+    const data = await Modals.projects.getUserProjects(user.uid);
+
     const result = await addPercentParameter(data);
 
     return result;
