@@ -24,6 +24,45 @@ export class FireBaseModal {
   delete = async id => {
     await firestore().collection(this.basePath).doc(id).delete();
   };
+
+  createProject = async data => {
+    const doc = await firestore().collection(this.basePath).doc();
+
+    await doc.set({...data, id: doc.id, status: 'ongoing'});
+  };
+
+  createTask = async task => {
+    await firestore().collection(this.basePath).add(task);
+  };
+
+  getMembers = async () => {
+    const members = await firestore().collection('users').get();
+
+    return members;
+  };
+
+  getProjects = async () => {
+    const projects = await firestore().collection('projects').orderBy().get();
+
+    return projects;
+  };
+
+  getProjectTasks = async projectId => {
+    return await firestore()
+      .collection('tasks')
+      // Filter results
+      .where('project_id', '==', projectId)
+      .get();
+  };
+
+  getCompletedTasks = async projectId => {
+    return await firestore()
+      .collection('tasks')
+      // Filter results
+      .where('status', '==', 'completed')
+      .where('project_id', '==', projectId)
+      .get();
+  };
 }
 
 export const Modals = {

@@ -4,16 +4,22 @@ import appTheme from '../../constants/colors';
 const styles = StyleSheet.create({
   projectsView: {
     flexDirection: 'row',
-    marginHorizontal: 10,
+    // marginHorizontal: 10,
   },
   projectTitleView: {
     display: 'flex',
     justifyContent: 'center',
-    height: 40,
-    width: 40,
-    backgroundColor: 'red',
+    alignItems: 'center',
+    height: 50,
+    width: 50,
+    borderRadius: 40,
+    backgroundColor: appTheme.COLOR1,
   },
-  projectTitle: {},
+  projectTitle: {
+    fontWeight: 'bold',
+    fontSize: 22,
+    color: '#fff',
+  },
 });
 
 export default styles;

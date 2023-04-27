@@ -1,14 +1,52 @@
 import {StyleSheet} from 'react-native';
 
 const styles = StyleSheet.create({
-  plusBtnContainer: {
-    height: 45,
-    width: 45,
-    borderRadius: 50,
-    display: 'flex',
+  commentsContainer: {
+    position: 'relative',
+    flex: 1,
+  },
+  commentsText: {
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 20,
+    paddingBottom: 20,
+  },
+  displayComments: {
+    padding: 10,
+    marginVertical: 5,
+    borderWidth: 1,
+    borderRadius: 17,
+    borderColor: 'gray',
+  },
+  commentHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
+  },
+  personNameText: {
+    fontWeight: 'bold',
+    fontSize: 15,
+  },
+  timeText: {
+    fontSize: 12,
+  },
+  comment: {
+    paddingTop: 10,
+  },
+  enterCommentView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    position: 'absolute',
+    bottom: 0,
+  },
+  textInputStyle: {
+    borderWidth: 1,
+    borderRadius: 17,
+    height: 45,
+    marginBottom: 20,
+    paddingHorizontal: 10,
+    borderColor: 'gray',
+    width: '90%',
   },
 });
 

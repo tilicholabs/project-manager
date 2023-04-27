@@ -49,7 +49,7 @@ export function BottomModalContainer() {
                 }}>
                 Select Members
               </Text>
-              <SelectedMembers doneButton={true} />
+              <SelectedMembers showDone={true} />
             </>
           ) : bottomModal === 'Comments' ? (
             <Comments />
