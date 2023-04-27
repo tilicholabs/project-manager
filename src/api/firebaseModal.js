@@ -45,7 +45,7 @@ export class FireBaseModal {
   };
 
   registerUser = async (id, data) => {
-    await firestore().collection().doc(id).set(data);
+    await firestore().collection(this.basePath).doc(id).set(data);
   };
 
   getProjectTasks = async projectId => {
