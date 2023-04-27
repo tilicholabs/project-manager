@@ -39,6 +39,13 @@ export class FireBaseModal {
     return members;
   };
 
+  getUserProjects = async id => {
+    return await firestore()
+      .collection(this.basePath)
+      .where('team_id', 'array-contains', id)
+      .get();
+  };
+
   getProjects = async () => {
     const projects = await firestore().collection('projects').orderBy().get();
     return projects;
