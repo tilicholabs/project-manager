@@ -6,7 +6,9 @@ export default function CustomTextInput(props) {
     <View style={{...styles?.container, ...props?.container}}>
       <TextInput {...{...props}} />
       {!!props?.value && (
-        <Text style={styles?.title}>{props?.placeholder}</Text>
+        <Text style={{...styles?.title, ...props?.placeholderStyle}}>
+          {props?.placeholder}
+        </Text>
       )}
     </View>
   );
@@ -18,7 +20,7 @@ const styles = StyleSheet.create({
   },
   title: {
     position: 'absolute',
-    left: 5,
+    left: 6,
     top: -9,
     fontSize: 12,
     fontWeight: '500',

@@ -20,41 +20,44 @@ import CustomTextInput from '../../Global/CustomTextInput';
 import {Modals} from '../../../api/firebaseModal';
 
 export function CreateProject({navigation}) {
-  const {state, dispatch} = useContext(AppContext);
+  const {state, dispatch, members} = useContext(AppContext);
   const [searchValue, setSearch] = useState('');
-  const [members, setMembers] = useState(state?.members);
+  const [updatedMembers, setUpdatedMembers] = useState(members);
   const [searchFocused, setSearchFocused] = useState(false);
   const [data, setData] = useState({
     title: '',
     description: '',
-    team_id: [],
+    selectedMembers: [],
   });
   const [keyboardDetails] = useKeyboardDetails();
 
-  const addMembersToFirst = (team_id, members) => {
+  const addMembersToFirst = (selectedMembers, members) => {
+    const newSelectedMembers = [];
     const newMembers = members?.filter(item => {
-      const foundIndex = team_id?.findIndex(a => a?.id === item?.id);
+      const foundIndex = selectedMembers?.findIndex(a => a === item?.id);
       if (foundIndex === -1) {
         return true;
       }
+      newSelectedMembers?.push(JSON?.parse(JSON?.stringify(item)));
       return false;
     });
-    setMembers([...team_id, ...newMembers]);
+
+    setUpdatedMembers([...newSelectedMembers, ...newMembers]);
   };
 
   // const handleSetValue = (field, value) => {
   //   let {newProject} = data;
-  //   if (field === 'team_id') {
-  //     let {team_id} = newProject;
-  //     const foundIndex = team_id?.findIndex(a => a?.id === value?.id);
+  //   if (field === 'selectedMembers') {
+  //     let {selectedMembers} = newProject;
+  //     const foundIndex = selectedMembers?.findIndex(a => a?.id === value?.id);
 
   //     if (foundIndex === -1) {
-  //       team_id.push(value);
+  //       selectedMembers.push(value);
   //     } else {
-  //       team_id = team_id.filter(a => a?.id !== value?.id);
+  //       selectedMembers = selectedMembers.filter(a => a?.id !== value?.id);
   //     }
-  //     newProject['team_id'] = team_id;
-  //     addMembersToFirst(team_id, members);
+  //     newProject['selectedMembers'] = selectedMembers;
+  //     addMembersToFirst(selectedMembers, members);
   //   } else {
   //     newProject[field] = value;
   //   }
@@ -68,16 +71,17 @@ export function CreateProject({navigation}) {
 
   const handleSetValue = (field, value) => {
     // let {newProject} = data;
-    if (field === 'team_id') {
-      let {team_id} = data;
-      const foundIndex = team_id?.findIndex(a => a === value);
+    if (field === 'selectedMembers') {
+      let {selectedMembers} = data;
+      const foundIndex = selectedMembers?.findIndex(a => a === value);
       if (foundIndex === -1) {
-        team_id.push(value);
+        selectedMembers.push(value);
       } else {
-        team_id = team_id.filter(a => a !== value);
+        selectedMembers = selectedMembers.filter(a => a !== value);
       }
-      data['team_id'] = team_id;
-      // addMembersToFirst(team_id, members);
+
+      data['selectedMembers'] = selectedMembers;
+      addMembersToFirst(selectedMembers, members);
     } else {
       data[field] = value;
     }
@@ -87,8 +91,8 @@ export function CreateProject({navigation}) {
 
   const isSelectedMember = member => {
     let value;
-    let {team_id} = data;
-    const foundIndex = team_id?.findIndex(a => a == member);
+    let {selectedMembers} = data;
+    const foundIndex = selectedMembers?.findIndex(a => a == member);
     if (foundIndex > -1) {
       value = true;
     }
@@ -99,10 +103,10 @@ export function CreateProject({navigation}) {
   };
 
   const onChange = text => {
-    const result = state?.members?.filter(item =>
-      item?.name?.toLowerCase()?.includes(text?.toLowerCase()),
+    const result = members?.filter(item =>
+      item?.user_name?.toLowerCase()?.includes(text?.toLowerCase()),
     );
-    addMembersToFirst(data?.team_id, result);
+
     setSearch(text);
   };
 
@@ -148,7 +152,7 @@ export function CreateProject({navigation}) {
         <View style={styles.teamSection}>
           <ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.teamWrapper}>
-              {members?.map(member => (
+              {updatedMembers?.map(member => (
                 <TouchableOpacity
                   key={shortid.generate()}
                   style={[
@@ -157,11 +161,28 @@ export function CreateProject({navigation}) {
                       ? styles.activeTeamWrapper
                       : null,
                   ]}
-                  onPress={() => handleSetValue('team_id', member?.id)}>
-                  <Image
-                    style={styles.memberPhoto}
-                    source={{uri: member?.photo}}
-                  />
+                  onPress={() => handleSetValue('selectedMembers', member?.id)}>
+                  {member?.profile_image ? (
+                    <Image
+                      style={styles.memberPhoto}
+                      source={{uri: member?.profile_image}}
+                    />
+                  ) : (
+                    <View
+                      style={{
+                        ...styles.memberPhoto,
+                        ...{
+                          justifyContent: 'center',
+                          display: 'flex',
+                          alignItems: 'center',
+                          backgroundColor: '#60C877',
+                        },
+                      }}>
+                      <Text style={{fontSize: 18, fontWeight: 'bold'}}>
+                        {member?.user_name?.[0]}
+                      </Text>
+                    </View>
+                  )}
                   <Text
                     style={[
                       styles.memberName,
@@ -169,7 +190,7 @@ export function CreateProject({navigation}) {
                     ]}
                     numberOfLines={2}
                     ellipsizeMode="tail">
-                    {member?._data?.name}
+                    {member?.user_name}
                   </Text>
                 </TouchableOpacity>
               ))}

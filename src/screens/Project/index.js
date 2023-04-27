@@ -143,11 +143,7 @@ export function Project({navigation, route}) {
       />
       <TabScreenHeader
         leftComponent={() => (
-          <TouchableOpacity
-            onPress={() => handleBackButton()}
-            style={styles.backButton}>
-            <Ionicons name="arrow-back-outline" size={25} color="#000" />
-          </TouchableOpacity>
+          <Text style={{fontSize: 16}}>Project Details</Text>
         )}
         isSearchBtnVisible={true}
         isMoreBtnVisible={true}

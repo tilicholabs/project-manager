@@ -119,13 +119,7 @@ export function TaskView() {
               size={20}
               color={appTheme.INACTIVE_COLOR}
             />
-            <DateTimePicker
-              testID="dateTimePicker"
-              value={date}
-              mode={mode}
-              is24Hour={true}
-              onChange={onChange}
-            />
+
             <TouchableOpacity onPress={() => setDatePicker(true)}>
               <Text style={styles.scheduleText}>June 13 2021</Text>
             </TouchableOpacity>

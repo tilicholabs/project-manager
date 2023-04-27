@@ -44,10 +44,10 @@ export const SelectedMembers = ({showDone = false}) => {
                 isSelectedMember(member) ? styles.activeTeamWrapper : null,
               ]}
               onPress={() => handleSetValue(member)}>
-              {member?.photo ? (
+              {member?.profile_image ? (
                 <Image
                   style={styles.memberPhoto}
-                  source={{uri: member?.photo}}
+                  source={{uri: member?.profile_image}}
                 />
               ) : (
                 <View
@@ -61,7 +61,7 @@ export const SelectedMembers = ({showDone = false}) => {
                     },
                   }}>
                   <Text style={{fontSize: 18, fontWeight: 'bold'}}>
-                    {member?.name[0]}
+                    {member?.user_name?.[0]}
                   </Text>
                 </View>
               )}
@@ -72,7 +72,7 @@ export const SelectedMembers = ({showDone = false}) => {
                 ]}
                 numberOfLines={2}
                 ellipsizeMode="tail">
-                {member?.name}
+                {member?.user_name}
               </Text>
             </TouchableOpacity>
           ))}
