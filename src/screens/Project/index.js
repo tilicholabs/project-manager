@@ -20,12 +20,13 @@ import appTheme from '../../constants/colors';
 import ActionButton from 'react-native-action-button';
 import {Modals} from '../../api/firebaseModal';
 import {dataFormatter} from '../../utils/DataFormatter';
+import {Loader} from '../../components/Loader';
 
 export function Project({navigation, route}) {
   const project = route.params;
-  const {state, dispatch, setIsProjectSelected} = useContext(AppContext);
-  const {members} = state;
-
+  const {state, dispatch, setIsProjectSelected, members} =
+    useContext(AppContext);
+  const [loading, setLoading] = useState(true);
   const [tasks, setTasks] = useState([]);
 
   // const tabs = ['Task List', 'File', 'Comments'];
@@ -79,10 +80,9 @@ export function Project({navigation, route}) {
 
   const getProjectTasks = async id => {
     const data = await Modals.tasks.getProjectTasks(id);
-
     const formattedData = dataFormatter(data);
     setTasksFun(formattedData);
-
+    setLoading(false);
     return data;
   };
 
@@ -109,26 +109,16 @@ export function Project({navigation, route}) {
     getProjectTasks(project?.id);
     return () => setIsProjectSelected(false);
   }, []);
+
   const filterMembers = arr => {
     const result = members.filter(item => {
-      let bool = false;
-
       return arr?.find(ele => {
-        return item?._data?.id === ele;
+        return item?.id === ele;
       });
-
-      if (bool) {
-        console.log(bool);
-      }
-
-      return bool;
-
-      //  return item?._data?.id === ele;
     });
 
     return result;
   };
-  const handleChangeTaskStatus = value => {};
 
   return (
     <SafeAreaView style={styles.container}>
@@ -144,11 +134,7 @@ export function Project({navigation, route}) {
       />
       <TabScreenHeader
         leftComponent={() => (
-          <TouchableOpacity
-            onPress={() => handleBackButton()}
-            style={styles.backButton}>
-            <Ionicons name="arrow-back-outline" size={25} color="#000" />
-          </TouchableOpacity>
+          <Text style={{fontSize: 16}}>Project Details</Text>
         )}
         isSearchBtnVisible={true}
         isMoreBtnVisible={true}
@@ -348,9 +334,15 @@ export function Project({navigation, route}) {
             <View style={styles.bottomContainer}>
               <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={styles.bottomContent}>
-                  {tasks?.map(task => (
-                    <TaskInfo task={task} key={shortid.generate()} />
-                  ))}
+                  {loading ? (
+                    <View style={{marginTop: 30}}>
+                      <Loader />
+                    </View>
+                  ) : (
+                    tasks?.map(task => (
+                      <TaskInfo task={task} key={shortid.generate()} />
+                    ))
+                  )}
                 </View>
               </ScrollView>
             </View>

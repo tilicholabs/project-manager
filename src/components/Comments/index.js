@@ -16,6 +16,7 @@ import firestore from '@react-native-firebase/firestore';
 import {dataFormatter} from '../../utils/DataFormatter';
 import styles from './commentsStyle';
 import moment from 'moment';
+// import moment from 'moment';
 
 export const Comments = () => {
   const comment = useRef('');

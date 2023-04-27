@@ -22,7 +22,7 @@ import {getScreenParent} from '../../utils/NavigationHelper';
 import {TextInput} from 'react-native-paper';
 import {FontAwesome} from 'react-native-vector-icons/FontAwesome';
 import ImagePicker from 'react-native-image-picker';
-import auth from '@react-native-firebase/auth';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
 export function Profile({navigation}) {
   const {state, dispatch} = useContext(AppContext);
@@ -71,25 +71,29 @@ export function Profile({navigation}) {
             path: 'images',
           },
         };
-        ImagePicker.showImagePicker(options, response => {
-          console.log('Response = ', response);
-
-          if (response.didCancel) {
-            console.log('User cancelled image picker');
-          } else if (response.error) {
-            console.log('ImagePicker Error: ', response.error);
-          } else if (response.customButton) {
-            console.log('User tapped custom button: ', response.customButton);
-            alert(response.customButton);
-          } else {
-            let source = response;
-            // You can also display the image using data:
-            // let source = {
-            //   uri: 'data:image/jpeg;base64,' + response.data
-            // };
-            setFilePath(source);
-          }
+        launchImageLibrary({}, response => {
+          console.log(response);
         });
+
+        // ImagePicker.launchImageLibrary(options, response => {
+        //   console.log('Response = ', response);
+
+        //   if (response.didCancel) {
+        //     console.log('User cancelled image picker');
+        //   } else if (response.error) {
+        //     console.log('ImagePicker Error: ', response.error);
+        //   } else if (response.customButton) {
+        //     console.log('User tapped custom button: ', response.customButton);
+        //     alert(response.customButton);
+        //   } else {
+        //     let source = response;
+        //     // You can also display the image using data:
+        //     // let source = {
+        //     //   uri: 'data:image/jpeg;base64,' + response.data
+        //     // };
+        //     setFilePath(source);
+        //   }
+        // });
       }
     } catch (e) {
       console.log(e);

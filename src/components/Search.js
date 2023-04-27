@@ -30,6 +30,7 @@ const Search = props => {
             padding: 0,
             flex: 1,
           },
+          placeholderStyle: {left: 0},
         }}
       />
       <MaterialCommunityIcons

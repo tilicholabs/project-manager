@@ -12,6 +12,7 @@ export const SelectedMembers = ({showDone = false}) => {
     dispatch,
     members,
     selectedTask,
+    selectedProject,
   } = useContext(AppContext);
   const {bottomModal} = state;
   const [requiredMembers, setRequiredMembers] = useState([]);
@@ -47,6 +48,17 @@ export const SelectedMembers = ({showDone = false}) => {
     if (bottomModal === 'SelectMembers' && selectedTask) {
       const filteredData = members?.filter(
         item => item?.id && !selectedTask?.team?.includes(item?.id),
+      );
+      const filteredKeys = [];
+      filteredData?.map(item => {
+        filteredKeys.push(item?.id);
+      });
+      setRequiredMembers(filteredKeys);
+    }
+    if (bottomModal === 'SelectMembers' && selectedProject) {
+      const filteredData = members?.filter(
+        item =>
+          item?.id && !selectedProject?.selectedMembers?.includes(item?.id),
       );
       const filteredKeys = [];
       filteredData?.map(item => {

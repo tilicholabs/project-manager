@@ -14,6 +14,7 @@ import {Modals} from '../../api/firebaseModal';
 import {dataFormatter} from '../../utils/DataFormatter';
 import {StatusPopUp} from '../../components/StatusPopUp';
 import moment from 'moment/moment';
+import {Loader} from '../../components/Loader';
 
 export function TaskView() {
   const {
@@ -87,7 +88,7 @@ export function TaskView() {
       const completedTasks = subTasks?.filter(
         item => item?.status === 'Completed',
       );
-      return (completedTasks?.length / subTasks?.length) * 100;
+      return (completedTasks?.length / subTasks?.length).toFixed(2) * 100;
     }
   };
 
@@ -135,7 +136,7 @@ export function TaskView() {
 
   return loading ? (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <Text>loading</Text>
+      <Loader />
     </View>
   ) : (
     <View style={{flex: 1, backgroundColor: '#fafafa'}}>
