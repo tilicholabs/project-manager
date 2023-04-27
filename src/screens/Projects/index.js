@@ -155,6 +155,10 @@ export function Projects({navigation}) {
     setProjectDataFun(result);
   };
 
+  const leftComponent = () => (
+    <Text style={{fontSize: 20, fontWeight: 'bold'}}>Projects</Text>
+  );
+
   useEffect(() => {
     if (bottomModal === null) {
       getProjectsData();
@@ -179,6 +183,7 @@ export function Projects({navigation}) {
           <MaterialCommunityIcons name={'file-check-outline'} />
         </ActionButton.Item>
       </ActionButton> */}
+      <TabScreenHeader {...{leftComponent, isBackButtonPresent: true}} />
       <ActionButton
         buttonColor={appTheme?.PRIMARY_COLOR}
         style={{zIndex: 1}}

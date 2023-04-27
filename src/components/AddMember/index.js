@@ -133,9 +133,10 @@ export const AddMember = () => {
         disabled={validation()}
         style={styles.addButtonStyle}
         onPress={async () => {
-          Linking.openURL(
-            `mailto:${memberDetails?.email}?subject=SendMail&body=URL: https://example.com`,
-          );
+          console.log('click');
+          // Linking.openURL(
+          //   `mailto:${memberDetails?.email}?subject=SendMail&body=URL: https://example.com`,
+          // );
           await Modals.users.registerUser(memberDetails);
           // dispatch({
           //   type: 'members',
