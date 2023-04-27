@@ -13,7 +13,7 @@ import ProgressCircle from 'react-native-progress-circle';
 import shortid from 'shortid';
 import DropDownPicker from 'react-native-dropdown-picker';
 import styles from './projectStyle';
-import {TabScreenHeader, EmptyListComponent, TaskInfo} from '../../components';
+import {TabScreenHeader, TaskInfo} from '../../components';
 import {combineData} from '../../utils/DataHelper';
 import {AppContext} from '../../context';
 import appTheme from '../../constants/colors';
@@ -23,7 +23,7 @@ import {dataFormatter} from '../../utils/DataFormatter';
 
 export function Project({navigation, route}) {
   const project = route.params;
-  const {state, dispatch} = useContext(AppContext);
+  const {state, dispatch, setIsProjectSelected} = useContext(AppContext);
   const {members} = state;
 
   const [tasks, setTasks] = useState([]);
@@ -107,6 +107,7 @@ export function Project({navigation, route}) {
 
   useEffect(() => {
     getProjectTasks(project?.id);
+    return () => setIsProjectSelected(false);
   }, []);
   const filterMembers = arr => {
     const result = members.filter(item => {

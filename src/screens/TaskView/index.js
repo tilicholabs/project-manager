@@ -97,7 +97,7 @@ export function TaskView() {
       team: [...prev.team, ...selectedMembers],
     }));
     await Modals.tasks.update(selectedTask?.id, {
-      team: [...selectedMembers],
+      team: [...selectedTask?.team, ...selectedMembers],
     });
     dispatch({
       type: 'toggleBottomModal',
@@ -190,7 +190,7 @@ export function TaskView() {
                   key={shortid.generate()}>
                   <Text
                     style={{fontSize: 15, fontWeight: 'bold', color: '#fff'}}>
-                    {member?.name[0]}
+                    {member?.user_name[0]}
                   </Text>
                 </View>
               )

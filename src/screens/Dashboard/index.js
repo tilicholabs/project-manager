@@ -25,7 +25,7 @@ import {getScreenParent} from '../../utils/NavigationHelper';
 import logo from '../../assets/logo.png';
 
 export function Dashboard({navigation}) {
-  const {state, dispatch} = useContext(AppContext);
+  const {state, dispatch, user} = useContext(AppContext);
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState('All Tasks');
   const [searchValue, setSearch] = useState('');
@@ -33,10 +33,11 @@ export function Dashboard({navigation}) {
   const [keyboardDetails] = useKeyboardDetails();
 
   const getTasks = async () => {
-    const data = await Modals.tasks.get();
+    const data = await Modals.tasks.getUserTasks(user?.uid);
     setTasks(data);
     firestore()
       .collection('tasks')
+      .where('team', 'array-contains', user?.uid)
       .onSnapshot(document => {
         const data = dataFormatter(document);
         setTasks(data);

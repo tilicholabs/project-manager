@@ -64,6 +64,14 @@ export class FireBaseModal {
       .where('project_id', '==', projectId)
       .get();
   };
+
+  getUserTasks = async id => {
+    const data = await firestore()
+      .collection(this.basePath)
+      .where('team', 'array-contains', id)
+      .get();
+    return dataFormatter(data);
+  };
 }
 
 export const Modals = {

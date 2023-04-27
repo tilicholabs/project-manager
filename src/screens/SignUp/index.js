@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   View,
   Text,
@@ -27,11 +27,13 @@ import auth from '@react-native-firebase/auth';
 import {Modals} from '../../api/firebaseModal';
 import {getTime} from '../../utils/DataHelper';
 import {connect} from 'http2';
+import {AppContext} from '../../context';
 
 export function SignUp({navigation}) {
   const handleBackButton = () => {
     navigation?.goBack();
   };
+  const {setUser} = useContext(AppContext);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     userName: '',
@@ -110,11 +112,10 @@ export function SignUp({navigation}) {
       auth()
         .createUserWithEmailAndPassword(formData.email, formData.password)
         .then(async userCredential => {
+          setUser(userCredential?.user);
           userCredential.user.updateProfile({
             displayName: formData.userName,
           });
-
-          console.log('inside');
           const userData = {
             id: userCredential?.user?.uid,
             user_name: formData.userName,
@@ -147,7 +148,10 @@ export function SignUp({navigation}) {
             },
           };
           await Modals.users.registerUser(userCredential?.user?.uid, userData);
-          navigation.navigate('BottomStack');
+          navigation.reset({
+            index: 0,
+            routes: [{name: 'BottomStack'}],
+          });
           console.log('User account created & signed in!');
         })
         .catch(error => {

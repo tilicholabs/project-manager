@@ -20,7 +20,7 @@ import moment from 'moment';
 export const Comments = () => {
   const comment = useRef('');
   const [loading, setLoading] = useState(false);
-  const {selectedTask} = useContext(AppContext);
+  const {selectedTask, user, members} = useContext(AppContext);
   const [taskComments, setTaskComments] = useState([]);
 
   const commentHandler = async () => {
@@ -28,10 +28,15 @@ export const Comments = () => {
     await Modals.comments.set({
       title: comment.current,
       task_id: selectedTask?.id,
-      commenter_id: '',
+      commenter_id: user?.uid,
       created_at: getTime(),
     });
     setLoading(false);
+  };
+
+  const getUserName = id => {
+    const nameArray = members?.filter(item => item?.id === id);
+    return nameArray?.[0]?.user_name;
   };
 
   useEffect(() => {
@@ -55,7 +60,15 @@ export const Comments = () => {
         {taskComments?.map(item => (
           <View style={styles.displayComments}>
             <View style={styles.commentHeader}>
-              <Text style={styles.personNameText}>You</Text>
+              <Text style={styles.personNameText}>
+                {item?.commenter_id === user?.uid ? (
+                  <Text style={{color: '#644CBC'}}>You</Text>
+                ) : (
+                  <Text style={{color: '#60C877'}}>
+                    {getUserName(item?.commenter_id)}
+                  </Text>
+                )}
+              </Text>
               <Text style={styles.timeText}>
                 {moment(item?.created_at).fromNow()}
               </Text>
