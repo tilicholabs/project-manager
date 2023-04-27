@@ -31,6 +31,8 @@ export function CreateProject({navigation}) {
   });
   const [keyboardDetails] = useKeyboardDetails();
 
+  // console.log(members, 'mem');
+
   const addMembersToFirst = (team_id, members) => {
     const newMembers = members?.filter(item => {
       const foundIndex = team_id?.findIndex(a => a?.id === item?.id);
@@ -158,10 +160,24 @@ export function CreateProject({navigation}) {
                       : null,
                   ]}
                   onPress={() => handleSetValue('team_id', member?.id)}>
-                  <Image
+                  {/* <Image
                     style={styles.memberPhoto}
                     source={{uri: member?.photo}}
-                  />
+                  /> */}
+                  <View
+                    style={{
+                      ...styles.memberPhoto,
+                      ...{
+                        justifyContent: 'center',
+                        display: 'flex',
+                        alignItems: 'center',
+                        backgroundColor: '#60C877',
+                      },
+                    }}>
+                    <Text style={{fontSize: 18, fontWeight: 'bold'}}>
+                      {member?._data?.user_name[0]}
+                    </Text>
+                  </View>
                   <Text
                     style={[
                       styles.memberName,
@@ -169,7 +185,7 @@ export function CreateProject({navigation}) {
                     ]}
                     numberOfLines={2}
                     ellipsizeMode="tail">
-                    {member?._data?.name}
+                    {member?._data?.user_name}
                   </Text>
                 </TouchableOpacity>
               ))}
