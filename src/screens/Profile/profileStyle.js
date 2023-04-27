@@ -92,8 +92,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   singleExplore: {
-    height: 80,
-    width: '28%',
+    height: 50,
+    width: '100%',
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 1},
     shadowOpacity: 0.5,
@@ -112,6 +112,39 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 14,
     color: appTheme.PRIMARY_COLOR,
+    height: 25,
+  },
+  inputContainer: {
+    marginTop: 25,
+    marginHorizontal: 15,
+    width: 300,
+    height: 200,
+  },
+  labels: {
+    fontSize: 18,
+    marginTop: 10,
+    marginBottom: 5,
+    lineHeight: 25,
+    fontFamily: 'regular',
+  },
+  inputStyle: {
+    borderWidth: 1,
+    borderRadius: 1,
+    fontSize: 18,
+    height: 35,
+  },
+  button: {
+    backgroundColor: 'blue',
+    marginTop: 15,
+    paddingVertical: 15,
+    borderRadius: 25,
+    width: '30%',
+    alignItems: 'center',
+  },
+  text: {
+    color: 'white',
+    fontWeight: '700',
+    fontSize: 18,
   },
 });
 
