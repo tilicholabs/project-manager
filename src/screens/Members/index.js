@@ -31,7 +31,7 @@ export function Members() {
 
   useEffect(() => {
     const filteredValue = members?.filter(user =>
-      user?._data?.name.toLowerCase().includes(searchValue.toLowerCase()),
+      user?._data?.user_name.toLowerCase().includes(searchValue.toLowerCase()),
     );
 
     setFilteredList(filteredValue);
@@ -103,7 +103,7 @@ export function Members() {
                         lineHeight: 32,
                         color: 'white',
                       }}>
-                      {member?._data?.name[0]}
+                      {member?._data?.user_name[0]}
                     </Text>
                   </View>
                 )}
@@ -112,7 +112,7 @@ export function Members() {
                     style={styles.selectedMemberName}
                     numberOfLines={1}
                     ellipsizeMode="tail">
-                    {member?._data?.name}
+                    {member?._data?.user_name}
                   </Text>
                   <Text style={styles.selectedMemberLastSeen}>
                     {member?._data?.designation}
