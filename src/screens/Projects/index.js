@@ -34,7 +34,7 @@ import {Loader} from '../../components/Loader';
 export function Projects({navigation}) {
   const tabs = ['All', 'Ongoing', 'Completed'];
 
-  const {state, dispatch} = useContext(AppContext);
+  const {state, dispatch, user} = useContext(AppContext);
   const {projects, bottomModal} = state;
   const [loading, setLoading] = useState(true);
 
@@ -105,7 +105,8 @@ export function Projects({navigation}) {
   };
 
   const getProjects = async () => {
-    const data = await Modals.projects.get();
+    const data = await Modals.projects.getUserProjects(user?.uid);
+    console.log(data);
     const result = await addPercentParameter(data);
     setLoading(false);
     return result;
@@ -132,7 +133,6 @@ export function Projects({navigation}) {
 
   const getProjectsData = async () => {
     const result = await getProjects();
-
     allProjectData.current = result;
     setProjectDataFun(result);
   };
@@ -140,12 +140,6 @@ export function Projects({navigation}) {
   const leftComponent = () => (
     <Text style={{fontSize: 20, fontWeight: 'bold'}}>Projects</Text>
   );
-
-  useEffect(() => {
-    if (bottomModal === null) {
-      getProjectsData();
-    }
-  }, [bottomModal]);
 
   useFocusEffect(() => {
     getProjectsData();

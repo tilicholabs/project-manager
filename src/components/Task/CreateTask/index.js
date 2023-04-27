@@ -67,13 +67,6 @@ export function CreateTask({subTask = false}) {
       data?.description !== '' &&
       selectedProject;
 
-  useEffect(() => {
-    return () => {
-      setSelectedMembers([]);
-      setSelectedProject();
-    };
-  }, []);
-
   return (
     <View style={styles.container}>
       <Text style={styles.boldText}>

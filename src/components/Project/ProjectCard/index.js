@@ -18,6 +18,7 @@ export function ProjectCard({project, navigation}) {
     setIsProjectSelected,
     members,
     selectedMembers,
+    setSelectedMembers,
   } = useContext(AppContext);
   const {bottomModal} = state;
 
@@ -34,14 +35,18 @@ export function ProjectCard({project, navigation}) {
         return item?.id === ele;
       });
     });
-
     return result;
   };
 
   const addTeamHandler = async () => {
     await Modals.projects.update(project?.id, {
-      selectedMembers: [...project?.selectedMembers, selectedMembers],
+      selectedMembers: [...project?.selectedMembers, ...selectedMembers],
     });
+    dispatch({
+      type: 'toggleBottomModal',
+      payload: {bottomModal: null},
+    });
+    setSelectedMembers([]);
   };
 
   useEffect(() => {
@@ -53,7 +58,10 @@ export function ProjectCard({project, navigation}) {
   return (
     <TouchableOpacity
       style={styles.container}
-      onPress={() => handleNavigation('Project', project)}>
+      onPress={() => {
+        setSelectedProject(project);
+        handleNavigation('Project');
+      }}>
       <Text style={styles.projectTitle}>{project?.title}</Text>
       <View style={styles.projectTeamAndProgress}>
         <View>

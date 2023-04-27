@@ -23,14 +23,20 @@ import {dataFormatter} from '../../utils/DataFormatter';
 import {Loader} from '../../components/Loader';
 
 export function Project({navigation, route}) {
-  const project = route.params;
-  const {state, dispatch, setIsProjectSelected, members} =
-    useContext(AppContext);
+  const {
+    state,
+    dispatch,
+    setIsProjectSelected,
+    members,
+    selectedProject,
+    setSelectedProject,
+    selectedMembers,
+    setSelectedMembers,
+  } = useContext(AppContext);
   const [loading, setLoading] = useState(true);
   const [tasks, setTasks] = useState([]);
-
-  // const tabs = ['Task List', 'File', 'Comments'];
   const tabs = ['All Tasks', 'Ongoing', 'Completed'];
+  const {bottomModal} = state;
 
   const [data, setData] = useState({
     activeTab: 'Task List',
@@ -86,29 +92,19 @@ export function Project({navigation, route}) {
     return data;
   };
 
-  //  const getProjects = () => {
-  //    let {activeTab} = data;
-  //    let projectsToRender = [];
-  //    if (activeTab === 'All') {
-  //      projectsToRender = projects;
-  //    } else {
-  //      projectsToRender =
-  //        projects?.filter(
-  //          project => project.status === activeTab?.toLowerCase(),
-  //        ) || [];
-  //    }
-
-  //    return projectsToRender;
-  //  };
-
   const setTasksFun = data => {
     setTasks(data);
   };
 
   useEffect(() => {
-    getProjectTasks(project?.id);
+    setSelectedProject(prev => ({
+      ...prev,
+      selectedMembers: [...prev.selectedMembers, ...selectedMembers],
+    }));
+    getProjectTasks(selectedProject?.id);
+    setSelectedMembers([]);
     return () => setIsProjectSelected(false);
-  }, []);
+  }, [bottomModal]);
 
   const filterMembers = arr => {
     const result = members.filter(item => {
@@ -126,6 +122,7 @@ export function Project({navigation, route}) {
         buttonColor={appTheme?.PRIMARY_COLOR}
         style={{zIndex: 1}}
         onPress={() => {
+          setIsProjectSelected(true);
           dispatch({
             type: 'toggleBottomModal',
             payload: {bottomModal: 'CreateTask'},
@@ -142,7 +139,7 @@ export function Project({navigation, route}) {
       <View>
         <View style={styles.projectDetailsSection}>
           <View style={styles.projectTitleWrapper}>
-            <Text style={styles.projectTitle}>{project?.title}</Text>
+            <Text style={styles.projectTitle}>{selectedProject?.title}</Text>
             <TouchableOpacity>
               <MaterialCommunityIcons
                 name="calendar-month-outline"
@@ -151,7 +148,9 @@ export function Project({navigation, route}) {
               />
             </TouchableOpacity>
           </View>
-          <Text style={styles.projectDescription}>{project?.description}</Text>
+          <Text style={styles.projectDescription}>
+            {selectedProject?.description}
+          </Text>
           <View style={styles.projectTeamAndProgress}>
             <View style={styles.projectProgressWrapper}>
               <ProgressCircle
@@ -161,32 +160,35 @@ export function Project({navigation, route}) {
                 color="#6AC67E"
                 shadowColor="#f4f4f4"
                 bgColor="#fff">
-                <Text style={styles.projectProgress}>{project?.percent}%</Text>
+                <Text style={styles.projectProgress}>
+                  {selectedProject?.percent}%
+                </Text>
               </ProgressCircle>
             </View>
             <View>
               <Text style={styles.projectTeamTitle}>Team</Text>
               <View style={styles.projectTeamWrapper}>
-                {filterMembers(project?.team_id)?.map(member => {
-                  return (
-                    // <View
-                    //   style={{
-                    //     // ...styles.singleMemberText,
-                    //     backgroundColor: `#${Math.floor(
-                    //       Math.random() * 16777215,
-                    //     ).toString(16)}`,
-                    //   }}>
-                    <Image
-                      key={shortid.generate()}
-                      style={styles.projectMemberPhoto}
-                      source={{
-                        uri: 'https://images.unsplash.com/photo-1609010697446-11f2155278f0?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80',
-                      }}
-                    />
-                    // </View>
-                  );
-                })}
-                <TouchableOpacity style={styles.plusBtnContainer}>
+                {filterMembers(selectedProject?.selectedMembers)?.map(
+                  member => {
+                    return (
+                      <Image
+                        key={shortid.generate()}
+                        style={styles.projectMemberPhoto}
+                        source={{
+                          uri: 'https://images.unsplash.com/photo-1609010697446-11f2155278f0?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80',
+                        }}
+                      />
+                    );
+                  },
+                )}
+                <TouchableOpacity
+                  style={styles.plusBtnContainer}
+                  onPress={() =>
+                    dispatch({
+                      type: 'toggleBottomModal',
+                      payload: {bottomModal: 'SelectMembers'},
+                    })
+                  }>
                   <MaterialCommunityIcons name="plus" size={22} color="#fff" />
                 </TouchableOpacity>
               </View>
@@ -216,7 +218,7 @@ export function Project({navigation, route}) {
               fontSize: 15,
             }}
           />
-          <Text style={styles.projectStatus}>{project?.status}</Text>
+          <Text style={styles.projectStatus}>{selectedProject?.status}</Text>
         </View>
         <View style={styles.projectBody}>
           <View style={styles.projectTabs}>

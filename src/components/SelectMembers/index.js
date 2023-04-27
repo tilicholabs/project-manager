@@ -66,7 +66,10 @@ export const SelectedMembers = ({showDone = false}) => {
       });
       setRequiredMembers(filteredKeys);
     }
-  }, []);
+    if (bottomModal === 'CreateTask' && selectedProject) {
+      setRequiredMembers(selectedProject?.selectedMembers);
+    }
+  }, [selectedProject, selectedTask, bottomModal]);
 
   return (
     <>

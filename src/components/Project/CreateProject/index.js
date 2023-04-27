@@ -180,10 +180,6 @@ export function CreateProject({navigation}) {
               ...data,
               created_at: new Date().getTime(),
             });
-            // dispatch({
-            //   type: 'toggleBottomModal',
-            //   payload: {bottomModal: null},
-            // });
             goBack();
           }}>
           <Text style={styles.btnText}>Add Project</Text>

@@ -23,7 +23,6 @@ export const ProjectsListing = () => {
         <TouchableOpacity
           style={{
             display: 'flex',
-            justifyContent: 'center',
             alignItems: 'center',
             backgroundColor:
               project?.id === selectedProject?.id
