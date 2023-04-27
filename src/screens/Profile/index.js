@@ -22,9 +22,10 @@ import {getScreenParent} from '../../utils/NavigationHelper';
 import {TextInput} from 'react-native-paper';
 import {FontAwesome} from 'react-native-vector-icons/FontAwesome';
 import ImagePicker from 'react-native-image-picker';
+import auth from '@react-native-firebase/auth';
 
 export function Profile({navigation}) {
-  const {state, dispatch} = useContext(AuthContext);
+  const {state, dispatch} = useContext(AppContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [text, setText] = useState('');
   const [text1, setTextone] = useState('');
@@ -33,6 +34,15 @@ export function Profile({navigation}) {
 
   const handleBackButton = () => {
     navigation?.goBack();
+  };
+
+  const handleLogout = () => {
+    auth()
+      .signOut()
+      .then(() => {
+        handleNavigation('Onboarding');
+        console.log('User signed out!');
+      });
   };
 
   const handleNavigation = (screen, params) => {
@@ -169,7 +179,7 @@ export function Profile({navigation}) {
                 styles.singleExplore,
                 {marginRight: 'auto', marginLeft: '2%'},
               ]}
-              onPress={() => handleNavigation('Onboarding')}>
+              onPress={handleLogout}>
               <MaterialCommunityIcons
                 name="logout"
                 size={22}

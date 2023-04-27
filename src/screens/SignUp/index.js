@@ -26,6 +26,7 @@ import {
 import auth from '@react-native-firebase/auth';
 import {Modals} from '../../api/firebaseModal';
 import {getTime} from '../../utils/DataHelper';
+import {connect} from 'http2';
 
 export function SignUp({navigation}) {
   const handleBackButton = () => {
@@ -104,7 +105,7 @@ export function SignUp({navigation}) {
       formData.password !== '' &&
         formData.designation !== '' &&
         formData.role !== '' &&
-        formData.location)
+        formData.location !== '')
     ) {
       auth()
         .createUserWithEmailAndPassword(formData.email, formData.password)
@@ -112,10 +113,12 @@ export function SignUp({navigation}) {
           userCredential.user.updateProfile({
             displayName: formData.userName,
           });
+
+          console.log('inside');
           const userData = {
             id: userCredential?.user?.uid,
             user_name: formData.userName,
-            phone_number: formData.phoneNumber,
+            phone_number: `+91${formData.phoneNumber}`,
             email: formData.email,
             designation: formData.designation,
             role: formData.role,
@@ -152,11 +155,11 @@ export function SignUp({navigation}) {
             Alert.alert('Email is already in use');
             console.log('That email address is already in use!');
           }
-
           if (error.code === 'auth/invalid-email') {
             Alert.alert('That email address is invalid!');
             console.log('That email address is invalid!');
           }
+          console.log(error);
         });
     }
   };

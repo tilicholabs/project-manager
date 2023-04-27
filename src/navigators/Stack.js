@@ -186,8 +186,10 @@ const SingleStack = () => {
 function AppStack() {
   const [userIn, setUserIn] = useState(false);
   const [firstRender, setFirstRender] = useState(true);
+  const {setUser} = useContext(AppContext);
   function userState(User) {
     if (User) {
+      setUser(User);
       setUserIn(true);
     } else {
       setUserIn(false);

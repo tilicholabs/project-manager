@@ -27,7 +27,6 @@ export class FireBaseModal {
 
   createProject = async data => {
     const doc = await firestore().collection(this.basePath).doc();
-
     await doc.set({...data, id: doc.id, status: 'ongoing'});
   };
 
@@ -37,14 +36,16 @@ export class FireBaseModal {
 
   getMembers = async () => {
     const members = await firestore().collection('users').get();
-
     return members;
   };
 
   getProjects = async () => {
     const projects = await firestore().collection('projects').orderBy().get();
-
     return projects;
+  };
+
+  registerUser = async (id, data) => {
+    await firestore().collection(this.basePath).doc(id).set(data);
   };
 
   getProjectTasks = async projectId => {

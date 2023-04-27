@@ -20,6 +20,7 @@ const App = () => {
   const [selectedTask, setSelectedTask] = useState();
   const [selectedProject, setSelectedProject] = useState();
   const [members, setMembers] = useState([]);
+  const [user, setUser] = useState();
 
   const getMembers = async () => {
     const data = await Modals.users.get();
@@ -51,6 +52,8 @@ const App = () => {
         setSelectedProject,
         members,
         setMembers,
+        user,
+        setUser,
       }}>
       <PaperProvider>
         <MenuProvider>
