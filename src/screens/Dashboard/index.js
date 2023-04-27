@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -16,6 +16,9 @@ import appTheme from '../../constants/colors';
 import {dashboardDetails} from '../../constants/all';
 import ActionButton from 'react-native-action-button';
 import Search from '../../components/Search';
+import {Modals} from '../../api/firebaseModal';
+import firestore from '@react-native-firebase/firestore';
+import {dataFormatter} from '../../utils/DataFormatter';
 import {useKeyboardDetails} from '../../hooks/useKeyboardDetails';
 import {navigateToNestedRoute} from '../../navigators/RootNavigation';
 import {getScreenParent} from '../../utils/NavigationHelper';
@@ -23,14 +26,28 @@ import logo from '../../assets/logo.png';
 
 export function Dashboard({navigation}) {
   const {state, dispatch} = useContext(AppContext);
-  let {tasks} = state;
   const [open, setOpen] = useState(false);
-
   const [value, setValue] = useState('All Tasks');
   const [searchValue, setSearch] = useState('');
+  const [tasks, setTasks] = useState([]);
   const [keyboardDetails] = useKeyboardDetails();
 
-  const getTasks = () => {
+  const getTasks = async () => {
+    const data = await Modals.tasks.get();
+    setTasks(data);
+    firestore()
+      .collection('tasks')
+      .onSnapshot(document => {
+        const data = dataFormatter(document);
+        setTasks(data);
+      });
+  };
+
+  useEffect(() => {
+    getTasks();
+  }, []);
+
+  const getFiltered = () => {
     let tasksToRender = [];
     if (!value || value === 'All Tasks') {
       tasksToRender = tasks;
@@ -49,6 +66,7 @@ export function Dashboard({navigation}) {
       payload: {bottomModal: 'CreateTask'},
     });
   };
+
   const handleCreateProject = () => {
     navigateToNestedRoute(
       getScreenParent('CreateProject'),
@@ -160,7 +178,7 @@ export function Dashboard({navigation}) {
           <View style={styles.tasksBody}>
             <ScrollView showsVerticalScrollIndicator={false}>
               <View style={styles.tasksList}>
-                {findFilterValue(getTasks())?.map(task => (
+                {findFilterValue(getFiltered())?.map(task => (
                   <TaskInfo task={task} key={shortid.generate()} />
                 ))}
               </View>

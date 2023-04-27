@@ -7,7 +7,8 @@ const initialState = {
   ...userState,
   ...projectsState,
   ...membersState,
-  ...tasksState
+  ...tasksState,
+  currentMembers: [],
 };
 
 export default initialState;

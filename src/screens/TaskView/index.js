@@ -23,10 +23,20 @@ import {Modals} from '../../api/firebaseModal';
 import {dataFormatter} from '../../utils/DataFormatter';
 
 export function TaskView() {
+  const [date, setDate] = useState(new Date(1598051730000));
+  const [mode, setMode] = useState('date');
+  const [show, setShow] = useState(false);
   const {state, dispatch, task} = useContext(AppContext);
   const {selectedTask} = state;
   const [subTasks, setSubTasks] = useState({});
   const [loading, setLoading] = useState(false);
+  const [datePickerOpen, setDatePicker] = useState(false);
+
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate;
+    setShow(false);
+    setDate(currentDate);
+  };
 
   const handleCreateTask = () => {
     dispatch({
@@ -109,7 +119,16 @@ export function TaskView() {
               size={20}
               color={appTheme.INACTIVE_COLOR}
             />
-            <Text style={styles.scheduleText}>June 13 2021</Text>
+            <DateTimePicker
+              testID="dateTimePicker"
+              value={date}
+              mode={mode}
+              is24Hour={true}
+              onChange={onChange}
+            />
+            <TouchableOpacity onPress={() => setDatePicker(true)}>
+              <Text style={styles.scheduleText}>June 13 2021</Text>
+            </TouchableOpacity>
           </View>
         </View>
         <Text style={styles.longText}>

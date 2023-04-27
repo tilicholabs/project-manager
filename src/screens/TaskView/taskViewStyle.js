@@ -72,7 +72,6 @@ const styles = StyleSheet.create({
   },
   scheduleText: {color: appTheme.INACTIVE_COLOR, marginLeft: 5},
   longText: {
-    height: 200,
     fontSize: 16,
     lineHeight: 22,
     color: appTheme.INACTIVE_COLOR,

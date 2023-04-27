@@ -4,10 +4,9 @@ import shortid from 'shortid';
 import {AppContext} from '../../context';
 import styles from './selectMembersStyle';
 
-export const SelectedMembers = ({doneButton = false}) => {
-  const {state, selectedMembers, setSelectedMembers, dispatch} =
+export const SelectedMembers = ({showDone = false}) => {
+  const {state, selectedMembers, setSelectedMembers, dispatch, members} =
     useContext(AppContext);
-  const {members} = state;
 
   const handleSetValue = value => {
     setSelectedMembers(prev => {
@@ -45,7 +44,27 @@ export const SelectedMembers = ({doneButton = false}) => {
                 isSelectedMember(member) ? styles.activeTeamWrapper : null,
               ]}
               onPress={() => handleSetValue(member)}>
-              <Image style={styles.memberPhoto} source={{uri: member?.photo}} />
+              {member?.photo ? (
+                <Image
+                  style={styles.memberPhoto}
+                  source={{uri: member?.photo}}
+                />
+              ) : (
+                <View
+                  style={{
+                    ...styles.memberPhoto,
+                    ...{
+                      justifyContent: 'center',
+                      display: 'flex',
+                      alignItems: 'center',
+                      backgroundColor: '#60C877',
+                    },
+                  }}>
+                  <Text style={{fontSize: 18, fontWeight: 'bold'}}>
+                    {member?.name[0]}
+                  </Text>
+                </View>
+              )}
               <Text
                 style={[
                   styles.memberName,
@@ -59,13 +78,13 @@ export const SelectedMembers = ({doneButton = false}) => {
           ))}
         </View>
       </ScrollView>
-      {doneButton && (
+      {showDone && (
         <TouchableOpacity
           style={styles.btnWrapper}
           onPress={() =>
             dispatch({
               type: 'toggleBottomModal',
-              payload: {bottomModal: null},
+              payload: {bottomModal: 'closeSelectMembers'},
             })
           }>
           <Text style={styles.btnText}>Done</Text>

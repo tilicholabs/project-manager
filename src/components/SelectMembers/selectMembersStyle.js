@@ -20,7 +20,13 @@ const styles = StyleSheet.create({
     marginHorizontal: 2.5,
   },
   memberPhoto: {height: 40, width: 40, borderRadius: 50},
-  memberName: {width: 60, textAlign: 'center', color: '#000', fontSize: 13},
+  memberName: {
+    width: 60,
+    textAlign: 'center',
+    color: '#000',
+    fontSize: 13,
+    paddingTop: 10,
+  },
   activeMemberName: {color: '#fff'},
   btnWrapper: {
     marginTop: 'auto',
