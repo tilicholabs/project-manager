@@ -1,5 +1,15 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {View, Text, TouchableOpacity, Image, ScrollView} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+  Modal,
+  Button,
+  TouchableHighlight,
+  Pressable,
+} from 'react-native';
 import shortid from 'shortid';
 import ProgressCircle from 'react-native-progress-circle';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
@@ -15,6 +25,8 @@ import {dataFormatter} from '../../utils/DataFormatter';
 import {StatusPopUp} from '../../components/StatusPopUp';
 import moment from 'moment/moment';
 import {Loader} from '../../components/Loader';
+import DatePicker from 'react-native-date-picker';
+import {CustomDatePicker} from '../../components/CustomDatePicker';
 
 export function TaskView() {
   const {
@@ -27,9 +39,14 @@ export function TaskView() {
     setSelectedMembers,
   } = useContext(AppContext);
   const [subTasks, setSubTasks] = useState([]);
-  const [loading, setLoading] = useState(false);
   const {bottomModal} = state;
+  const [modalOpen, setModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate;
+    setShow(false);
+  };
   const handleCreateTask = () => {
     dispatch({
       type: 'toggleBottomModal',
@@ -66,6 +83,11 @@ export function TaskView() {
     }
     await Modals.subTasks.update(id, {status: status});
     setLoading(false);
+  };
+  const dateHandler = date => {
+    const due_date = JSON?.stringify(date);
+    setSelectedTask(prv => ({...prv, due_date}));
+    Modals?.tasks?.update(selectedTask?.id, {due_date});
   };
 
   useEffect(() => {
@@ -133,6 +155,11 @@ export function TaskView() {
       teamHandler();
     }
   }, [bottomModal]);
+  const findDate = new Date(JSON?.parse(selectedTask?.due_date));
+
+  const date = `${findDate?.getDate()}-${
+    findDate?.getMonth() + 1
+  }-${findDate?.getFullYear()}`;
 
   return loading ? (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -209,9 +236,10 @@ export function TaskView() {
               size={20}
               color={appTheme.INACTIVE_COLOR}
             />
-            <Text style={styles.scheduleText}>
-              {moment(selectedTask?.created_at).format('DD MMM YYYY')}
-            </Text>
+
+            <TouchableOpacity onPress={() => setModalOpen(true)}>
+              <Text style={styles.scheduleText}>{date}</Text>
+            </TouchableOpacity>
           </View>
         </View>
         <Text style={styles.longText}>{selectedTask?.description}</Text>
@@ -256,6 +284,12 @@ export function TaskView() {
           <Text style={styles.bottomText}>2 attachments</Text>
         </TouchableOpacity>
       </View>
+      <CustomDatePicker
+        open={modalOpen}
+        intialDate={findDate || new Date()}
+        onClose={() => setModalOpen(false)}
+        {...{newDateCallBack: dateHandler}}
+      />
     </View>
   );
 }

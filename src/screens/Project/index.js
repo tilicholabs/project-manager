@@ -103,8 +103,11 @@ export function Project({navigation, route}) {
     }));
     getProjectTasks(selectedProject?.id);
     setSelectedMembers([]);
-    return () => setIsProjectSelected(false);
   }, [bottomModal]);
+
+  useEffect(() => {
+    return () => setIsProjectSelected(false);
+  }, []);
 
   const filterMembers = arr => {
     const result = members.filter(item => {

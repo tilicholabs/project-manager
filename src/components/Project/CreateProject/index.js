@@ -18,6 +18,7 @@ import {TabScreenHeader} from '../../Global';
 import {onChange} from 'react-native-reanimated';
 import CustomTextInput from '../../Global/CustomTextInput';
 import {Modals} from '../../../api/firebaseModal';
+import appTheam from '../../../constants/colors';
 
 export function CreateProject({navigation}) {
   const {state, dispatch, members} = useContext(AppContext);
@@ -79,12 +80,16 @@ export function CreateProject({navigation}) {
   };
 
   const onChange = text => {
-    const result = members?.filter(item =>
-      item?.user_name?.toLowerCase()?.includes(text?.toLowerCase()),
-    );
-
     setSearch(text);
   };
+
+  const validation = () => {
+    return (
+      !data?.title || !data?.description || data?.selectedMembers?.length <= 0
+    );
+  };
+
+  console.log(validation());
 
   return (
     <Fragment>
@@ -174,7 +179,13 @@ export function CreateProject({navigation}) {
           </ScrollView>
         </View>
         <TouchableOpacity
-          style={styles.btnWrapper}
+          style={{
+            ...styles.btnWrapper,
+            backgroundColor: validation()
+              ? appTheam?.INACTIVE_COLOR
+              : appTheam?.PRIMARY_COLOR,
+          }}
+          disabled={validation()}
           onPress={async () => {
             await Modals.projects.createProject({
               ...data,

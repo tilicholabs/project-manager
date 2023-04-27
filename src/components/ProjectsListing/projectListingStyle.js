@@ -4,6 +4,7 @@ import appTheme from '../../constants/colors';
 const styles = StyleSheet.create({
   projectsView: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     // marginHorizontal: 10,
   },
   projectTitleView: {
