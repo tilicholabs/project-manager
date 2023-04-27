@@ -5,10 +5,10 @@ import {
   TouchableOpacity,
   SafeAreaView,
   ScrollView,
-  Image,
 } from 'react-native';
 import shortid from 'shortid';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Entypo from 'react-native-vector-icons/Entypo';
 import styles from './dashboardStyle';
 import {AppContext} from '../../context';
 import {TabScreenHeader, TaskInfo} from '../../components';
@@ -16,25 +16,21 @@ import appTheme from '../../constants/colors';
 import {dashboardDetails} from '../../constants/all';
 import ActionButton from 'react-native-action-button';
 import Search from '../../components/Search';
-import {Modals} from '../../api/firebaseModal';
 import firestore from '@react-native-firebase/firestore';
 import {dataFormatter} from '../../utils/DataFormatter';
 import {useKeyboardDetails} from '../../hooks/useKeyboardDetails';
 import {navigateToNestedRoute} from '../../navigators/RootNavigation';
 import {getScreenParent} from '../../utils/NavigationHelper';
-import logo from '../../assets/logo.png';
+import AppLogo from '../../components/AppLogo';
 
 export function Dashboard({navigation}) {
   const {state, dispatch} = useContext(AppContext);
-  const [open, setOpen] = useState(false);
   const [value, setValue] = useState('All Tasks');
   const [searchValue, setSearch] = useState('');
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState();
   const [keyboardDetails] = useKeyboardDetails();
 
   const getTasks = async () => {
-    const data = await Modals.tasks.get();
-    setTasks(data);
     firestore()
       .collection('tasks')
       .onSnapshot(document => {
@@ -46,6 +42,20 @@ export function Dashboard({navigation}) {
   useEffect(() => {
     getTasks();
   }, []);
+
+  const getFiltered = () => {
+    let tasksToRender = [];
+    if (!value || value === 'All Tasks') {
+      tasksToRender = tasks;
+    } else if (value === 'In progress') {
+      tasksToRender = tasks.filter(task => task?.status == 'In Progress') || [];
+    } else if (value === 'Completed') {
+      tasksToRender = tasks.filter(task => task?.status == 'Completed') || [];
+    } else if (value === 'Favourites') {
+      tasksToRender = tasks.filter(task => task?.status == 'Favourites') || [];
+    }
+    return tasksToRender;
+  };
 
   const handleCreateTask = () => {
     dispatch({
@@ -63,7 +73,7 @@ export function Dashboard({navigation}) {
   };
 
   const Card = ({
-    bg = appTheme.PRIMARY_COLOR,
+    bg = '',
     icon = '',
     size = 19,
     color = '#fff',
@@ -78,14 +88,20 @@ export function Dashboard({navigation}) {
         style={[
           styles.statisticsContent,
           {
-            backgroundColor: '#BB84E8',
+            backgroundColor: bg,
+            position: 'relative',
           },
           selected && {
-            borderWidth: 0,
-            backgroundColor: appTheme?.PRIMARY_COLOR,
+            borderWidth: 1,
+            borderColor: 'black',
           },
         ]}
         {...{onPress, ...props}}>
+        {selected && (
+          <View style={{position: 'absolute'}}>
+            <Entypo name={'dot-single'} size={30} color={'white'} />
+          </View>
+        )}
         <MaterialCommunityIcons
           name={icon}
           size={size}
@@ -101,7 +117,7 @@ export function Dashboard({navigation}) {
   };
 
   const leftComponent = () => {
-    return <Image source={logo} style={{width: 50, height: 30}} />;
+    return <AppLogo />;
   };
 
   const findFilterValue = tasks => {
@@ -162,10 +178,11 @@ export function Dashboard({navigation}) {
             ...styles.tasksSection,
             paddingTop: !keyboardDetails?.isVisible ? 30 : 0,
           }}>
+          <Text style={{fontSize: 16, fontWeight: '700'}}>Tasks</Text>
           <View style={styles.tasksBody}>
             <ScrollView showsVerticalScrollIndicator={false}>
               <View style={styles.tasksList}>
-                {findFilterValue(tasks)?.map(task => (
+                {findFilterValue(getFiltered())?.map(task => (
                   <TaskInfo task={task} key={shortid.generate()} />
                 ))}
               </View>

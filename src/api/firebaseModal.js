@@ -64,6 +64,14 @@ export class FireBaseModal {
       .where('project_id', '==', projectId)
       .get();
   };
+
+  getOn = async () => {
+    return await firestore()
+      .collection(this?.basePath)
+      .onSnapshot(async document => {
+        return await dataFormatter(document);
+      });
+  };
 }
 
 export const Modals = {

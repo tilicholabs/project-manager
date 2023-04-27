@@ -15,7 +15,7 @@ import {AppContext} from '../../context';
 import firestore from '@react-native-firebase/firestore';
 import {dataFormatter} from '../../utils/DataFormatter';
 import styles from './commentsStyle';
-import moment from 'moment';
+// import moment from 'moment';
 
 export const Comments = () => {
   const comment = useRef('');
@@ -56,9 +56,9 @@ export const Comments = () => {
           <View style={styles.displayComments}>
             <View style={styles.commentHeader}>
               <Text style={styles.personNameText}>You</Text>
-              <Text style={styles.timeText}>
+              {/* <Text style={styles.timeText}>
                 {moment(item?.created_at).fromNow()}
-              </Text>
+              </Text> */}
             </View>
             <Text style={styles.comment}>{item?.title}</Text>
           </View>
