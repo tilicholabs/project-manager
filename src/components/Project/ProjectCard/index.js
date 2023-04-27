@@ -11,10 +11,12 @@ import {AppContext} from '../../../context';
 import {Modals} from '../../../api/firebaseModal';
 
 export function ProjectCard({project, navigation}) {
+  const {state, dispatch, setSelectedProject} = useContext(AppContext);
+
   const handleNavigation = (screen, params) => {
+    setSelectedProject(project);
     navigateToNestedRoute(getScreenParent(screen), screen, params);
   };
-  const {state, dispatch} = useContext(AppContext);
 
   const {members} = state;
 

@@ -42,6 +42,7 @@ export function Members() {
       .collection('users')
       .onSnapshot(document => {
         setMembers(document.docs);
+        setFilteredList(document.docs);
       });
   }, []);
 
@@ -56,8 +57,13 @@ export function Members() {
     });
   };
 
+  const leftComponent = () => (
+    <Text style={{fontSize: 20, fontWeight: 'bold'}}>Members</Text>
+  );
+
   return (
     <SafeAreaView style={styles.container}>
+      <TabScreenHeader {...{leftComponent, isBackButtonPresent: true}} />
       <Search
         {...{
           placeholder: 'Search member',
