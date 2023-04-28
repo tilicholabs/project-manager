@@ -39,8 +39,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   profilePhoto: {
-    height: 80,
-    width: 80,
+    height: 100,
+    width: 100,
     borderRadius: 50,
     marginBottom: 20,
   },

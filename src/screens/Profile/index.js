@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -19,14 +19,29 @@ import {navigateToNestedRoute} from '../../navigators/RootNavigation';
 import {getScreenParent} from '../../utils/NavigationHelper';
 import {TextInput} from 'react-native-paper';
 import {launchImageLibrary} from 'react-native-image-picker';
+import {utils} from '@react-native-firebase/app';
+import storage from '@react-native-firebase/storage';
+import {Loader} from '../../components/Loader';
+import {Modals} from '../../api/firebaseModal';
 
 export function Profile({navigation}) {
-  const {state, dispatch} = useContext(AppContext);
+  const {state, dispatch, user, members} = useContext(AppContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [text, setText] = useState('');
   const [text1, setTextone] = useState('');
-  const [cameraPhoto, setCameraPhoto] = useState();
-  const {user} = state;
+  const [image, setImage] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [profile, setProfile] = useState({user_name: '', designation: ''});
+
+  // const {user} = state;
+
+  useEffect(() => {
+    const user_profile = members?.find(item => item?.id === user?.uid);
+    setProfile(prev => ({
+      user_name: user_profile?.user_name,
+      designation: user_profile?.designation,
+    }));
+  }, []);
 
   const handleBackButton = () => {
     navigation?.goBack();
@@ -49,6 +64,8 @@ export function Profile({navigation}) {
     mediaType: 'photo',
   };
   const uploadImage = async () => {
+    setIsLoading(false);
+    const reference = storage().ref(user.uid);
     try {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.CAMERA,
@@ -67,14 +84,32 @@ export function Profile({navigation}) {
             path: 'images',
           },
         };
-        launchImageLibrary({}, response => {
-          console.log(response);
+        launchImageLibrary({}, async response => {
+          if (response.didCancel) {
+            setIsLoading(true);
+            console.log('user cancelled image picker');
+          } else if (response.error) {
+            setIsLoading(true);
+            console.log('Image picker error', response.error);
+          } else if (response.customButton) {
+            setIsLoading(true);
+            console.log('user tapped custom button', response.customButton);
+          } else {
+            const pathToFile = response?.uri;
+            await reference.putFile(pathToFile);
+            // fetch profileurl from storage
+            const url = await storage().ref(user?.uid).getDownloadURL();
+            setImage(url);
+            await Modals.users.update(user?.uid, {profile_image: url});
+            setIsLoading(true);
+          }
         });
       }
     } catch (e) {
       console.log(e);
     }
   };
+
   return (
     <SafeAreaView style={styles.container}>
       <TabScreenHeader
@@ -94,12 +129,24 @@ export function Profile({navigation}) {
               </View>
               <View style={{alignItems: 'center'}}>
                 <View style={{position: 'relative'}}>
-                  <Image
-                    style={styles.profilePhoto}
-                    source={{
-                      uri: user?.photo,
-                    }}
-                  />
+                  {!isLoading ? (
+                    <Loader />
+                  ) : image.length === 0 ? (
+                    // TODO put empty image
+                    <Image
+                      style={styles.profilePhoto}
+                      source={{
+                        uri: 'https://images.unsplash.com/photo-1610261003803-224ee66747e1?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTl8fHdvbWVuJTIwcHJvZmlsZSUyMHBob3RvfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
+                      }}
+                    />
+                  ) : (
+                    <Image
+                      style={styles.profilePhoto}
+                      source={{
+                        uri: image,
+                      }}
+                    />
+                  )}
                   <TouchableOpacity
                     onPress={() => uploadImage()}
                     style={{position: 'absolute', bottom: 18, right: 0}}>
@@ -111,8 +158,11 @@ export function Profile({navigation}) {
                     />
                   </TouchableOpacity>
                 </View>
-                <Text style={styles.nameText}>{user?.name}</Text>
-                <Text style={styles.designationText}>{user?.designation}</Text>
+
+                <Text style={styles.nameText}>{profile?.user_name}</Text>
+                <Text style={styles.designationText}>
+                  {profile?.designation}
+                </Text>
                 <TouchableOpacity
                   style={styles.editProfileWrapper}
                   onPress={() => setIsModalOpen(true)}>
