@@ -34,6 +34,14 @@ export class FireBaseModal {
     await firestore().collection(this.basePath).add(task);
   };
 
+  getUser = async id => {
+    const data = await firestore()
+      .collection('users')
+      .where('id', '==', id)
+      .get();
+    return dataFormatter(data);
+  };
+
   getMembers = async () => {
     const members = await firestore().collection('users').get();
     return members;
@@ -68,7 +76,7 @@ export class FireBaseModal {
     return await firestore()
       .collection('tasks')
       // Filter results
-      .where('status', '==', 'completed')
+      .where('status', '==', 'Completed')
       .where('project_id', '==', projectId)
       .get();
   };

@@ -28,9 +28,10 @@ export const ProjectsListing = () => {
               project?.id === selectedProject?.id
                 ? appTheme.INACTIVE_COLOR
                 : 'white',
-            padding: 5,
+            padding: 10,
             borderRadius: 10,
-            marginLeft: index > 0 ? 7 : 0,
+
+            width: 100,
           }}
           onPress={() => setSelectedProject(project)}>
           <View key={index} style={styles.projectTitleView}>
@@ -42,7 +43,7 @@ export const ProjectsListing = () => {
             <Text
               style={{
                 textAlign: 'center',
-                marginLeft: index > 0 ? 7 : 0,
+                // marginLeft: index > 0 ? 7 : 0,
                 marginTop: 5,
               }}>
               {project?.title}

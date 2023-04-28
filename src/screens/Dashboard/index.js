@@ -36,14 +36,13 @@ export function Dashboard({navigation}) {
   const [loading, setLoading] = useState(true);
 
   const getTasks = async () => {
-    const data = await Modals.tasks.getUserTasks(user?.uid);
+    const data = await Modals.tasks.getUserTasks(user?.id);
     setTasks(data);
     setLoading(false);
     firestore()
       .collection('tasks')
-      .where('team', 'array-contains', user?.uid)
+      .where('team', 'array-contains', user?.id)
       .onSnapshot(async document => {
-        console.log(document);
         const data = await dataFormatter(document);
 
         setTasks(data);
@@ -58,7 +57,7 @@ export function Dashboard({navigation}) {
     let tasksToRender = [];
     if (!value || value === 'All Tasks') {
       tasksToRender = tasks;
-    } else if (value === 'In progress') {
+    } else if (value === 'In Progress') {
       tasksToRender = tasks.filter(task => task?.status == 'In Progress') || [];
     } else if (value === 'Completed') {
       tasksToRender = tasks.filter(task => task?.status == 'Completed') || [];
@@ -199,9 +198,20 @@ export function Dashboard({navigation}) {
           <View style={styles.tasksBody}>
             <ScrollView showsVerticalScrollIndicator={false}>
               <View style={styles.tasksList}>
-                {findFilterValue(getFiltered())?.map(task => (
-                  <TaskInfo task={task} key={shortid.generate()} />
-                ))}
+                {[] > 0 ? (
+                  findFilterValue(getFiltered())?.map(task => (
+                    <TaskInfo task={task} key={shortid.generate()} />
+                  ))
+                ) : (
+                  <Text
+                    style={{
+                      fontSize: 17,
+                      textAlign: 'center',
+                      marginTop: 50,
+                    }}>
+                    No tasks available
+                  </Text>
+                )}
               </View>
             </ScrollView>
           </View>

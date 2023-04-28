@@ -71,7 +71,7 @@ export function ProjectCard({project, navigation}) {
     const percent = Math?.round(
       (completedTasks?.length / formattedData?.length) * 100,
     );
-    setPercentage(percent);
+    setPercentage(percent || 0);
   };
 
   useEffect(() => {

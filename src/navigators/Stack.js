@@ -26,6 +26,7 @@ import {AppContext} from '../context';
 import {TaskView} from '../screens/TaskView';
 import auth from '@react-native-firebase/auth';
 import {CreateProject} from '../components';
+import {Modals} from '../api/firebaseModal';
 
 const Stack = createStackNavigator();
 const BottomTab = createBottomTabNavigator();
@@ -177,7 +178,7 @@ const SingleStack = () => {
       <Stack.Screen
         name="TaskView"
         component={TaskView}
-        options={() => customHeader({title: ''})}
+        options={{headerShown: false}}
       />
     </Stack.Navigator>
   );
@@ -187,15 +188,16 @@ function AppStack() {
   const [userIn, setUserIn] = useState(false);
   const [firstRender, setFirstRender] = useState(true);
   const {setUser} = useContext(AppContext);
-  function userState(User) {
+  const userState = async User => {
     if (User) {
-      setUser(User);
+      const data = await Modals?.users?.getUser(User?.uid);
+      setUser(data?.[0]);
       setUserIn(true);
     } else {
       setUserIn(false);
     }
     setFirstRender(false);
-  }
+  };
 
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(userState);

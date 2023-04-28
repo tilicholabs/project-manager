@@ -116,26 +116,28 @@ export function Project({navigation, route}) {
     Array?.isArray(totalTasks?.current) ? totalTasks?.current : []
   )?.filter(item => item?.status == 'Completed');
 
-  const percent = Math?.round(
-    (completedTasks?.length / totalTasks?.current?.length) * 100,
-  );
+  const percent =
+    Math?.round((completedTasks?.length / totalTasks?.current?.length) * 100) ||
+    0;
 
   useEffect(() => {
-    if (percent == 100 && selectedProject?.status != 'Completed') {
-      Modals.projects.update(selectedProject?.id, {status: 'Completed'});
-      setSelectedProject(prv => ({...prv, status: 'Completed'}));
-    } else if (percent == 0 && selectedProject?.status != 'Not Started') {
-      Modals.projects.update(selectedProject?.id, {status: 'Not Started'});
-      setSelectedProject(prv => ({...prv, status: 'Not Started'}));
-    } else if (
-      selectedProject?.status != 'In progess' &&
-      percent > 0 &&
-      percent < 100
-    ) {
-      Modals.projects.update(selectedProject?.id, {status: 'In progess'});
-      setSelectedProject(prv => ({...prv, status: 'In progess'}));
+    if (!!percent) {
+      if (percent == 100 && selectedProject?.status != 'Completed') {
+        Modals.projects.update(selectedProject?.id, {status: 'Completed'});
+        setSelectedProject(prv => ({...prv, status: 'Completed'}));
+      } else if (percent == 0 && selectedProject?.status != 'Not Started') {
+        Modals.projects.update(selectedProject?.id, {status: 'Not Started'});
+        setSelectedProject(prv => ({...prv, status: 'Not Started'}));
+      } else if (
+        selectedProject?.status != 'In Progress' &&
+        percent > 0 &&
+        percent < 100
+      ) {
+        Modals.projects.update(selectedProject?.id, {status: 'In Progress'});
+        setSelectedProject(prv => ({...prv, status: 'In Progress'}));
+      }
     }
-  }, [completedTasks]);
+  }, [completedTasks, tasks]);
 
   return (
     <SafeAreaView style={styles.container}>

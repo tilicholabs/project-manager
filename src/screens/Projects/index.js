@@ -35,7 +35,7 @@ import {Loader} from '../../components/Loader';
 import {dataFormatter} from '../../utils/DataFormatter';
 
 export function Projects({navigation}) {
-  const tabs = ['All', 'Ongoing', 'Completed'];
+  const tabs = ['All', 'In Progress', 'Completed'];
 
   const {state, dispatch, user} = useContext(AppContext);
   const {projects, bottomModal} = state;
@@ -45,18 +45,19 @@ export function Projects({navigation}) {
 
   const [projectData, setProjectData] = useState([]);
 
-  const allProjectData = useRef(null);
+  const allProjectData = useRef([]);
 
   const toggleTab = tab => {
     if (tab === 'Completed') {
       const result = allProjectData?.current.filter(item => {
-        return item?.status === 'completed';
+        return item?.status === 'Completed';
       });
       setProjectData(result);
-    } else if (tab === 'Ongoing') {
+    } else if (tab === 'In Progress') {
       const result = allProjectData?.current.filter(item => {
-        return item?.status === 'ongoing';
+        return item?.status === 'In Progress';
       });
+
       setProjectData(result);
     } else {
       setProjectData(allProjectData?.current);
@@ -119,20 +120,18 @@ export function Projects({navigation}) {
   };
 
   const getProjects = async () => {
-    const data = await Modals.projects.getUserProjects(user?.uid);
-    const result = await addPercentParameter(data);
-    setProjectData(result);
+    const data = await Modals.projects.getUserProjects(user?.id);
+    allProjectData.current = data || [];
+    setProjectData(data || []);
     setLoading(false);
 
     firestore()
       .collection('projects')
-      .where('selectedMembers', 'array-contains', user?.uid)
+      .where('selectedMembers', 'array-contains', user?.id)
       .onSnapshot(async document => {
-        const data = dataFormatter(document);
-        if (data?._z) {
-          const result = await addPercentParameter(data);
-          setProjectData(result);
-        }
+        const data = await dataFormatter(document);
+
+        setProjectData(data);
       });
   };
 

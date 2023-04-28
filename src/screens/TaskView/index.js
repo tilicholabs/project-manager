@@ -18,7 +18,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import styles from './taskViewStyle';
 import {AppContext} from '../../context';
 import appTheme from '../../constants/colors';
-import {AddIcon} from '../../components';
+import {AddIcon, TabScreenHeader} from '../../components';
 import firestore from '@react-native-firebase/firestore';
 import {Modals} from '../../api/firebaseModal';
 import {dataFormatter} from '../../utils/DataFormatter';
@@ -161,12 +161,17 @@ export function TaskView() {
     findDate?.getMonth() + 1
   }-${findDate?.getFullYear()}`;
 
+  const leftComponent = () => {
+    return <Text style={{fontSize: 16}}>Task Details</Text>;
+  };
+
   return loading ? (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
       <Loader />
     </View>
   ) : (
     <View style={{flex: 1, backgroundColor: '#fafafa'}}>
+      <TabScreenHeader {...{leftComponent}} />
       <ScrollView
         style={styles.container}
         contentContainerStyle={{paddingBottom: 50}}>
@@ -184,9 +189,25 @@ export function TaskView() {
           </View>
           <Text style={styles.taskTitle}>{selectedTask?.title}</Text>
         </View>
-        <Text style={styles.dueDateText}>Due Date - Today</Text>
+        <View style={{flexDirection: 'row'}}>
+          <Text style={styles.dueDateText}>Due Date - </Text>
+          <View style={styles.scheduleWrapper}>
+            <View style={styles.scheduleRow}>
+              <AntDesign
+                name="calendar"
+                size={20}
+                color={appTheme.INACTIVE_COLOR}
+              />
+
+              <TouchableOpacity onPress={() => setModalOpen(true)}>
+                <Text style={styles.scheduleText}>{date}</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+
         <Text style={styles.statusText}>{`Status - ${
-          progressHandler() === 100 ? 'Completed' : 'In progress'
+          progressHandler() === 100 ? 'Completed' : 'In Progress'
         }`}</Text>
         <Text style={styles.taskTeamText}>Team</Text>
         <View style={styles.taskMembersWrapper}>
@@ -229,19 +250,7 @@ export function TaskView() {
             onPress={handleAddTeamMember}
           />
         </View>
-        <View style={styles.scheduleWrapper}>
-          <View style={styles.scheduleRow}>
-            <AntDesign
-              name="calendar"
-              size={20}
-              color={appTheme.INACTIVE_COLOR}
-            />
 
-            <TouchableOpacity onPress={() => setModalOpen(true)}>
-              <Text style={styles.scheduleText}>{date}</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
         <Text style={styles.longText}>{selectedTask?.description}</Text>
         <Text style={styles.subTaskText}>Sub-Tasks</Text>
         {subTasks?.length > 0 ? (
@@ -270,6 +279,8 @@ export function TaskView() {
           shadowRadius: 1,
           elevation: 3,
           zIndex: 10,
+          height: 55,
+          width: 55,
         }}
         onPress={handleCreateTask}
         bg={appTheme.PRIMARY_COLOR}
@@ -277,12 +288,12 @@ export function TaskView() {
       <View style={styles.bottomWrapper}>
         <TouchableOpacity style={styles.bottomContent} onPress={handleComments}>
           <EvilIcons name="comment" size={25} color={appTheme.INACTIVE_COLOR} />
-          <Text style={styles.bottomText}>3 comments</Text>
+          <Text style={styles.bottomText}>comments</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.bottomContent}>
+        {/* <TouchableOpacity style={styles.bottomContent}>
           <Ionicons name="attach" size={25} color={appTheme.INACTIVE_COLOR} />
           <Text style={styles.bottomText}>2 attachments</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
       <CustomDatePicker
         open={modalOpen}

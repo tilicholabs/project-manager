@@ -62,7 +62,6 @@ export function CreateProject({navigation}) {
     } else {
       data[field] = value;
     }
-
     setData({...data});
   };
 
@@ -80,6 +79,11 @@ export function CreateProject({navigation}) {
   };
 
   const onChange = text => {
+    setUpdatedMembers(
+      members?.filter(item =>
+        item?.user_name?.toLowerCase()?.includes(text?.toLowerCase()),
+      ),
+    );
     setSearch(text);
   };
 

@@ -117,7 +117,7 @@ export function SignUp({navigation}) {
             displayName: formData.userName,
           });
           const userData = {
-            id: userCredential?.user?.uid,
+            id: userCredential?.user?.id,
             user_name: formData.userName,
             phone_number: `+91${formData.phoneNumber}`,
             email: formData.email,
@@ -147,7 +147,7 @@ export function SignUp({navigation}) {
               },
             },
           };
-          await Modals.users.registerUser(userCredential?.user?.uid, userData);
+          await Modals.users.registerUser(userCredential?.user?.id, userData);
           navigation.reset({
             index: 0,
             routes: [{name: 'BottomStack'}],

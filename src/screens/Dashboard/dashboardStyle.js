@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     color: appTheme.INACTIVE_COLOR,
   },
   tasksList: {
-    marginBottom: 30,
+    marginBottom: 55,
   },
 });
 
