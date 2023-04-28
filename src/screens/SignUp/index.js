@@ -231,10 +231,10 @@ export function SignUp({navigation}) {
               color="gray"
             />
             <TextInput
-              placeholder="Phone number"
+              placeholder="Eg:+916302634470"
               placeholderTextColor="gray"
               style={styles.textInput}
-              keyboardType="decimal-pad"
+              keyboardType="phone-pad"
               onChangeText={text => phoneNumberHandler(text)}
             />
           </View>

@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -21,16 +21,21 @@ import {TextInput} from 'react-native-paper';
 import {launchImageLibrary} from 'react-native-image-picker';
 
 export function Profile({navigation}) {
-  const {state, dispatch} = useContext(AppContext);
+  const {state, dispatch, members, user} = useContext(AppContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [text, setText] = useState('');
   const [text1, setTextone] = useState('');
   const [cameraPhoto, setCameraPhoto] = useState();
-  const {user} = state;
+  const [userProfile, setUserProfile] = useState({});
 
   const handleBackButton = () => {
     navigation?.goBack();
   };
+
+  useEffect(() => {
+    const user_profile = members?.find(item => item?.id === user?.uid);
+    setUserProfile(user_profile);
+  }, []);
 
   const handleLogout = () => {
     auth()
@@ -97,7 +102,7 @@ export function Profile({navigation}) {
                   <Image
                     style={styles.profilePhoto}
                     source={{
-                      uri: user?.photo,
+                      uri: userProfile?.profile_image,
                     }}
                   />
                   <TouchableOpacity
@@ -111,11 +116,18 @@ export function Profile({navigation}) {
                     />
                   </TouchableOpacity>
                 </View>
-                <Text style={styles.nameText}>{user?.name}</Text>
-                <Text style={styles.designationText}>{user?.designation}</Text>
+                <Text style={styles.nameText}>{userProfile?.user_name}</Text>
+                <Text style={styles.designationText}>
+                  {userProfile?.designation}
+                </Text>
                 <TouchableOpacity
                   style={styles.editProfileWrapper}
-                  onPress={() => setIsModalOpen(true)}>
+                  onPress={() =>
+                    dispatch({
+                      type: 'toggleBottomModal',
+                      payload: {bottomModal: 'UpdateProfile'},
+                    })
+                  }>
                   <Text style={styles.editProfileText}>Edit Profile</Text>
                 </TouchableOpacity>
               </View>

@@ -16,11 +16,9 @@ export const InputTextField = props => {
   const [name, setName] = useState('');
 
   return (
-    <View style={{marginLeft: 12}}>
+    <View>
       <View style={{flexDirection: 'row'}}>
-        <Text style={{marginTop: 12, marginBottom: 5, marginRight: 3}}>
-          {title}
-        </Text>
+        <Text style={{marginTop: 12, marginBottom: 5}}>{title}</Text>
         {isRequired && <Text style={{marginTop: 12, color: 'red'}}>*</Text>}
       </View>
       <TextInput
@@ -30,6 +28,7 @@ export const InputTextField = props => {
         keyboardType={keyboardType}
         autoComplete="off"
         maxLength={maxLength}
+        value={value}
       />
     </View>
   );

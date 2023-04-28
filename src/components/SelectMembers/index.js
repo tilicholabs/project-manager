@@ -14,7 +14,6 @@ export const SelectedMembers = ({showDone = false}) => {
     selectedTask,
     selectedProject,
   } = useContext(AppContext);
-  console.log(members);
   const {bottomModal} = state;
   const [requiredMembers, setRequiredMembers] = useState([]);
 
