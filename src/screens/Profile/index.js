@@ -19,6 +19,10 @@ import {navigateToNestedRoute} from '../../navigators/RootNavigation';
 import {getScreenParent} from '../../utils/NavigationHelper';
 import {TextInput} from 'react-native-paper';
 import {launchImageLibrary} from 'react-native-image-picker';
+import {utils} from '@react-native-firebase/app';
+import storage from '@react-native-firebase/storage';
+import {Loader} from '../../components/Loader';
+import {Modals} from '../../api/firebaseModal';
 
 export function Profile({navigation}) {
   const {state, dispatch, members, user} = useContext(AppContext);
@@ -27,6 +31,8 @@ export function Profile({navigation}) {
   const [text1, setTextone] = useState('');
   const [cameraPhoto, setCameraPhoto] = useState();
   const [userProfile, setUserProfile] = useState({});
+  const [image, setImage] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleBackButton = () => {
     navigation?.goBack();
@@ -54,6 +60,8 @@ export function Profile({navigation}) {
     mediaType: 'photo',
   };
   const uploadImage = async () => {
+    setIsLoading(false);
+    const reference = storage().ref(user.uid);
     try {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.CAMERA,
@@ -72,14 +80,32 @@ export function Profile({navigation}) {
             path: 'images',
           },
         };
-        launchImageLibrary({}, response => {
-          console.log(response);
+        launchImageLibrary({}, async response => {
+          if (response.didCancel) {
+            setIsLoading(true);
+            console.log('user cancelled image picker');
+          } else if (response.error) {
+            setIsLoading(true);
+            console.log('Image picker error', response.error);
+          } else if (response.customButton) {
+            setIsLoading(true);
+            console.log('user tapped custom button', response.customButton);
+          } else {
+            const pathToFile = response?.uri;
+            await reference.putFile(pathToFile);
+            // fetch profileurl from storage
+            const url = await storage().ref(user?.uid).getDownloadURL();
+            setImage(url);
+            await Modals.users.update(user?.uid, {profile_image: url});
+            setIsLoading(true);
+          }
         });
       }
     } catch (e) {
       console.log(e);
     }
   };
+
   return (
     <SafeAreaView style={styles.container}>
       <TabScreenHeader
@@ -99,12 +125,24 @@ export function Profile({navigation}) {
               </View>
               <View style={{alignItems: 'center'}}>
                 <View style={{position: 'relative'}}>
-                  <Image
-                    style={styles.profilePhoto}
-                    source={{
-                      uri: userProfile?.profile_image,
-                    }}
-                  />
+                  {!isLoading ? (
+                    <Loader />
+                  ) : image.length === 0 ? (
+                    // TODO put empty image
+                    <Image
+                      style={styles.profilePhoto}
+                      source={{
+                        uri: 'https://images.unsplash.com/photo-1610261003803-224ee66747e1?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTl8fHdvbWVuJTIwcHJvZmlsZSUyMHBob3RvfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
+                      }}
+                    />
+                  ) : (
+                    <Image
+                      style={styles.profilePhoto}
+                      source={{
+                        uri: image,
+                      }}
+                    />
+                  )}
                   <TouchableOpacity
                     onPress={() => uploadImage()}
                     style={{position: 'absolute', bottom: 18, right: 0}}>
