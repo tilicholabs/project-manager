@@ -24,7 +24,7 @@ import firestore from '@react-native-firebase/firestore';
 import Search from '../../components/Search';
 
 export function Members() {
-  const {state, dispatch, members} = useContext(AppContext);
+  const {state, dispatch, members, setMembers} = useContext(AppContext);
   const [searchValue, setSearch] = useState('');
   const [filteredList, setFilteredList] = useState([]);
 
@@ -33,7 +33,7 @@ export function Members() {
       user => user?.user_name.toLowerCase().includes(searchValue.toLowerCase()),
     );
     setFilteredList([...filteredValue]);
-  }, [searchValue]);
+  }, [searchValue, members]);
 
   const handleNavigation = (screen, params) => {
     navigateToNestedRoute(getScreenParent(screen), screen, params);
@@ -121,7 +121,7 @@ export function Members() {
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={async () => {
-                    await Modals.users.deleteUser(member?.id);
+                    await Modals.users.delete(member?.id);
                   }}>
                   <MaterialCommunityIcons
                     name="delete"
