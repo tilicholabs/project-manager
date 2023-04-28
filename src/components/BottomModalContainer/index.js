@@ -6,7 +6,7 @@ import styles from './bottomModalContainerStyle';
 import {AppContext} from '../../context';
 import {SelectedMembers} from '../SelectMembers';
 import {Comments} from '../Comments';
-import {AddMember} from '../AddMember';
+import {AddMember, UpdateProfile} from '../UpdateProfile';
 
 export function BottomModalContainer() {
   const {state, dispatch} = useContext(AppContext);
@@ -53,8 +53,8 @@ export function BottomModalContainer() {
             </>
           ) : bottomModal === 'Comments' ? (
             <Comments />
-          ) : bottomModal === 'AddMember' ? (
-            <AddMember />
+          ) : bottomModal === 'UpdateProfile' ? (
+            <UpdateProfile />
           ) : null}
         </View>
       </SafeAreaView>

@@ -25,27 +25,23 @@ import {Loader} from '../../components/Loader';
 import {Modals} from '../../api/firebaseModal';
 
 export function Profile({navigation}) {
-  const {state, dispatch, user, members} = useContext(AppContext);
+  const {state, dispatch, members, user} = useContext(AppContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [text, setText] = useState('');
   const [text1, setTextone] = useState('');
+  const [cameraPhoto, setCameraPhoto] = useState();
+  const [userProfile, setUserProfile] = useState({});
   const [image, setImage] = useState('');
   const [isLoading, setIsLoading] = useState(true);
-  const [profile, setProfile] = useState({user_name: '', designation: ''});
-
-  // const {user} = state;
-
-  useEffect(() => {
-    const user_profile = members?.find(item => item?.id === user?.uid);
-    setProfile(prev => ({
-      user_name: user_profile?.user_name,
-      designation: user_profile?.designation,
-    }));
-  }, []);
 
   const handleBackButton = () => {
     navigation?.goBack();
   };
+
+  useEffect(() => {
+    const user_profile = members?.find(item => item?.id === user?.uid);
+    setUserProfile(user_profile);
+  }, []);
 
   const handleLogout = () => {
     auth()
@@ -158,14 +154,18 @@ export function Profile({navigation}) {
                     />
                   </TouchableOpacity>
                 </View>
-
-                <Text style={styles.nameText}>{profile?.user_name}</Text>
+                <Text style={styles.nameText}>{userProfile?.user_name}</Text>
                 <Text style={styles.designationText}>
-                  {profile?.designation}
+                  {userProfile?.designation}
                 </Text>
                 <TouchableOpacity
                   style={styles.editProfileWrapper}
-                  onPress={() => setIsModalOpen(true)}>
+                  onPress={() =>
+                    dispatch({
+                      type: 'toggleBottomModal',
+                      payload: {bottomModal: 'UpdateProfile'},
+                    })
+                  }>
                   <Text style={styles.editProfileText}>Edit Profile</Text>
                 </TouchableOpacity>
               </View>

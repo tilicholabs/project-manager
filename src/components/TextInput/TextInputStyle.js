@@ -4,11 +4,9 @@ import appTheme from '../../constants/colors';
 const styles = StyleSheet.create({
   textInput: {
     height: 40,
-    width: '90%',
     borderRadius: 5,
     borderColor: appTheme.INACTIVE_COLOR,
     borderWidth: 1,
-    // marginBottom: 20,
     fontSize: 16,
     paddingVertical: 5,
     paddingHorizontal: 7,
