@@ -94,8 +94,8 @@ export function TaskView() {
     firestore()
       .collection('sub_tasks')
       .where('parent_task_id', '==', selectedTask?.id)
-      .onSnapshot(document => {
-        const data = dataFormatter(document);
+      .onSnapshot(async document => {
+        const data = await dataFormatter(document);
         setSubTasks(data);
       });
     return () => setSelectedMembers([]);

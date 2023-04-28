@@ -1,4 +1,4 @@
-import React, {useState, useContext, useEffect} from 'react';
+import React, {useState, useContext, useEffect, useRef} from 'react';
 import {
   View,
   Text,
@@ -7,11 +7,11 @@ import {
   ScrollView,
   Image,
 } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import firestore from '@react-native-firebase/firestore';
+
 import ProgressCircle from 'react-native-progress-circle';
 import shortid from 'shortid';
-import DropDownPicker from 'react-native-dropdown-picker';
 import styles from './projectStyle';
 import {TabScreenHeader, TaskInfo} from '../../components';
 import {combineData} from '../../utils/DataHelper';
@@ -19,8 +19,8 @@ import {AppContext} from '../../context';
 import appTheme from '../../constants/colors';
 import ActionButton from 'react-native-action-button';
 import {Modals} from '../../api/firebaseModal';
-import {dataFormatter} from '../../utils/DataFormatter';
 import {Loader} from '../../components/Loader';
+import {dataFormatter} from '../../utils/DataFormatter';
 
 export function Project({navigation, route}) {
   const {
@@ -35,41 +35,22 @@ export function Project({navigation, route}) {
   } = useContext(AppContext);
   const [loading, setLoading] = useState(true);
   const [tasks, setTasks] = useState([]);
-  const tabs = ['All Tasks', 'Ongoing', 'Completed'];
+  const tabs = ['All Tasks', 'In Progress', 'Completed'];
   const {bottomModal} = state;
 
   const [data, setData] = useState({
-    activeTab: 'Task List',
+    activeTab: 'All Tasks',
   });
 
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(null);
-  const [items, setItems] = useState([
-    {label: 'Reject', value: 'All Tasks'},
-    {label: 'OnProgress', value: 'Ongoing'},
-    {label: 'Completed', value: 'Completed'},
-  ]);
-
-  // const getTasks = () => {
-  //   let tasksToRender = [];
-  //   if (!value || value === 'All Tasks') {
-  //     tasksToRender = tasks;
-  //   } else if (value === 'Ongoing') {
-  //     tasksToRender = tasks.filter(task => task.progress < 100) || [];
-  //   } else if (value === 'Completed') {
-  //     tasksToRender = tasks.filter(task => task.progress === 100) || [];
-  //   }
-
-  //   return tasksToRender;
-  // };
-
-  const handleBackButton = () => {
-    navigation?.goBack();
-  };
+  const totalTasks = useRef();
 
   const toggleTab = tab => {
     setData(combineData(data, {activeTab: tab}));
-    setValue(tab);
+    setTasks(
+      tab == 'All Tasks'
+        ? [...totalTasks?.current]
+        : totalTasks?.current?.filter(item => item?.status == tab),
+    );
   };
 
   const isActiveTab = tab => {
@@ -86,24 +67,36 @@ export function Project({navigation, route}) {
 
   const getProjectTasks = async id => {
     const data = await Modals.tasks.getProjectTasks(id);
-    const formattedData = dataFormatter(data);
-    setTasksFun(formattedData);
+    const formattedData = await dataFormatter(data);
+    setTasks(formattedData);
+    totalTasks.current = [...formattedData];
+    firestore()
+      .collection('tasks')
+      .where('project_id', '==', id)
+      .onSnapshot(async document => {
+        const data = await dataFormatter(document);
+        setTasks(data);
+        totalTasks.current = [...data];
+      });
     setLoading(false);
     return data;
-  };
-
-  const setTasksFun = data => {
-    setTasks(data);
   };
 
   useEffect(() => {
     setSelectedProject(prev => ({
       ...prev,
-      selectedMembers: [...prev.selectedMembers, ...selectedMembers],
+      selectedMembers: [
+        ...(Array?.isArray(prev?.selectedMembers) ? prev?.selectedMembers : []),
+        ...selectedMembers,
+      ],
     }));
-    getProjectTasks(selectedProject?.id);
+
     setSelectedMembers([]);
   }, [bottomModal]);
+
+  useEffect(() => {
+    getProjectTasks(selectedProject?.id);
+  }, []);
 
   useEffect(() => {
     return () => setIsProjectSelected(false);
@@ -118,6 +111,31 @@ export function Project({navigation, route}) {
 
     return result;
   };
+
+  const completedTasks = (
+    Array?.isArray(totalTasks?.current) ? totalTasks?.current : []
+  )?.filter(item => item?.status == 'Completed');
+
+  const percent = Math?.round(
+    (completedTasks?.length / totalTasks?.current?.length) * 100,
+  );
+
+  useEffect(() => {
+    if (percent == 100 && selectedProject?.status != 'Completed') {
+      Modals.projects.update(selectedProject?.id, {status: 'Completed'});
+      setSelectedProject(prv => ({...prv, status: 'Completed'}));
+    } else if (percent == 0 && selectedProject?.status != 'Not Started') {
+      Modals.projects.update(selectedProject?.id, {status: 'Not Started'});
+      setSelectedProject(prv => ({...prv, status: 'Not Started'}));
+    } else if (
+      selectedProject?.status != 'In progess' &&
+      percent > 0 &&
+      percent < 100
+    ) {
+      Modals.projects.update(selectedProject?.id, {status: 'In progess'});
+      setSelectedProject(prv => ({...prv, status: 'In progess'}));
+    }
+  }, [completedTasks]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -157,15 +175,13 @@ export function Project({navigation, route}) {
           <View style={styles.projectTeamAndProgress}>
             <View style={styles.projectProgressWrapper}>
               <ProgressCircle
-                percent={0}
+                percent={percent}
                 radius={50}
                 borderWidth={10}
                 color="#6AC67E"
                 shadowColor="#f4f4f4"
                 bgColor="#fff">
-                <Text style={styles.projectProgress}>
-                  {selectedProject?.percent}%
-                </Text>
+                <Text style={styles.projectProgress}>{percent}%</Text>
               </ProgressCircle>
             </View>
             <View>
@@ -197,8 +213,7 @@ export function Project({navigation, route}) {
               </View>
             </View>
           </View>
-          <DropDownPicker
-            placeholder="All Tasks"
+          {/* <DropDownPicker
             placeholderStyle={{fontSize: 15}}
             open={open}
             value={value}
@@ -220,7 +235,7 @@ export function Project({navigation, route}) {
             labelStyle={{
               fontSize: 15,
             }}
-          />
+          /> */}
           <Text style={styles.projectStatus}>{selectedProject?.status}</Text>
         </View>
         <View style={styles.projectBody}>
@@ -247,95 +262,8 @@ export function Project({navigation, route}) {
               </TouchableOpacity>
             ))}
           </View>
-          {/* {data?.activeTab === 'Task List' ? (
-            <>
-              <View style={styles.tasksHeader}>
-                <TouchableOpacity
-                  style={styles.tasksRow}
-                  onPress={() => handleCreateTask()}>
-                  <Text style={styles.tasksLeftText}>Add Task</Text>
-                  <View style={styles.plusBtnContainer2}>
-                    <MaterialCommunityIcons
-                      name="plus"
-                      size={19}
-                      color="#fff"
-                    />
-                  </View>
-                </TouchableOpacity>
-                <DropDownPicker
-                  placeholder="All Tasks"
-                  placeholderStyle={{fontSize: 15}}
-                  open={open}
-                  value={value}
-                  items={items}
-                  setOpen={setOpen}
-                  setValue={setValue}
-                  setItems={setItems}
-                  containerStyle={{
-                    width: 130,
-                  }}
-                  style={{
-                    borderColor: 'transparent',
-                    backgroundColor: 'transparent',
-                  }}
-                  dropDownContainerStyle={{
-                    backgroundColor: '#fff',
-                    borderColor: 'transparent',
-                  }}
-                  labelStyle={{
-                    fontSize: 15,
-                  }}
-                />
-              </View>
-              <View style={styles.bottomContainer}>
-                <ScrollView showsVerticalScrollIndicator={false}>
-                  <View style={styles.bottomContent}>
-                    {getTasks()?.map(task => (
-                      <TaskInfo task={task} key={shortid.generate()} />
-                    ))}
-                  </View>
-                </ScrollView>
-              </View>
-            </>
-          ) : data?.activeTab === 'File' ? (
-            <></>
-          ) : null} */}
 
           <>
-            <View style={styles.tasksHeader}>
-              {/* <TouchableOpacity
-                style={styles.tasksRow}
-                onPress={() => handleCreateTask()}>
-                <Text style={styles.tasksLeftText}>Add Task</Text>
-                <View style={styles.plusBtnContainer2}>
-                  <MaterialCommunityIcons name="plus" size={19} color="#fff" />
-                </View>
-              </TouchableOpacity> */}
-              {/* <DropDownPicker
-                placeholder="All Tasks"
-                placeholderStyle={{fontSize: 15}}
-                open={open}
-                value={value}
-                items={items}
-                setOpen={setOpen}
-                setValue={setValue}
-                setItems={setItems}
-                containerStyle={{
-                  width: 130,
-                }}
-                style={{
-                  borderColor: 'transparent',
-                  backgroundColor: 'transparent',
-                }}
-                dropDownContainerStyle={{
-                  backgroundColor: '#fff',
-                  borderColor: 'transparent',
-                }}
-                labelStyle={{
-                  fontSize: 15,
-                }}
-              /> */}
-            </View>
             <View style={styles.bottomContainer}>
               <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={styles.bottomContent}>
@@ -344,7 +272,7 @@ export function Project({navigation, route}) {
                       <Loader />
                     </View>
                   ) : (
-                    tasks?.map(task => (
+                    (Array?.isArray(tasks) ? tasks : [])?.map(task => (
                       <TaskInfo task={task} key={shortid.generate()} />
                     ))
                   )}

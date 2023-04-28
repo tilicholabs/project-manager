@@ -9,10 +9,8 @@ import {
   Modal,
   PermissionsAndroid,
 } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Fontisto from 'react-native-vector-icons/Fontisto';
-import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import auth from '@react-native-firebase/auth';
 import styles from './profileStyle';
 import appTheme from '../../constants/colors';
 import {AppContext} from '../../context';
@@ -20,9 +18,7 @@ import {TabScreenHeader} from '../../components';
 import {navigateToNestedRoute} from '../../navigators/RootNavigation';
 import {getScreenParent} from '../../utils/NavigationHelper';
 import {TextInput} from 'react-native-paper';
-import {FontAwesome} from 'react-native-vector-icons/FontAwesome';
-import ImagePicker from 'react-native-image-picker';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import {launchImageLibrary} from 'react-native-image-picker';
 
 export function Profile({navigation}) {
   const {state, dispatch} = useContext(AppContext);
@@ -74,26 +70,6 @@ export function Profile({navigation}) {
         launchImageLibrary({}, response => {
           console.log(response);
         });
-
-        // ImagePicker.launchImageLibrary(options, response => {
-        //   console.log('Response = ', response);
-
-        //   if (response.didCancel) {
-        //     console.log('User cancelled image picker');
-        //   } else if (response.error) {
-        //     console.log('ImagePicker Error: ', response.error);
-        //   } else if (response.customButton) {
-        //     console.log('User tapped custom button: ', response.customButton);
-        //     alert(response.customButton);
-        //   } else {
-        //     let source = response;
-        //     // You can also display the image using data:
-        //     // let source = {
-        //     //   uri: 'data:image/jpeg;base64,' + response.data
-        //     // };
-        //     setFilePath(source);
-        //   }
-        // });
       }
     } catch (e) {
       console.log(e);
@@ -116,26 +92,32 @@ export function Profile({navigation}) {
                 <Text style={styles.statisticsText}>135</Text>
                 <Text style={styles.statisticsTitle}>Completed Tasks</Text>
               </View>
-              <Image
-                style={styles.profilePhoto}
-                source={{
-                  uri: user?.photo,
-                }}
-              />
-              <View>
-                <TouchableOpacity onPress={() => uploadImage()}>
-                  <MaterialCommunityIcons
-                    name="camera"
-                    size={20}
-                    color={'blue'}
+              <View style={{alignItems: 'center'}}>
+                <View style={{position: 'relative'}}>
+                  <Image
+                    style={styles.profilePhoto}
+                    source={{
+                      uri: user?.photo,
+                    }}
                   />
+                  <TouchableOpacity
+                    onPress={() => uploadImage()}
+                    style={{position: 'absolute', bottom: 18, right: 0}}>
+                    <MaterialCommunityIcons
+                      name="camera"
+                      size={25}
+                      color={appTheme?.PRIMARY_COLOR}
+                      style={{backgroundColor: 'white', borderRadius: 6}}
+                    />
+                  </TouchableOpacity>
+                </View>
+                <Text style={styles.nameText}>{user?.name}</Text>
+                <Text style={styles.designationText}>{user?.designation}</Text>
+                <TouchableOpacity
+                  style={styles.editProfileWrapper}
+                  onPress={() => setIsModalOpen(true)}>
+                  <Text style={styles.editProfileText}>Edit Profile</Text>
                 </TouchableOpacity>
-                <Image
-                  style={styles.profilePhoto}
-                  source={{
-                    uri: cameraPhoto,
-                  }}
-                />
               </View>
               <View style={styles.statisticsContainer}>
                 <Text style={styles.statisticsText}>20</Text>
@@ -143,13 +125,6 @@ export function Profile({navigation}) {
               </View>
             </View>
             <View style={styles.profileCenterSection}>
-              <Text style={styles.nameText}>{user?.name}</Text>
-              <Text style={styles.designationText}>{user?.designation}</Text>
-              <TouchableOpacity
-                style={styles.editProfileWrapper}
-                onPress={() => setIsModalOpen(true)}>
-                <Text style={styles.editProfileText}>Edit Profile</Text>
-              </TouchableOpacity>
               <Modal
                 animationType={'slide'}
                 visible={isModalOpen}
@@ -179,14 +154,11 @@ export function Profile({navigation}) {
           </View>
           <View style={styles.exploreSection}>
             <TouchableOpacity
-              style={[
-                styles.singleExplore,
-                {marginRight: 'auto', marginLeft: '2%'},
-              ]}
+              style={[styles.singleExplore]}
               onPress={handleLogout}>
               <MaterialCommunityIcons
                 name="logout"
-                size={22}
+                size={25}
                 color={appTheme.COLOR1}
               />
               <Text style={styles.exploreText}>Log out</Text>

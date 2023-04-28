@@ -57,7 +57,6 @@ export function CreateTask({subTask = false}) {
       });
     }
     setSelectedMembers([]);
-    setSelectedProject();
     dispatch({
       type: 'toggleBottomModal',
       payload: {bottomModal: ''},
@@ -145,7 +144,7 @@ export function CreateTask({subTask = false}) {
         open={modalOpen}
         intialDate={data?.due_date || new Date()}
         onClose={() => setModalOpen(false)}
-        childrenStyle={{marginTop: 100}}
+        childrenStyle={{marginTop: 150}}
         {...{newDateCallBack: dateHandler}}
       />
     </View>

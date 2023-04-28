@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useRef} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {View, Text, Image, TouchableOpacity} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import ProgressCircle from 'react-native-progress-circle';
@@ -9,6 +9,7 @@ import {navigateToNestedRoute} from '../../../navigators/RootNavigation';
 import {getScreenParent} from '../../../utils/NavigationHelper';
 import {AppContext} from '../../../context';
 import {Modals} from '../../../api/firebaseModal';
+import {dataFormatter} from '../../../utils/DataFormatter';
 
 export function ProjectCard({project, navigation}) {
   const {
@@ -21,6 +22,8 @@ export function ProjectCard({project, navigation}) {
     setSelectedMembers,
   } = useContext(AppContext);
   const {bottomModal} = state;
+
+  const [percentage, setPercentage] = useState(0);
 
   const handleNavigation = (screen, params) => {
     setIsProjectSelected(true);
@@ -54,6 +57,26 @@ export function ProjectCard({project, navigation}) {
       addTeamHandler();
     }
   }, [bottomModal]);
+
+  // const percent = Math?.round(
+  //   (completedTasks?.length / totalTasks?.current?.length) * 100,
+  // );
+
+  const getPercentage = async () => {
+    const data = await Modals.tasks.getProjectTasks(project?.id);
+    const formattedData = await dataFormatter(data);
+    const completedTasks = (
+      Array?.isArray(formattedData) ? formattedData : []
+    )?.filter(item => item?.status == 'Completed');
+    const percent = Math?.round(
+      (completedTasks?.length / formattedData?.length) * 100,
+    );
+    setPercentage(percent);
+  };
+
+  useEffect(() => {
+    getPercentage();
+  }, []);
 
   return (
     <TouchableOpacity
@@ -93,13 +116,13 @@ export function ProjectCard({project, navigation}) {
           </View>
         </View>
         <ProgressCircle
-          percent={project?.percent}
+          percent={percentage}
           radius={40}
           borderWidth={8}
           color="#6AC67E"
           shadowColor="#f4f4f4"
           bgColor="#fff">
-          <Text style={styles.projectProgress}>{project?.percent}%</Text>
+          <Text style={styles.projectProgress}>{percentage}%</Text>
         </ProgressCircle>
       </View>
       <View style={styles.rowJustifyBetween}>

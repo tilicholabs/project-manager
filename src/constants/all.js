@@ -21,8 +21,8 @@ export const dashboardDetails = [
   },
   {
     icon: 'heart-outline',
-    status: 'Favourites',
+    status: 'Not started',
     count: '35',
-    bg: 'red',
+    bg: appTheme?.INACTIVE_COLOR,
   },
 ];

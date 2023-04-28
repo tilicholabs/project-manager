@@ -12,6 +12,8 @@ import {
   SafeAreaView,
   FlatList,
 } from 'react-native';
+import firestore from '@react-native-firebase/firestore';
+
 import shortid from 'shortid';
 import styles from './projectsStyle';
 import {AppContext} from '../../context';
@@ -30,6 +32,7 @@ import {navigateToNestedRoute} from '../../navigators/RootNavigation';
 import {getScreenParent} from '../../utils/NavigationHelper';
 import {useFocusEffect} from '@react-navigation/core';
 import {Loader} from '../../components/Loader';
+import {dataFormatter} from '../../utils/DataFormatter';
 
 export function Projects({navigation}) {
   const tabs = ['All', 'Ongoing', 'Completed'];
@@ -56,7 +59,7 @@ export function Projects({navigation}) {
       });
       setProjectData(result);
     } else {
-      setProjectDataFun(allProjectData?.current);
+      setProjectData(allProjectData?.current);
     }
     setData(combineData(data, {activeTab: tab}));
   };
@@ -104,14 +107,6 @@ export function Projects({navigation}) {
     });
   };
 
-  const getProjects = async () => {
-    const data = await Modals.projects.getUserProjects(user?.uid);
-    console.log(data);
-    const result = await addPercentParameter(data);
-    setLoading(false);
-    return result;
-  };
-
   const addPercentParameter = async arr => {
     const result = await Promise.all(
       arr.map(async item => {
@@ -123,50 +118,35 @@ export function Projects({navigation}) {
     return result;
   };
 
+  const getProjects = async () => {
+    const data = await Modals.projects.getUserProjects(user?.uid);
+    const result = await addPercentParameter(data);
+    setProjectData(result);
+    setLoading(false);
+
+    firestore()
+      .collection('projects')
+      .where('selectedMembers', 'array-contains', user?.uid)
+      .onSnapshot(async document => {
+        const data = dataFormatter(document);
+        if (data?._z) {
+          const result = await addPercentParameter(data);
+          setProjectData(result);
+        }
+      });
+  };
+
   useEffect(() => {
     api();
+    getProjects();
   }, []);
-
-  const setProjectDataFun = data => {
-    setProjectData(data);
-  };
-
-  const getProjectsData = async () => {
-    const result = await getProjects();
-    allProjectData.current = result;
-    setProjectDataFun(result);
-  };
 
   const leftComponent = () => (
     <Text style={{fontSize: 20, fontWeight: 'bold'}}>Projects</Text>
   );
 
-  useFocusEffect(() => {
-    getProjectsData();
-  });
-
-  return loading ? (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <Loader />
-    </View>
-  ) : (
+  return (
     <SafeAreaView style={styles.container}>
-      {/* <ActionButton buttonColor={appTheme?.PRIMARY_COLOR} style={{zIndex: 1}}>
-        <ActionButton.Item
-          buttonColor="#9b59b6"
-          title="New Task"
-          useNativeDriver={false}
-          onPress={() => handleCreateTask()}>
-          <MaterialCommunityIcons name={'clock-outline'} />
-        </ActionButton.Item>
-        <ActionButton.Item
-          buttonColor="#3498db"
-          title="New Project"
-          useNativeDriver={false}
-          onPress={() => handleCreateProject()}>
-          <MaterialCommunityIcons name={'file-check-outline'} />
-        </ActionButton.Item>
-      </ActionButton> */}
       <TabScreenHeader {...{leftComponent, isBackButtonPresent: true}} />
       <ActionButton
         buttonColor={appTheme?.PRIMARY_COLOR}
@@ -179,46 +159,46 @@ export function Projects({navigation}) {
           );
         }}
       />
-
-      {/* <TabScreenHeader
-        leftComponent={() => <Text style={styles.headerTitle}>Projects</Text>}
-        isSearchBtnVisible={true}
-        isMoreBtnVisible={true}
-      /> */}
-      <View style={styles.projectsBody}>
-        <View style={styles.projectsTabs}>
-          {tabs?.map(tab => (
-            <TouchableOpacity
-              style={[
-                styles.projectTab,
-                isActiveTab(tab) ? styles.activeProjectTab : null,
-              ]}
-              onPress={() => toggleTab(tab)}
-              key={shortid.generate()}>
-              <Text
-                style={[
-                  styles.projectTabText,
-                  isActiveTab(tab)
-                    ? styles.activeProjectTabText
-                    : styles.inActiveProjectTabText,
-                ]}>
-                {tab}
-              </Text>
-            </TouchableOpacity>
-          ))}
+      {loading ? (
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <Loader />
         </View>
-        {projects?.length > 0 ? (
-          <FlatList
-            data={projectData}
-            keyExtractor={(item, index) => shortid.generate()}
-            renderItem={renderProjectInfo}
-            horizontal={false}
-            showsVerticalScrollIndicator={false}
-          />
-        ) : (
-          <EmptyListComponent />
-        )}
-      </View>
+      ) : (
+        <View style={styles.projectsBody}>
+          <View style={styles.projectsTabs}>
+            {tabs?.map(tab => (
+              <TouchableOpacity
+                style={[
+                  styles.projectTab,
+                  isActiveTab(tab) ? styles.activeProjectTab : null,
+                ]}
+                onPress={() => toggleTab(tab)}
+                key={shortid.generate()}>
+                <Text
+                  style={[
+                    styles.projectTabText,
+                    isActiveTab(tab)
+                      ? styles.activeProjectTabText
+                      : styles.inActiveProjectTabText,
+                  ]}>
+                  {tab}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+          {projects?.length > 0 ? (
+            <FlatList
+              data={projectData}
+              keyExtractor={(item, index) => shortid.generate()}
+              renderItem={renderProjectInfo}
+              horizontal={false}
+              showsVerticalScrollIndicator={false}
+            />
+          ) : (
+            <EmptyListComponent />
+          )}
+        </View>
+      )}
     </SafeAreaView>
   );
 }
