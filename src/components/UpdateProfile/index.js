@@ -18,7 +18,7 @@ export const UpdateProfile = () => {
   const [FormValidator, setFormValidator] = useState(false);
 
   useEffect(() => {
-    const profile_user = members?.find(item => item?.id === user?.uid);
+    const profile_user = members?.find(item => item?.id === user?.id);
     current_user.current = profile_user;
     setMemberDetails(prev => ({
       ...prev,
@@ -163,11 +163,10 @@ export const UpdateProfile = () => {
           },
         }}
         onPress={async () => {
-          console.log('click');
           // Linking.openURL(
           //   `mailto:${memberDetails?.email}?subject=SendMail&body=URL: https://example.com`,
           // );
-          await Modals.users.update(user?.uid, memberDetails);
+          await Modals.users.update(user?.id, memberDetails);
           // dispatch({
           //   type: 'members',
           //   payload: {memberDetails: memberDetails},

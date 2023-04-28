@@ -136,7 +136,7 @@ export function Members() {
       ) : (
         <EmptyListComponent />
       )}
-      <AddIcon
+      {/* <AddIcon
         style={{
           position: 'absolute',
           bottom: 10,
@@ -146,7 +146,7 @@ export function Members() {
           backgroundColor: colors.PRIMARY_COLOR,
         }}
         onPress={handleAddMember}
-      />
+      /> */}
     </SafeAreaView>
   );
 }

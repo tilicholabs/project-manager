@@ -29,7 +29,7 @@ export const Comments = () => {
     await Modals.comments.set({
       title: comment.current,
       task_id: selectedTask?.id,
-      commenter_id: user?.uid,
+      commenter_id: user?.id,
       created_at: getTime(),
     });
     setLoading(false);
@@ -44,8 +44,8 @@ export const Comments = () => {
     firestore()
       .collection('comments')
       .where('task_id', '==', selectedTask?.id)
-      .onSnapshot(snap => {
-        const data = dataFormatter(snap);
+      .onSnapshot(async snap => {
+        const data = await dataFormatter(snap);
         setTaskComments(data);
       });
   }, []);
@@ -58,11 +58,11 @@ export const Comments = () => {
     <View style={styles.commentsContainer}>
       <Text style={styles.commentsText}>Comments</Text>
       <ScrollView>
-        {taskComments?.map(item => (
-          <View style={styles.displayComments}>
+        {taskComments?.map((item, index) => (
+          <View key={index} style={styles.displayComments}>
             <View style={styles.commentHeader}>
               <Text style={styles.personNameText}>
-                {item?.commenter_id === user?.uid ? (
+                {item?.commenter_id === user?.id ? (
                   <Text style={{color: '#644CBC'}}>You</Text>
                 ) : (
                   <Text style={{color: '#60C877'}}>

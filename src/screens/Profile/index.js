@@ -25,23 +25,9 @@ import {Loader} from '../../components/Loader';
 import {Modals} from '../../api/firebaseModal';
 
 export function Profile({navigation}) {
-  const {state, dispatch, members, user} = useContext(AppContext);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [text, setText] = useState('');
-  const [text1, setTextone] = useState('');
-  const [cameraPhoto, setCameraPhoto] = useState();
-  const [userProfile, setUserProfile] = useState({});
+  const {state, dispatch, user} = useContext(AppContext);
   const [image, setImage] = useState('');
   const [isLoading, setIsLoading] = useState(true);
-
-  const handleBackButton = () => {
-    navigation?.goBack();
-  };
-
-  useEffect(() => {
-    const user_profile = members?.find(item => item?.id === user?.uid);
-    setUserProfile(user_profile);
-  }, []);
 
   const handleLogout = () => {
     auth()
@@ -61,7 +47,7 @@ export function Profile({navigation}) {
   };
   const uploadImage = async () => {
     setIsLoading(false);
-    const reference = storage().ref(user.uid);
+    const reference = storage().ref(user.id);
     try {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.CAMERA,
@@ -94,9 +80,9 @@ export function Profile({navigation}) {
             const pathToFile = response?.uri;
             await reference.putFile(pathToFile);
             // fetch profileurl from storage
-            const url = await storage().ref(user?.uid).getDownloadURL();
+            const url = await storage().ref(user?.id).getDownloadURL();
             setImage(url);
-            await Modals.users.update(user?.uid, {profile_image: url});
+            await Modals.users.update(user?.id, {profile_image: url});
             setIsLoading(true);
           }
         });
@@ -106,6 +92,12 @@ export function Profile({navigation}) {
     }
   };
 
+  const editProfile = () => {
+    dispatch({
+      type: 'toggleBottomModal',
+      payload: {bottomModal: 'EditProfile'},
+    });
+  };
   return (
     <SafeAreaView style={styles.container}>
       <TabScreenHeader
@@ -125,23 +117,29 @@ export function Profile({navigation}) {
               </View>
               <View style={{alignItems: 'center'}}>
                 <View style={{position: 'relative'}}>
-                  {!isLoading ? (
-                    <Loader />
-                  ) : image.length === 0 ? (
-                    // TODO put empty image
-                    <Image
-                      style={styles.profilePhoto}
-                      source={{
-                        uri: 'https://images.unsplash.com/photo-1610261003803-224ee66747e1?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTl8fHdvbWVuJTIwcHJvZmlsZSUyMHBob3RvfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
-                      }}
-                    />
-                  ) : (
+                  {image?.length > 0 ? (
                     <Image
                       style={styles.profilePhoto}
                       source={{
                         uri: image,
                       }}
                     />
+                  ) : (
+                    <View
+                      style={{
+                        justifyContent: 'center',
+                        display: 'flex',
+                        alignItems: 'center',
+                        backgroundColor: '#60C877',
+                        height: 80,
+                        width: 80,
+                        borderRadius: 50,
+                        marginBottom: 20,
+                      }}>
+                      <Text style={{fontSize: 24, fontWeight: 'bold'}}>
+                        {user?.user_name[0].toUpperCase()}
+                      </Text>
+                    </View>
                   )}
                   <TouchableOpacity
                     onPress={() => uploadImage()}
@@ -154,18 +152,11 @@ export function Profile({navigation}) {
                     />
                   </TouchableOpacity>
                 </View>
-                <Text style={styles.nameText}>{userProfile?.user_name}</Text>
-                <Text style={styles.designationText}>
-                  {userProfile?.designation}
-                </Text>
+                <Text style={styles.nameText}>{user?.user_name}</Text>
+                <Text style={styles.designationText}>{user?.designation}</Text>
                 <TouchableOpacity
                   style={styles.editProfileWrapper}
-                  onPress={() =>
-                    dispatch({
-                      type: 'toggleBottomModal',
-                      payload: {bottomModal: 'UpdateProfile'},
-                    })
-                  }>
+                  onPress={editProfile}>
                   <Text style={styles.editProfileText}>Edit Profile</Text>
                 </TouchableOpacity>
               </View>
@@ -173,33 +164,6 @@ export function Profile({navigation}) {
                 <Text style={styles.statisticsText}>20</Text>
                 <Text style={styles.statisticsTitle}>Ongoing Tasks</Text>
               </View>
-            </View>
-            <View style={styles.profileCenterSection}>
-              <Modal
-                animationType={'slide'}
-                visible={isModalOpen}
-                onRequestClose={() => setIsModalOpen(false)}
-                style={{backgroundColor: 'red'}}>
-                <View style={styles.inputContainer}>
-                  <Text style={styles.labels}>Enter Your Name</Text>
-                  <TextInput
-                    style={styles.inputStyle}
-                    onChangeText={newText => setText(newText)}
-                    defaultValue={text}
-                  />
-                  <Text style={styles.labels}>Enter Your Designation</Text>
-                  <TextInput
-                    style={styles.inputStyle}
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    onChangeText={newText1 => setText(newText1)}
-                    defaultValue={text1}
-                  />
-                  <TouchableOpacity style={styles.button}>
-                    <Text style={styles.text}>Submit</Text>
-                  </TouchableOpacity>
-                </View>
-              </Modal>
             </View>
           </View>
           <View style={styles.exploreSection}>

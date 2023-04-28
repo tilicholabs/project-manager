@@ -73,7 +73,6 @@ export function Login({navigation}) {
       auth()
         .signInWithEmailAndPassword(formData.email, formData.password)
         .then(user => {
-          console.log(user);
           setUser(user?.user);
           navigation.reset({
             index: 0,

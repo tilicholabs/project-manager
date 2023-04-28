@@ -50,7 +50,7 @@ const projectState = {
       progress: 28,
       createdAt: 'Jan 17 2021',
       tasks: 24,
-      status: 'completed',
+      status: 'Completed',
     },
     {
       id: 3,

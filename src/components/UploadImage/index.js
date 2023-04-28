@@ -147,7 +147,7 @@ export const UploadImage = () => {
         maxWidth: 200,
       },
       response => {
-        console.log(response);
+        // console.log(response);
         // this.setState({resourcePath: response});
       },
     );

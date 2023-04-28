@@ -4,7 +4,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/Ionicons';
 import {goBack} from '../../../navigators/RootNavigation';
 
 export function TabScreenHeader({
-  leftComponent,
+  leftComponent = () => {},
   style = {},
   isBackButtonPresent = true,
 }) {

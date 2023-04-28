@@ -27,9 +27,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderTopLeftRadius: 60,
     borderTopRightRadius: 60,
-    paddingTop: 16,
-    paddingHorizontal: 20,
-    paddingBottom: 10,
+
     display: 'flex',
     shadowColor: '#000',
     shadowOffset: {

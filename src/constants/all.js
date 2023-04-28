@@ -9,7 +9,7 @@ export const dashboardDetails = [
   },
   {
     icon: 'clock-outline',
-    status: 'In progress',
+    status: 'In Progress',
     count: '35',
     bg: 'orange',
   },
