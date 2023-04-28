@@ -22,11 +22,12 @@ import {CustomDatePicker} from '../../CustomDatePicker';
 export function CreateTask({subTask = false}) {
   const {
     dispatch,
-    task,
+    selectedTask,
     selectedMembers,
     setSelectedMembers,
     selectedProject,
     setSelectedProject,
+    isProjectSelected,
   } = useContext(AppContext);
   const [data, setData] = useState({
     title: '',
@@ -39,7 +40,7 @@ export function CreateTask({subTask = false}) {
     if (subTask) {
       await Modals.subTasks.set({
         title: data?.title || '',
-        parent_task_id: task?.id || '',
+        parent_task_id: selectedTask?.id || '',
         status: 'Not started',
         team: selectedMembers || [],
         created_at: getTime(),
@@ -72,13 +73,6 @@ export function CreateTask({subTask = false}) {
       selectedMembers?.length > 0 &&
       data?.description !== '' &&
       selectedProject;
-
-  useEffect(() => {
-    return () => {
-      setSelectedMembers([]);
-      setSelectedProject();
-    };
-  }, []);
 
   return (
     <View style={styles.container}>
@@ -121,7 +115,7 @@ export function CreateTask({subTask = false}) {
           </>
         )}
 
-        {!subTask && !selectedProject && (
+        {!subTask && !isProjectSelected && (
           <View style={styles.teamTextWrapper}>
             <Text style={styles.teamText}>Select Project</Text>
             <ProjectsListing />

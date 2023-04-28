@@ -14,31 +14,32 @@ import shortid from 'shortid';
 import ProgressCircle from 'react-native-progress-circle';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import styles from './taskViewStyle';
-import {combineData} from '../../utils/DataHelper';
 import {AppContext} from '../../context';
 import appTheme from '../../constants/colors';
 import {AddIcon} from '../../components';
-import {
-  Menu,
-  MenuOptions,
-  MenuOption,
-  MenuTrigger,
-} from 'react-native-popup-menu';
-import {statusColors, taskStatusOptions} from '../../constants/constants';
 import firestore from '@react-native-firebase/firestore';
 import {Modals} from '../../api/firebaseModal';
 import {dataFormatter} from '../../utils/DataFormatter';
+import {StatusPopUp} from '../../components/StatusPopUp';
+import moment from 'moment/moment';
+import {Loader} from '../../components/Loader';
 import DatePicker from 'react-native-date-picker';
 import {CustomDatePicker} from '../../components/CustomDatePicker';
 
 export function TaskView() {
-  const {state, dispatch, selectedTask, setSelectedTask} =
-    useContext(AppContext);
-
-  const [subTasks, setSubTasks] = useState({});
+  const {
+    state,
+    dispatch,
+    selectedTask,
+    members,
+    selectedMembers,
+    setSelectedTask,
+    setSelectedMembers,
+  } = useContext(AppContext);
+  const [subTasks, setSubTasks] = useState([]);
+  const {bottomModal} = state;
   const [modalOpen, setModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -46,7 +47,6 @@ export function TaskView() {
     const currentDate = selectedDate;
     setShow(false);
   };
-
   const handleCreateTask = () => {
     dispatch({
       type: 'toggleBottomModal',
@@ -68,6 +68,22 @@ export function TaskView() {
     });
   };
 
+  const statusUpateHandler = async (id, status) => {
+    setLoading(true);
+    const completedTasks = subTasks?.filter(
+      item => item?.status === 'Completed',
+    );
+    if (completedTasks !== subTasks?.length) {
+      await Modals.tasks.update(selectedTask?.id, {status: 'In Progress'});
+      setSelectedTask(prev => ({...prev, status: 'In Progress'}));
+    }
+    if (completedTasks === subTasks?.length) {
+      await Modals.tasks.update(selectedTask?.id, {status: 'Completed'});
+      setSelectedTask(prev => ({...prev, status: 'Completed'}));
+    }
+    await Modals.subTasks.update(id, {status: status});
+    setLoading(false);
+  };
   const dateHandler = date => {
     const due_date = JSON?.stringify(date);
     setSelectedTask(prv => ({...prv, due_date}));
@@ -77,12 +93,68 @@ export function TaskView() {
   useEffect(() => {
     firestore()
       .collection('sub_tasks')
+      .where('parent_task_id', '==', selectedTask?.id)
       .onSnapshot(document => {
         const data = dataFormatter(document);
         setSubTasks(data);
       });
+    return () => setSelectedMembers([]);
   }, []);
 
+  const progressHandler = () => {
+    if (selectedTask?.status === 'Completed') {
+      return 100;
+    } else if (subTasks?.length === 0) {
+      return 0;
+    } else {
+      const completedTasks = subTasks?.filter(
+        item => item?.status === 'Completed',
+      );
+      return (completedTasks?.length / subTasks?.length).toFixed(2) * 100;
+    }
+  };
+
+  const teamHandler = async () => {
+    setSelectedTask(prev => ({
+      ...prev,
+      team: [...prev.team, ...selectedMembers],
+    }));
+    await Modals.tasks.update(selectedTask?.id, {
+      team: [...selectedTask?.team, ...selectedMembers],
+    });
+    dispatch({
+      type: 'toggleBottomModal',
+      payload: {bottomModal: null},
+    });
+  };
+
+  const allSubTasksHandler = async () => {
+    if (subTasks?.length > 0) {
+      if (selectedTask?.status === 'Completed') {
+        setLoading(true);
+        await Promise.all(
+          subTasks?.map(async item => {
+            await statusUpateHandler(item?.id, 'Completed');
+          }),
+        );
+        setLoading(false);
+      }
+    }
+  };
+
+  useEffect(() => {
+    allSubTasksHandler();
+  }, [subTasks]);
+
+  useEffect(() => {
+    progressHandler();
+  }, [subTasks]);
+
+  useEffect(() => {
+    if (bottomModal === 'closeSelectMembers') {
+      teamHandler();
+    }
+  }, [bottomModal]);
   const findDate = new Date(JSON?.parse(selectedTask?.due_date));
 
   const date = `${findDate?.getDate()}-${
@@ -91,7 +163,7 @@ export function TaskView() {
 
   return loading ? (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <Text>loading</Text>
+      <Loader />
     </View>
   ) : (
     <View style={{flex: 1, backgroundColor: '#fafafa'}}>
@@ -101,39 +173,63 @@ export function TaskView() {
         <View style={styles.topWrapper}>
           <View style={styles.taskProgressWrapper}>
             <ProgressCircle
-              percent={selectedTask?.progress}
+              percent={progressHandler() || 0}
               radius={30}
               borderWidth={7}
               color="#6AC67E"
               shadowColor="#f4f4f4"
               bgColor="#fff">
-              <Text style={styles.taskProgress}>{selectedTask?.progress}%</Text>
+              <Text style={styles.taskProgress}>{progressHandler() || 0}%</Text>
             </ProgressCircle>
           </View>
           <Text style={styles.taskTitle}>{selectedTask?.title}</Text>
         </View>
         <Text style={styles.dueDateText}>Due Date - Today</Text>
-        <Text style={styles.statusText}>Status - Completed</Text>
+        <Text style={styles.statusText}>{`Status - ${
+          progressHandler() === 100 ? 'Completed' : 'In progress'
+        }`}</Text>
         <Text style={styles.taskTeamText}>Team</Text>
         <View style={styles.taskMembersWrapper}>
-          {selectedTask?.members?.map(member => (
-            <Image
-              key={shortid.generate()}
-              style={styles.taskMemberPhoto}
-              source={{uri: member?.photo}}
-            />
-          ))}
-          <AddIcon style={{marginLeft: -10}} onPress={handleAddTeamMember} />
+          {members?.map(member => {
+            return selectedTask?.team?.includes(member?.id) ? (
+              member?.photo_url ? (
+                <Image
+                  key={shortid.generate()}
+                  style={styles.taskMemberPhoto}
+                  source={{uri: member?.photo}}
+                />
+              ) : (
+                <View
+                  style={{
+                    ...styles.taskMemberPhoto,
+                    ...{
+                      backgroundColor: '#644CBC',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      shadowColor: 'black',
+                      shadowOffset: {
+                        height: 0,
+                        width: 1,
+                      },
+                      elevation: 1,
+                    },
+                  }}
+                  key={shortid.generate()}>
+                  <Text
+                    style={{fontSize: 15, fontWeight: 'bold', color: '#fff'}}>
+                    {member?.user_name[0]}
+                  </Text>
+                </View>
+              )
+            ) : null;
+          })}
+          <AddIcon
+            style={{marginLeft: -10, elevation: 2}}
+            onPress={handleAddTeamMember}
+          />
         </View>
         <View style={styles.scheduleWrapper}>
-          <View style={styles.scheduleRow}>
-            <MaterialCommunityIcons
-              name="clock"
-              size={20}
-              color={appTheme.INACTIVE_COLOR}
-            />
-            <Text style={styles.scheduleText}>1:30PM - 2:00PM</Text>
-          </View>
           <View style={styles.scheduleRow}>
             <AntDesign
               name="calendar"
@@ -146,16 +242,7 @@ export function TaskView() {
             </TouchableOpacity>
           </View>
         </View>
-        <Text style={styles.longText}>
-          It is an established fact that a reader will be distracted by the
-          readable content of a page when looking at its layout. {'\n'} {'\n'}
-          The point of using Lorem Ipsum is that it has a more-or-less normal
-          distribution of letters, as opposed to using 'Content here, content
-          here', making it look like readable English. Many desktop publishing
-          packages and web page editors now use Lorem Ipsum as their default
-          model text, and a search for 'lorem ipsum' will uncover many web sites
-          still in their infancy.
-        </Text>
+        <Text style={styles.longText}>{selectedTask?.description}</Text>
         <Text style={styles.subTaskText}>Sub-Tasks</Text>
         {subTasks?.length > 0 ? (
           subTasks.map((task, index) => {
@@ -164,46 +251,7 @@ export function TaskView() {
                 <View>
                   <Text>{task.title}</Text>
                 </View>
-                <Menu>
-                  <MenuTrigger>
-                    <View style={styles.checkBoxOuterView}>
-                      <View
-                        style={{
-                          ...styles.checkBoxInnerView,
-                          ...{
-                            backgroundColor: statusColors[task.status],
-                          },
-                        }}></View>
-                    </View>
-                  </MenuTrigger>
-                  <MenuOptions>
-                    {taskStatusOptions?.map((status, index1) => (
-                      <MenuOption
-                        style={{
-                          borderBottomWidth:
-                            index1 !== taskStatusOptions.length - 1 ? 1 : 0,
-                          borderBottomColor: 'gray',
-                          flexDirection: 'row',
-                          alignItems: 'center',
-                        }}
-                        key={index1}
-                        onSelect={async () => {
-                          setLoading(true);
-                          await Modals.subTasks.update(task.id, status.title);
-                          setLoading(false);
-                        }}>
-                        <View
-                          style={{
-                            ...styles.checkBox,
-                            ...{backgroundColor: statusColors[status.title]},
-                          }}></View>
-                        <Text style={styles.menuOptionsText}>
-                          {status.title}
-                        </Text>
-                      </MenuOption>
-                    ))}
-                  </MenuOptions>
-                </Menu>
+                <StatusPopUp task={task} onSelect={statusUpateHandler} />
               </View>
             );
           })

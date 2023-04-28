@@ -29,12 +29,14 @@ import {Modals} from '../../api/firebaseModal';
 import {navigateToNestedRoute} from '../../navigators/RootNavigation';
 import {getScreenParent} from '../../utils/NavigationHelper';
 import {useFocusEffect} from '@react-navigation/core';
+import {Loader} from '../../components/Loader';
 
 export function Projects({navigation}) {
   const tabs = ['All', 'Ongoing', 'Completed'];
 
   const {state, dispatch, user} = useContext(AppContext);
   const {projects, bottomModal} = state;
+  const [loading, setLoading] = useState(true);
 
   const [data, setData] = useState({activeTab: 'All'});
 
@@ -47,21 +49,15 @@ export function Projects({navigation}) {
       const result = allProjectData?.current.filter(item => {
         return item?.status === 'completed';
       });
-
       setProjectData(result);
-
-      // return result;
     } else if (tab === 'Ongoing') {
       const result = allProjectData?.current.filter(item => {
         return item?.status === 'ongoing';
       });
       setProjectData(result);
-
-      // return result;
     } else {
       setProjectDataFun(allProjectData?.current);
     }
-
     setData(combineData(data, {activeTab: tab}));
   };
 
@@ -70,25 +66,7 @@ export function Projects({navigation}) {
     return value;
   };
 
-  // const getProjects = () => {
-  //   let {activeTab} = data;
-  //   let projectsToRender = [];
-  //   if (activeTab === 'All') {
-  //     projectsToRender = projects;
-  //   } else {
-  //     projectsToRender =
-  //       projects?.filter(
-  //         project => project.status === activeTab?.toLowerCase(),
-  //       ) || [];
-  //   }
-
-  //   return projectsToRender;
-  // };
-
   const renderProjectInfo = ({item}) => {
-    // var percentage = 10;
-
-    // percent();
     return (
       <ProjectCard
         project={item}
@@ -100,7 +78,6 @@ export function Projects({navigation}) {
 
   const getTasks = async id => {
     const data = (await Modals.tasks.getProjectTasks(id)).docs;
-
     return data;
   };
 
@@ -110,7 +87,6 @@ export function Projects({navigation}) {
   };
 
   const percent = async id => {
-    // const allTasks = await (await getAllTasks())?.length;
     const tasks = await (await getTasks(id)).length;
     const completedTasks = await (await getCompletedTasks(id)).length;
     if (tasks) {
@@ -122,7 +98,6 @@ export function Projects({navigation}) {
 
   const api = async () => {
     const data = (await Modals.projects.getMembers()).docs;
-
     dispatch({
       type: 'setMembers',
       payload: data,
@@ -130,13 +105,11 @@ export function Projects({navigation}) {
   };
 
   const getProjects = async () => {
-    const data = await Modals.projects.getUserProjects(user.uid);
-
+    const data = await Modals.projects.getUserProjects(user?.uid);
+    console.log(data);
     const result = await addPercentParameter(data);
-
+    setLoading(false);
     return result;
-
-    setProjectData(result);
   };
 
   const addPercentParameter = async arr => {
@@ -160,7 +133,6 @@ export function Projects({navigation}) {
 
   const getProjectsData = async () => {
     const result = await getProjects();
-
     allProjectData.current = result;
     setProjectDataFun(result);
   };
@@ -169,18 +141,15 @@ export function Projects({navigation}) {
     <Text style={{fontSize: 20, fontWeight: 'bold'}}>Projects</Text>
   );
 
-  useEffect(() => {
-    if (bottomModal === null) {
-      getProjectsData();
-    }
-  }, [bottomModal]);
-
   useFocusEffect(() => {
-    // console.log('inside');
     getProjectsData();
   });
 
-  return (
+  return loading ? (
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <Loader />
+    </View>
+  ) : (
     <SafeAreaView style={styles.container}>
       {/* <ActionButton buttonColor={appTheme?.PRIMARY_COLOR} style={{zIndex: 1}}>
         <ActionButton.Item
@@ -203,19 +172,11 @@ export function Projects({navigation}) {
         buttonColor={appTheme?.PRIMARY_COLOR}
         style={{zIndex: 1}}
         onPress={() => {
-          // dispatch({
-          //   type: 'toggleBottomModal',
-          //   payload: {bottomModal: 'CreateProject'},
-          // });
           navigateToNestedRoute(
             getScreenParent('CreateProject'),
             'CreateProject',
             {},
           );
-
-          // const handleCreateProject = () => {
-
-          // };
         }}
       />
 

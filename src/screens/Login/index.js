@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   View,
   Text,
@@ -18,9 +18,11 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import {emailValidator, passwordValidator} from '../../utils/FormValidator';
 import auth from '@react-native-firebase/auth';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import {AppContext} from '../../context';
 
 export function Login({navigation}) {
   const [showPassword, setShowPassword] = useState(false);
+  const {setUser} = useContext(AppContext);
   const handleBackButton = () => {
     navigation?.goBack();
   };
@@ -71,7 +73,12 @@ export function Login({navigation}) {
       auth()
         .signInWithEmailAndPassword(formData.email, formData.password)
         .then(user => {
-          navigation.navigate('BottomStack');
+          console.log(user);
+          setUser(user?.user);
+          navigation.reset({
+            index: 0,
+            routes: [{name: 'BottomStack'}],
+          });
           console.log('signed in succesfully');
         })
         .catch(error => {

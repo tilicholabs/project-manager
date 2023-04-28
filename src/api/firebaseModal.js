@@ -40,10 +40,11 @@ export class FireBaseModal {
   };
 
   getUserProjects = async id => {
-    return await firestore()
+    const data = await firestore()
       .collection(this.basePath)
-      .where('team_id', 'array-contains', id)
+      .where('selectedMembers', 'array-contains', id)
       .get();
+    return dataFormatter(data);
   };
 
   getProjects = async () => {
@@ -72,12 +73,12 @@ export class FireBaseModal {
       .get();
   };
 
-  getOn = async () => {
-    return await firestore()
-      .collection(this?.basePath)
-      .onSnapshot(async document => {
-        return await dataFormatter(document);
-      });
+  getUserTasks = async id => {
+    const data = await firestore()
+      .collection(this.basePath)
+      .where('team', 'array-contains', id)
+      .get();
+    return dataFormatter(data);
   };
 }
 

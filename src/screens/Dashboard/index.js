@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
   ScrollView,
+  ActivityIndicator,
 } from 'react-native';
 import shortid from 'shortid';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -22,17 +23,25 @@ import {useKeyboardDetails} from '../../hooks/useKeyboardDetails';
 import {navigateToNestedRoute} from '../../navigators/RootNavigation';
 import {getScreenParent} from '../../utils/NavigationHelper';
 import AppLogo from '../../components/AppLogo';
+import {Modals} from '../../api/firebaseModal';
+import {Loader} from '../../components/Loader';
 
 export function Dashboard({navigation}) {
-  const {state, dispatch} = useContext(AppContext);
+  const {state, dispatch, user} = useContext(AppContext);
+  const [open, setOpen] = useState(false);
   const [value, setValue] = useState('All Tasks');
   const [searchValue, setSearch] = useState('');
   const [tasks, setTasks] = useState();
   const [keyboardDetails] = useKeyboardDetails();
+  const [loading, setLoading] = useState(true);
 
   const getTasks = async () => {
+    const data = await Modals.tasks.getUserTasks(user?.uid);
+    setTasks(data);
+    setLoading(false);
     firestore()
       .collection('tasks')
+      .where('team', 'array-contains', user?.uid)
       .onSnapshot(document => {
         const data = dataFormatter(document);
         setTasks(data);
@@ -126,7 +135,11 @@ export function Dashboard({navigation}) {
     );
   };
 
-  return (
+  return loading ? (
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <Loader />
+    </View>
+  ) : (
     <SafeAreaView style={styles.container}>
       <TabScreenHeader {...{leftComponent, isBackButtonPresent: false}} />
       <ActionButton buttonColor={appTheme?.PRIMARY_COLOR} style={{zIndex: 1}}>

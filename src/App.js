@@ -21,6 +21,7 @@ const App = () => {
   const [selectedProject, setSelectedProject] = useState();
   const [members, setMembers] = useState([]);
   const [user, setUser] = useState();
+  const [isProjectSelected, setIsProjectSelected] = useState(false);
 
   const getMembers = async () => {
     const data = await Modals.users.get();
@@ -54,6 +55,8 @@ const App = () => {
         setMembers,
         user,
         setUser,
+        isProjectSelected,
+        setIsProjectSelected,
       }}>
       <PaperProvider>
         <MenuProvider>

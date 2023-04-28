@@ -191,7 +191,6 @@ export function CreateProject({navigation}) {
               ...data,
               created_at: new Date().getTime(),
             });
-
             goBack();
           }}>
           <Text style={styles.btnText}>Add Project</Text>

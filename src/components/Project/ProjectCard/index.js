@@ -1,4 +1,4 @@
-import React, {useContext, useRef} from 'react';
+import React, {useContext, useEffect, useRef} from 'react';
 import {View, Text, Image, TouchableOpacity} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import ProgressCircle from 'react-native-progress-circle';
@@ -11,51 +11,64 @@ import {AppContext} from '../../../context';
 import {Modals} from '../../../api/firebaseModal';
 
 export function ProjectCard({project, navigation}) {
-  const {state, dispatch, setSelectedProject} = useContext(AppContext);
+  const {
+    state,
+    dispatch,
+    setSelectedProject,
+    setIsProjectSelected,
+    members,
+    selectedMembers,
+    setSelectedMembers,
+  } = useContext(AppContext);
+  const {bottomModal} = state;
 
   const handleNavigation = (screen, params) => {
+    setIsProjectSelected(true);
     setSelectedProject(project);
     navigateToNestedRoute(getScreenParent(screen), screen, params);
   };
 
-  const {members} = state;
-
-  const p = useRef('');
-
   const filterMembers = arr => {
     const result = members.filter(item => {
       let bool = false;
-
       return arr?.find(ele => {
-        return item?._data?.id === ele;
+        return item?.id === ele;
       });
-
-      if (bool) {
-        console.log(bool);
-      }
-
-      return bool;
-
-      //  return item?._data?.id === ele;
     });
-
     return result;
   };
+
+  const addTeamHandler = async () => {
+    await Modals.projects.update(project?.id, {
+      selectedMembers: [...project?.selectedMembers, ...selectedMembers],
+    });
+    dispatch({
+      type: 'toggleBottomModal',
+      payload: {bottomModal: null},
+    });
+    setSelectedMembers([]);
+  };
+
+  useEffect(() => {
+    if (bottomModal === 'closeSelectMembers') {
+      addTeamHandler();
+    }
+  }, [bottomModal]);
 
   return (
     <TouchableOpacity
       style={styles.container}
-      onPress={() => handleNavigation('Project', project)}>
+      onPress={() => {
+        setSelectedProject(project);
+        handleNavigation('Project');
+      }}>
       <Text style={styles.projectTitle}>{project?.title}</Text>
       <View style={styles.projectTeamAndProgress}>
         <View>
           <Text style={styles.projectDescription}>{project?.description}</Text>
           <Text style={styles.projectTeamTitle}>Team</Text>
           <View style={styles.projectTeamWrapper}>
-            {filterMembers(project?.team_id)?.map(member => {
-              // let percent1 = 0;
-              // percent1 = percent();
-
+            {filterMembers(project?.selectedMembers)?.map(member => {
               return (
                 <Image
                   key={shortid.generate()}
@@ -66,7 +79,15 @@ export function ProjectCard({project, navigation}) {
                 />
               );
             })}
-            <TouchableOpacity style={styles.plusBtnContainer}>
+            <TouchableOpacity
+              style={styles.plusBtnContainer}
+              onPress={() => {
+                setSelectedProject(project);
+                dispatch({
+                  type: 'toggleBottomModal',
+                  payload: {bottomModal: 'SelectMembers'},
+                });
+              }}>
               <MaterialCommunityIcons name="plus" size={22} color="#fff" />
             </TouchableOpacity>
           </View>

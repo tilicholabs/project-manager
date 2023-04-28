@@ -24,27 +24,16 @@ import firestore from '@react-native-firebase/firestore';
 import Search from '../../components/Search';
 
 export function Members() {
-  const {state, dispatch} = useContext(AppContext);
-  const [members, setMembers] = useState([]);
+  const {state, dispatch, members} = useContext(AppContext);
   const [searchValue, setSearch] = useState('');
   const [filteredList, setFilteredList] = useState([]);
 
   useEffect(() => {
     const filteredValue = members?.filter(user =>
-      user?._data?.user_name.toLowerCase().includes(searchValue.toLowerCase()),
+      user?.user_name.toLowerCase().includes(searchValue.toLowerCase()),
     );
-
     setFilteredList(filteredValue);
   }, [searchValue]);
-
-  useEffect(() => {
-    firestore()
-      .collection('users')
-      .onSnapshot(document => {
-        setMembers(document.docs);
-        setFilteredList(document.docs);
-      });
-  }, []);
 
   const handleNavigation = (screen, params) => {
     navigateToNestedRoute(getScreenParent(screen), screen, params);
@@ -82,11 +71,11 @@ export function Members() {
                   marginBottom: index === filteredList.length - 1 ? 50 : 15,
                 }}
                 key={shortid.generate()}>
-                {member?._data?.photo ? (
+                {member?.profile_image ? (
                   <Image
                     style={styles.singleMemberPhoto}
                     source={{
-                      uri: member?._data?.photo,
+                      uri: member?.profile_image,
                     }}
                   />
                 ) : (
@@ -103,7 +92,7 @@ export function Members() {
                         lineHeight: 32,
                         color: 'white',
                       }}>
-                      {member?._data?.user_name[0]}
+                      {member?.user_name[0]}
                     </Text>
                   </View>
                 )}
@@ -112,17 +101,17 @@ export function Members() {
                     style={styles.selectedMemberName}
                     numberOfLines={1}
                     ellipsizeMode="tail">
-                    {member?._data?.user_name}
+                    {member?.user_name}
                   </Text>
                   <Text style={styles.selectedMemberLastSeen}>
-                    {member?._data?.designation}
+                    {member?.designation}
                   </Text>
                 </View>
                 <TouchableOpacity
                   style={{marginRight: 5}}
                   onPress={() => {
                     Linking.openURL(
-                      `whatsapp://send?phone=${member?._data?.phoneNumber}`,
+                      `whatsapp://send?phone=${member?.phone_number}`,
                     );
                   }}>
                   <Image
@@ -131,8 +120,8 @@ export function Members() {
                   />
                 </TouchableOpacity>
                 <TouchableOpacity
-                  onPress={() => {
-                    Modals.users.deleteUser(member?._data?.id);
+                  onPress={async () => {
+                    await Modals.users.deleteUser(member?.id);
                   }}>
                   <MaterialCommunityIcons
                     name="delete"
