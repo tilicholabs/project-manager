@@ -29,10 +29,10 @@ export function Members() {
   const [filteredList, setFilteredList] = useState([]);
 
   useEffect(() => {
-    const filteredValue = members?.filter(user =>
-      user?.user_name.toLowerCase().includes(searchValue.toLowerCase()),
+    const filteredValue = (Array?.isArray(members) ? members : [])?.filter(
+      user => user?.user_name.toLowerCase().includes(searchValue.toLowerCase()),
     );
-    setFilteredList(filteredValue);
+    setFilteredList([...filteredValue]);
   }, [searchValue]);
 
   const handleNavigation = (screen, params) => {

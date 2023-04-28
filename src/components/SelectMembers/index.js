@@ -14,6 +14,7 @@ export const SelectedMembers = ({showDone = false}) => {
     selectedTask,
     selectedProject,
   } = useContext(AppContext);
+  console.log(members);
   const {bottomModal} = state;
   const [requiredMembers, setRequiredMembers] = useState([]);
 
@@ -75,7 +76,7 @@ export const SelectedMembers = ({showDone = false}) => {
     <>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.teamWrapper}>
-          {members?.map(
+          {(Array?.isArray(members) ? members : [])?.map(
             member =>
               requiredMembers?.includes(member?.id) && (
                 <TouchableOpacity

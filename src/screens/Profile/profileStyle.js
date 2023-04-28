@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
   profileInfoSection: {
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'space-between',
     marginBottom: 20,
   },
@@ -42,10 +42,12 @@ const styles = StyleSheet.create({
     height: 80,
     width: 80,
     borderRadius: 50,
+    marginBottom: 20,
   },
   statisticsContainer: {
     display: 'flex',
     alignItems: 'center',
+    marginTop: 25,
   },
   statisticsText: {
     color: appTheme.PRIMARY_COLOR,
@@ -106,13 +108,15 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    alignSelf: 'flex-start',
+
+    flexDirection: 'row',
   },
   exploreText: {
     fontWeight: 'bold',
     fontSize: 14,
     color: appTheme.PRIMARY_COLOR,
     height: 25,
+    marginLeft: 8,
   },
   inputContainer: {
     marginTop: 25,

@@ -42,8 +42,10 @@ export function Dashboard({navigation}) {
     firestore()
       .collection('tasks')
       .where('team', 'array-contains', user?.uid)
-      .onSnapshot(document => {
-        const data = dataFormatter(document);
+      .onSnapshot(async document => {
+        console.log(document);
+        const data = await dataFormatter(document);
+
         setTasks(data);
       });
   };
@@ -60,8 +62,8 @@ export function Dashboard({navigation}) {
       tasksToRender = tasks.filter(task => task?.status == 'In Progress') || [];
     } else if (value === 'Completed') {
       tasksToRender = tasks.filter(task => task?.status == 'Completed') || [];
-    } else if (value === 'Favourites') {
-      tasksToRender = tasks.filter(task => task?.status == 'Favourites') || [];
+    } else if (value === 'Not started') {
+      tasksToRender = tasks.filter(task => task?.status == 'Not started') || [];
     }
     return tasksToRender;
   };
@@ -99,16 +101,18 @@ export function Dashboard({navigation}) {
           {
             backgroundColor: bg,
             position: 'relative',
+            opacity: 0.6,
           },
           selected && {
             borderWidth: 1,
             borderColor: 'black',
+            opacity: 1,
           },
         ]}
         {...{onPress, ...props}}>
         {selected && (
-          <View style={{position: 'absolute'}}>
-            <Entypo name={'dot-single'} size={30} color={'white'} />
+          <View style={{position: 'absolute', top: -8, left: -5}}>
+            <Entypo name={'dot-single'} size={50} color={'white'} />
           </View>
         )}
         <MaterialCommunityIcons
@@ -129,8 +133,8 @@ export function Dashboard({navigation}) {
     return <AppLogo />;
   };
 
-  const findFilterValue = tasks => {
-    return tasks?.filter(item =>
+  const findFilterValue = (tasks = []) => {
+    return (Array?.isArray(tasks) ? tasks : [])?.filter(item =>
       item?.title?.toLowerCase()?.includes(searchValue?.toLowerCase()),
     );
   };

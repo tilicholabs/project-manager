@@ -26,10 +26,11 @@ const App = () => {
   const getMembers = async () => {
     const data = await Modals.users.get();
     setMembers(data);
+
     firestore()
       .collection('users')
-      .onSnapshot(snap => {
-        const usersData = dataFormatter(snap);
+      .onSnapshot(async snap => {
+        const usersData = await dataFormatter(snap);
         setMembers(usersData);
       });
   };

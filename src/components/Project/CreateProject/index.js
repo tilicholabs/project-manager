@@ -89,8 +89,6 @@ export function CreateProject({navigation}) {
     );
   };
 
-  console.log(validation());
-
   return (
     <Fragment>
       <TabScreenHeader {...{leftComponent}} />
@@ -133,48 +131,54 @@ export function CreateProject({navigation}) {
         <View style={styles.teamSection}>
           <ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.teamWrapper}>
-              {updatedMembers?.map(member => (
-                <TouchableOpacity
-                  key={shortid.generate()}
-                  style={[
-                    styles.memberWrapper,
-                    isSelectedMember(member?.id)
-                      ? styles.activeTeamWrapper
-                      : null,
-                  ]}
-                  onPress={() => handleSetValue('selectedMembers', member?.id)}>
-                  {member?.profile_image ? (
-                    <Image
-                      style={styles.memberPhoto}
-                      source={{uri: member?.profile_image}}
-                    />
-                  ) : (
-                    <View
-                      style={{
-                        ...styles.memberPhoto,
-                        ...{
-                          justifyContent: 'center',
-                          display: 'flex',
-                          alignItems: 'center',
-                          backgroundColor: '#60C877',
-                        },
-                      }}>
-                      <Text style={{fontSize: 18, fontWeight: 'bold'}}>
-                        {member?.user_name?.[0]}
-                      </Text>
-                    </View>
-                  )}
-                  <Text
+              {(Array?.isArray(updatedMembers) ? updatedMembers : [])?.map(
+                member => (
+                  <TouchableOpacity
+                    key={shortid.generate()}
                     style={[
-                      styles.memberName,
-                      isSelectedMember(member) ? styles.activeMemberName : null,
+                      styles.memberWrapper,
+                      isSelectedMember(member?.id)
+                        ? styles.activeTeamWrapper
+                        : null,
                     ]}
-                    numberOfLines={2}
-                    ellipsizeMode="tail">
-                    {member?.user_name}
-                  </Text>
-                </TouchableOpacity>
-              ))}
+                    onPress={() =>
+                      handleSetValue('selectedMembers', member?.id)
+                    }>
+                    {member?.profile_image ? (
+                      <Image
+                        style={styles.memberPhoto}
+                        source={{uri: member?.profile_image}}
+                      />
+                    ) : (
+                      <View
+                        style={{
+                          ...styles.memberPhoto,
+                          ...{
+                            justifyContent: 'center',
+                            display: 'flex',
+                            alignItems: 'center',
+                            backgroundColor: '#60C877',
+                          },
+                        }}>
+                        <Text style={{fontSize: 18, fontWeight: 'bold'}}>
+                          {member?.user_name?.[0]}
+                        </Text>
+                      </View>
+                    )}
+                    <Text
+                      style={[
+                        styles.memberName,
+                        isSelectedMember(member)
+                          ? styles.activeMemberName
+                          : null,
+                      ]}
+                      numberOfLines={2}
+                      ellipsizeMode="tail">
+                      {member?.user_name}
+                    </Text>
+                  </TouchableOpacity>
+                ),
+              )}
             </View>
           </ScrollView>
         </View>
