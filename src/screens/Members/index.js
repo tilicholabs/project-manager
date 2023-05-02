@@ -120,13 +120,14 @@ export function Members() {
                   />
                 </TouchableOpacity>
                 <TouchableOpacity
+                  disabled={true}
                   onPress={async () => {
                     await Modals.users.delete(member?.id);
                   }}>
                   <MaterialCommunityIcons
                     name="delete"
                     size={25}
-                    color={appTheme.SECONDARY_COLOR}
+                    color={appTheme.INACTIVE_COLOR}
                   />
                 </TouchableOpacity>
               </View>
