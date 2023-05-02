@@ -5,7 +5,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
     padding: 10,
-    height: 180,
+    height: 150,
     borderRadius: 7,
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 1},
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    paddingLeft: 10
+    paddingLeft: 10,
   },
   projectMemberPhoto: {
     height: 40,
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
   projectBottomText: {
     marginLeft: 5,
     fontSize: 14,
-  },  
+  },
   plusBtnContainer: {
     backgroundColor: appTheme.COLOR1,
     height: 40,

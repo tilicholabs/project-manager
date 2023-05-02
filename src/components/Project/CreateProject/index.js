@@ -23,7 +23,9 @@ import appTheam from '../../../constants/colors';
 export function CreateProject({navigation}) {
   const {state, dispatch, members, user} = useContext(AppContext);
   const [searchValue, setSearch] = useState('');
-  const [updatedMembers, setUpdatedMembers] = useState(members);
+  const [updatedMembers, setUpdatedMembers] = useState(
+    members?.filter(item => item?.id != user?.id),
+  );
   const [searchFocused, setSearchFocused] = useState(false);
   const [data, setData] = useState({
     title: '',
@@ -55,9 +57,7 @@ export function CreateProject({navigation}) {
       } else {
         selectedMembers = selectedMembers.filter(a => a !== value);
       }
-      if (!selectedMembers?.includes(user?.id)) {
-        selectedMembers.push(user.id);
-      }
+
       data['selectedMembers'] = selectedMembers;
       addMembersToFirst(selectedMembers, members);
     } else {
@@ -89,9 +89,7 @@ export function CreateProject({navigation}) {
   };
 
   const validation = () => {
-    return (
-      !data?.title || !data?.description || data?.selectedMembers?.length <= 0
-    );
+    return !data?.title || !data?.description;
   };
 
   return (
@@ -197,7 +195,10 @@ export function CreateProject({navigation}) {
           disabled={validation()}
           onPress={async () => {
             await Modals.projects.createProject({
-              ...data,
+              ...{
+                ...data,
+                selectedMembers: [...data?.selectedMembers, user.id],
+              },
               created_at: new Date().getTime(),
             });
             goBack();

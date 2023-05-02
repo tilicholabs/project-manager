@@ -145,24 +145,6 @@ export function ProjectCard({project, navigation}) {
           <Text style={styles.projectProgress}>{percentage}%</Text>
         </ProgressCircle>
       </View>
-      <View style={styles.rowJustifyBetween}>
-        <View style={styles.flexRow}>
-          <MaterialCommunityIcons
-            name="calendar-month-outline"
-            size={20}
-            color={appTheme.INACTIVE_COLOR}
-          />
-          <Text style={styles.projectBottomText}>{project?.createdAt}</Text>
-        </View>
-        <View style={styles.flexRow}>
-          <MaterialCommunityIcons
-            name="checkbox-marked"
-            size={20}
-            color={appTheme.INACTIVE_COLOR}
-          />
-          <Text style={styles.projectBottomText}>{project?.tasks} Tasks</Text>
-        </View>
-      </View>
     </TouchableOpacity>
   );
 }

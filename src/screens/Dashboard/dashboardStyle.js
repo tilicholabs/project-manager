@@ -53,13 +53,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   statisticsValue: {
-    color: 'white',
+    color: 'black',
     fontSize: 20,
     fontWeight: 'bold',
     fontFamily: 'serif',
   },
   statisticsTitle: {
-    color: 'white',
+    color: 'black',
     fontSize: 15,
     fontWeight: 'bold',
     fontFamily: 'serif',
@@ -102,6 +102,13 @@ const styles = StyleSheet.create({
   },
   tasksList: {
     marginBottom: 55,
+  },
+  welcome: {
+    fontSize: 18,
+
+    color: 'black',
+
+    fontFamily: 'serif',
   },
 });
 

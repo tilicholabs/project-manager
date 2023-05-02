@@ -11,6 +11,8 @@ import {navigateToNestedRoute} from '../../../navigators/RootNavigation';
 import {getScreenParent} from '../../../utils/NavigationHelper';
 import {StatusPopUp} from '../../StatusPopUp';
 import {Modals} from '../../../api/firebaseModal';
+import moment from 'moment';
+import {findDueDate} from '../../../utils/functions';
 
 export function TaskInfo({task}) {
   const {setSelectedTask} = useContext(AppContext);
@@ -35,8 +37,11 @@ export function TaskInfo({task}) {
               color: '#1c1c1c',
               fontStyle: 'italic',
               fontWeight: '600',
+              backgroundColor: 'white',
+              paddingLeft: 4,
+              paddingRight: 10,
             }}>
-            {task?.projectName}
+            {task?.project_name}
           </Text>
         </View>
         <StatusPopUp task={task} onSelect={statusUpateHandler} />
@@ -44,14 +49,9 @@ export function TaskInfo({task}) {
           <Text style={styles.taskTitle} numberOfLines={1} ellipsizeMode="tail">
             {task?.title}
           </Text>
-          {/* <ProgressBar
-            progress={Number(task?.progress)}
-            // color={task?.progress === 100 ? appTheme.COLOR2 : appTheme.COLOR1}
-            style={styles.taskProgressBar}
-          /> */}
         </View>
         <View style={styles.teamWrapper}>
-          <Text>due 20 days </Text>
+          <Text>{findDueDate(JSON?.parse(task?.due_date))} </Text>
         </View>
         <MaterialIcons
           name="keyboard-arrow-right"

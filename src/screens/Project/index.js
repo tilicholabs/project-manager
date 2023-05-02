@@ -160,13 +160,6 @@ export function Project({navigation, route}) {
         <View style={styles.projectDetailsSection}>
           <View style={styles.projectTitleWrapper}>
             <Text style={styles.projectTitle}>{selectedProject?.title}</Text>
-            <TouchableOpacity>
-              <MaterialCommunityIcons
-                name="calendar-month-outline"
-                size={20}
-                color="#000"
-              />
-            </TouchableOpacity>
           </View>
           <Text style={styles.projectDescription}>
             {selectedProject?.description}

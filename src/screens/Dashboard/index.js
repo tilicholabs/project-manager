@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useMemo, useState} from 'react';
 import {
   View,
   Text,
@@ -31,27 +31,41 @@ export function Dashboard({navigation}) {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState('All Tasks');
   const [searchValue, setSearch] = useState('');
-  const [tasks, setTasks] = useState();
+  const [tasks, setTasks] = useState([]);
   const [keyboardDetails] = useKeyboardDetails();
   const [loading, setLoading] = useState(true);
 
-  const getTasks = async () => {
-    const data = await Modals.tasks.getUserTasks(user?.id);
-    setTasks(data);
-    setLoading(false);
-    firestore()
-      .collection('tasks')
-      .where('team', 'array-contains', user?.id)
-      .onSnapshot(async document => {
-        const data = await dataFormatter(document);
+  const tasksCount = useMemo(
+    () => ({
+      'All Tasks': tasks?.length,
+      'In Progress': tasks.filter(task => task?.status == 'In Progress')
+        ?.length,
+      Completed: tasks.filter(task => task?.status == 'Completed')?.length,
+      'Not started': tasks.filter(task => task?.status == 'Not started')
+        ?.length,
+    }),
+    [tasks],
+  );
 
-        setTasks(data);
-      });
+  const getTasks = async () => {
+    if (user?.id) {
+      const data = await Modals.tasks.getUserTasks(user?.id);
+      setTasks(data);
+      setLoading(false);
+      firestore()
+        .collection('tasks')
+        .where('team', 'array-contains', user?.id)
+        .onSnapshot(async document => {
+          const data = await dataFormatter(document);
+
+          setTasks(data);
+        });
+    }
   };
 
   useEffect(() => {
     getTasks();
-  }, []);
+  }, [user?.id]);
 
   const getFiltered = () => {
     let tasksToRender = [];
@@ -100,10 +114,6 @@ export function Dashboard({navigation}) {
           {
             backgroundColor: bg,
             position: 'relative',
-            // opacity: 0.6,
-          },
-          selected && {
-            opacity: 1,
           },
         ]}
         {...{onPress, ...props}}>
@@ -115,7 +125,7 @@ export function Dashboard({navigation}) {
         <MaterialCommunityIcons
           name={icon}
           size={size}
-          color={color}
+          color={'black'}
           style={styles.statisticsIcon}
         />
         <View style={styles.statisticsCounter}>
@@ -162,13 +172,13 @@ export function Dashboard({navigation}) {
       <Text
         style={{
           fontSize: 18,
-          fontWeight: '600',
+          fontWeight: '700',
           color: 'black',
           marginHorizontal: 16,
           marginTop: 10,
           fontFamily: 'serif',
         }}>{`Welcome ${user?.user_name},`}</Text>
-      <View style={{paddingVertical: 10}}>
+      <View style={{paddingTop: 10, paddingBottom: 20}}>
         <Search
           {...{
             placeholder: 'Search task',
@@ -186,7 +196,7 @@ export function Dashboard({navigation}) {
               return (
                 <Card
                   selected={items?.status == value}
-                  {...{...items}}
+                  {...{...items, count: tasksCount?.[items?.status] || 0}}
                   onPress={() => {
                     setValue(items?.status);
                   }}
@@ -201,7 +211,7 @@ export function Dashboard({navigation}) {
             paddingTop: !keyboardDetails?.isVisible ? 20 : 0,
           }}>
           <Text style={{fontSize: 16, fontWeight: '600', fontFamily: 'serif'}}>
-            Tasks
+            Your Tasks
           </Text>
           <View style={styles.tasksBody}>
             <ScrollView showsVerticalScrollIndicator={false}>
@@ -216,6 +226,7 @@ export function Dashboard({navigation}) {
                       fontSize: 17,
                       textAlign: 'center',
                       marginTop: 50,
+                      fontFamily: 'serif',
                     }}>
                     No tasks available
                   </Text>
