@@ -37,12 +37,13 @@ export function Project({navigation, route}) {
   const [tasks, setTasks] = useState([]);
   const tabs = ['All Tasks', 'In Progress', 'Completed'];
   const {bottomModal} = state;
+  const [updated, setUpdated] = useState(false);
 
   const [data, setData] = useState({
     activeTab: 'All Tasks',
   });
 
-  const totalTasks = useRef();
+  const totalTasks = useRef([]);
 
   const toggleTab = tab => {
     setData(combineData(data, {activeTab: tab}));
@@ -53,33 +54,29 @@ export function Project({navigation, route}) {
     );
   };
 
+  useEffect(() => {
+    if (!!totalTasks?.current) toggleTab(data?.activeTab);
+  }, [updated]);
+
   const isActiveTab = tab => {
     const value = data?.activeTab === tab;
     return value;
   };
 
-  const handleCreateTask = () => {
-    dispatch({
-      type: 'toggleBottomModal',
-      payload: {bottomModal: 'CreateTask'},
-    });
-  };
-
   const getProjectTasks = async id => {
-    const data = await Modals.tasks.getProjectTasks(id);
-    const formattedData = await dataFormatter(data);
-    setTasks(formattedData);
+    const res = await Modals.tasks.getProjectTasks(id);
+    const formattedData = await dataFormatter(res);
+    setTasks([...formattedData]);
     totalTasks.current = [...formattedData];
     firestore()
       .collection('tasks')
       .where('project_id', '==', id)
       .onSnapshot(async document => {
-        const data = await dataFormatter(document);
-        setTasks(data);
-        totalTasks.current = [...data];
+        const res = await dataFormatter(document);
+        totalTasks.current = [...res];
+        setUpdated(prv => !prv);
       });
     setLoading(false);
-    return data;
   };
 
   useEffect(() => {
@@ -191,14 +188,34 @@ export function Project({navigation, route}) {
               <View style={styles.projectTeamWrapper}>
                 {filterMembers(selectedProject?.selectedMembers)?.map(
                   member => {
-                    return (
+                    return !!member?.profile_image ? (
                       <Image
-                        key={shortid.generate()}
-                        style={styles.projectMemberPhoto}
+                        style={{
+                          height: 40,
+                          width: 40,
+                          borderRadius: 50,
+                          marginLeft: -10,
+                        }}
                         source={{
-                          uri: 'https://images.unsplash.com/photo-1609010697446-11f2155278f0?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80',
+                          uri: member?.profile_image,
                         }}
                       />
+                    ) : (
+                      <View
+                        style={{
+                          justifyContent: 'center',
+                          display: 'flex',
+                          alignItems: 'center',
+                          backgroundColor: '#60C877',
+                          height: 80,
+                          width: 80,
+                          borderRadius: 50,
+                          marginBottom: 20,
+                        }}>
+                        <Text style={{fontSize: 24, fontWeight: 'bold'}}>
+                          {member?.user_name[0].toUpperCase()}
+                        </Text>
+                      </View>
                     );
                   },
                 )}

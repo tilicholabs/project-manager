@@ -12,12 +12,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginLeft: 'auto',
     marginRight: 'auto',
-    marginBottom: 40,
+    marginBottom: 30,
     marginTop: 10,
   },
   textInput: {
     height: 40,
-    width: '90%',
+    width: '100%',
     borderRadius: 5,
     borderColor: appTheme.INACTIVE_COLOR,
     borderWidth: 1,
@@ -25,6 +25,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     paddingVertical: 5,
     paddingHorizontal: 7,
+    justifyContent: 'center',
   },
   teamTextWrapper: {width: '90%'},
   teamText: {

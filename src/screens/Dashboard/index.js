@@ -198,7 +198,7 @@ export function Dashboard({navigation}) {
           <View style={styles.tasksBody}>
             <ScrollView showsVerticalScrollIndicator={false}>
               <View style={styles.tasksList}>
-                {[] > 0 ? (
+                {findFilterValue(getFiltered())?.length > 0 ? (
                   findFilterValue(getFiltered())?.map(task => (
                     <TaskInfo task={task} key={shortid.generate()} />
                   ))

@@ -28,6 +28,7 @@ import {Modals} from '../../api/firebaseModal';
 import {getTime} from '../../utils/DataHelper';
 import {connect} from 'http2';
 import {AppContext} from '../../context';
+import {Loader} from '../../components/Loader';
 
 export function SignUp({navigation}) {
   const handleBackButton = () => {
@@ -35,13 +36,13 @@ export function SignUp({navigation}) {
   };
   const {setUser} = useContext(AppContext);
   const [showPassword, setShowPassword] = useState(false);
+  const [loader, setLoader] = useState(false);
   const [formData, setFormData] = useState({
     userName: '',
     email: '',
     phoneNumber: '',
     password: '',
     designation: '',
-    role: '',
     location: '',
     department: '',
   });
@@ -51,7 +52,6 @@ export function SignUp({navigation}) {
     phoneNumber: false,
     password: false,
     designation: false,
-    role: false,
     location: false,
   });
 
@@ -106,9 +106,9 @@ export function SignUp({navigation}) {
         formData.phoneNumber !== '',
       formData.password !== '' &&
         formData.designation !== '' &&
-        formData.role !== '' &&
         formData.location !== '')
     ) {
+      setLoader(true);
       auth()
         .createUserWithEmailAndPassword(formData.email, formData.password)
         .then(async userCredential => {
@@ -117,12 +117,12 @@ export function SignUp({navigation}) {
             displayName: formData.userName,
           });
           const userData = {
-            id: userCredential?.user?.id,
+            id: userCredential?.user?.uid,
             user_name: formData.userName,
             phone_number: `+91${formData.phoneNumber}`,
             email: formData.email,
             designation: formData.designation,
-            role: formData.role,
+
             location: formData.location,
             department: formData.department,
             created_at: getTime(),
@@ -147,11 +147,13 @@ export function SignUp({navigation}) {
               },
             },
           };
-          await Modals.users.registerUser(userCredential?.user?.id, userData);
+          console.log(userCredential?.user?.uid);
+          await Modals.users.registerUser(userCredential?.user?.uid, userData);
           navigation.reset({
             index: 0,
             routes: [{name: 'BottomStack'}],
           });
+          setLoader(false);
           console.log('User account created & signed in!');
         })
         .catch(error => {
@@ -168,7 +170,11 @@ export function SignUp({navigation}) {
     }
   };
 
-  return (
+  return loader ? (
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <Loader />
+    </View>
+  ) : (
     <>
       <View>
         <TouchableOpacity
@@ -251,21 +257,6 @@ export function SignUp({navigation}) {
               placeholderTextColor="gray"
               style={styles.textInput}
               onChangeText={text => textValidator('designation', text)}
-            />
-          </View>
-          <View
-            style={{
-              ...styles.inputRow,
-              ...{
-                borderBottomColor: error.role ? 'red' : 'gray',
-              },
-            }}>
-            <MaterialCommunityIcons name="account-cog" size={20} color="gray" />
-            <TextInput
-              placeholder="Role"
-              placeholderTextColor="gray"
-              style={styles.textInput}
-              onChangeText={text => textValidator('role', text)}
             />
           </View>
           <View

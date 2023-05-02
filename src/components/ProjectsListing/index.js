@@ -31,7 +31,7 @@ export const ProjectsListing = () => {
             padding: 10,
             borderRadius: 10,
 
-            width: 100,
+            width: '33.33%',
           }}
           onPress={() => setSelectedProject(project)}>
           <View key={index} style={styles.projectTitleView}>

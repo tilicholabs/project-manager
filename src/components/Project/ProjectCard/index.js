@@ -92,14 +92,34 @@ export function ProjectCard({project, navigation}) {
           <Text style={styles.projectTeamTitle}>Team</Text>
           <View style={styles.projectTeamWrapper}>
             {filterMembers(project?.selectedMembers)?.map(member => {
-              return (
+              return !!member?.profile_image ? (
                 <Image
-                  key={shortid.generate()}
-                  style={styles.projectMemberPhoto}
+                  style={{
+                    height: 40,
+                    width: 40,
+                    borderRadius: 50,
+                    marginLeft: -10,
+                  }}
                   source={{
-                    uri: 'https://images.unsplash.com/photo-1609010697446-11f2155278f0?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80',
+                    uri: member?.profile_image,
                   }}
                 />
+              ) : (
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    display: 'flex',
+                    alignItems: 'center',
+                    backgroundColor: '#60C877',
+                    height: 80,
+                    width: 80,
+                    borderRadius: 50,
+                    marginBottom: 20,
+                  }}>
+                  <Text style={{fontSize: 24, fontWeight: 'bold'}}>
+                    {member?.user_name[0].toUpperCase()}
+                  </Text>
+                </View>
               );
             })}
             <TouchableOpacity
