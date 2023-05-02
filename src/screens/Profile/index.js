@@ -29,6 +29,10 @@ export function Profile({navigation}) {
   const [image, setImage] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
+  useEffect(() => {
+    setImage(user?.profile_image);
+  }, []);
+
   const handleLogout = () => {
     auth()
       .signOut()
@@ -45,7 +49,7 @@ export function Profile({navigation}) {
     saveToPhotos: true,
     mediaType: 'photo',
   };
-  console.log(user);
+
   const uploadImage = async () => {
     setIsLoading(false);
     const reference = storage().ref(user.id);
@@ -113,10 +117,10 @@ export function Profile({navigation}) {
         <View>
           <View style={styles.profileDetailsSection}>
             <View style={styles.profileInfoSection}>
-              <View style={styles.statisticsContainer}>
+              {/* <View style={styles.statisticsContainer}>
                 <Text style={styles.statisticsText}>135</Text>
                 <Text style={styles.statisticsTitle}>Completed Tasks</Text>
-              </View>
+              </View> */}
               <View style={{alignItems: 'center'}}>
                 <View style={{position: 'relative'}}>
                   {image?.length > 0 ? (
@@ -162,10 +166,10 @@ export function Profile({navigation}) {
                   <Text style={styles.editProfileText}>Edit Profile</Text>
                 </TouchableOpacity>
               </View>
-              <View style={styles.statisticsContainer}>
+              {/* <View style={styles.statisticsContainer}>
                 <Text style={styles.statisticsText}>20</Text>
                 <Text style={styles.statisticsTitle}>Ongoing Tasks</Text>
-              </View>
+              </View> */}
             </View>
           </View>
           <View style={styles.exploreSection}>

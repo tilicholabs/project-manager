@@ -174,24 +174,24 @@ export function Login({navigation}) {
             Don't have an account? SIGN UP
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={async () => {
-            onGoogleButtonPress()
-              .then(user => console.log(user))
-              .catch(e => console.log(e));
-          }}
-          style={{width: '100%'}}>
-          <Image
-            source={require('../../assets/google_signin_button.png')}
-            style={{
-              width: '100%',
-              height: 45,
-              marginBottom: 15,
-              resizeMode: 'contain',
-            }}
-          />
-        </TouchableOpacity>
       </View>
+      <TouchableOpacity
+        onPress={async () => {
+          onGoogleButtonPress()
+            .then(user => console.log(user))
+            .catch(e => console.log(e));
+        }}
+        style={{width: '100%'}}>
+        <Image
+          source={require('../../assets/google_signin_button.png')}
+          style={{
+            width: '100%',
+            height: 45,
+            marginBottom: 15,
+            resizeMode: 'contain',
+          }}
+        />
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }

@@ -100,11 +100,9 @@ export function Dashboard({navigation}) {
           {
             backgroundColor: bg,
             position: 'relative',
-            opacity: 0.6,
+            // opacity: 0.6,
           },
           selected && {
-            borderWidth: 1,
-            borderColor: 'black',
             opacity: 1,
           },
         ]}
@@ -144,7 +142,7 @@ export function Dashboard({navigation}) {
     </View>
   ) : (
     <SafeAreaView style={styles.container}>
-      <TabScreenHeader {...{leftComponent, isBackButtonPresent: false}} />
+      {/* <TabScreenHeader {...{leftComponent, isBackButtonPresent: false}} /> */}
       <ActionButton buttonColor={appTheme?.PRIMARY_COLOR} style={{zIndex: 1}}>
         <ActionButton.Item
           buttonColor="#9b59b6"
@@ -161,6 +159,15 @@ export function Dashboard({navigation}) {
           <MaterialCommunityIcons name={'file-check-outline'} />
         </ActionButton.Item>
       </ActionButton>
+      <Text
+        style={{
+          fontSize: 18,
+          fontWeight: '600',
+          color: 'black',
+          marginHorizontal: 16,
+          marginTop: 10,
+          fontFamily: 'serif',
+        }}>{`Welcome ${user?.user_name},`}</Text>
       <View style={{paddingVertical: 10}}>
         <Search
           {...{
@@ -171,30 +178,31 @@ export function Dashboard({navigation}) {
           }}
         />
       </View>
+
       <ScrollView style={{paddingHorizontal: 16}}>
         {!keyboardDetails?.isVisible && (
           <View style={styles.statisticsSection}>
-            <View style={styles.statisticsContainer}>
-              {dashboardDetails?.map((items, index) => {
-                return (
-                  <Card
-                    selected={items?.status == value}
-                    {...{...items}}
-                    onPress={() => {
-                      setValue(items?.status);
-                    }}
-                  />
-                );
-              })}
-            </View>
+            {dashboardDetails?.map((items, index) => {
+              return (
+                <Card
+                  selected={items?.status == value}
+                  {...{...items}}
+                  onPress={() => {
+                    setValue(items?.status);
+                  }}
+                />
+              );
+            })}
           </View>
         )}
         <View
           style={{
             ...styles.tasksSection,
-            paddingTop: !keyboardDetails?.isVisible ? 30 : 0,
+            paddingTop: !keyboardDetails?.isVisible ? 20 : 0,
           }}>
-          <Text style={{fontSize: 16, fontWeight: '700'}}>Tasks</Text>
+          <Text style={{fontSize: 16, fontWeight: '600', fontFamily: 'serif'}}>
+            Tasks
+          </Text>
           <View style={styles.tasksBody}>
             <ScrollView showsVerticalScrollIndicator={false}>
               <View style={styles.tasksList}>
