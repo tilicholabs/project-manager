@@ -33,9 +33,10 @@ const styles = StyleSheet.create({
   },
   profileInfoSection: {
     display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
+    alignItems: 'center',
+    // flexDirection: 'row',
+    // alignItems: 'flex-start',
+    // justifyContent: 'space-between',
     marginBottom: 20,
   },
   profilePhoto: {

@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   textInput: {
-    height: 40,
+    // height: 40,
     width: '100%',
     borderRadius: 5,
     borderColor: appTheme.INACTIVE_COLOR,

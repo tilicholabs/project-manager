@@ -1,5 +1,5 @@
 import React, {useState, useContext, useEffect} from 'react';
-import {View, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -60,26 +60,43 @@ const CustomTabBar = props => {
   return (
     <View style={styles.menuWrapper}>
       <View style={styles.menuContainer}>
-        <TouchableOpacity onPress={() => handleNavigation('Dashboard')}>
-          <Ionicons name="ios-menu" size={32} color={getColor('Dashboard')} />
+        <TouchableOpacity
+          style={{alignItems: 'center'}}
+          onPress={() => handleNavigation('Dashboard')}>
+          <Ionicons
+            name="home-outline"
+            size={24}
+            color={getColor('Dashboard')}
+          />
+          <Text style={{color: getColor('Dashboard')}}>Home</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => handleNavigation('Projects')}>
+        <TouchableOpacity
+          style={{alignItems: 'center'}}
+          onPress={() => handleNavigation('Projects')}>
           <Ionicons
             name="ios-document-text"
             size={25}
             color={getColor('Projects')}
           />
+          <Text style={{color: getColor('Projects')}}>Projects</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => handleNavigation('Members')}>
-          <Feather name="send" size={25} color={getColor('Members')} />
+        <TouchableOpacity
+          style={{alignItems: 'center'}}
+          onPress={() => handleNavigation('Members')}>
+          {/* <Feather name="send" size={25} color={getColor('Members')} /> */}
+          <MaterialIcons name="groups" size={25} color={getColor('Members')} />
+          <Text style={{color: getColor('Members')}}>Members</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => handleNavigation('Profile')}>
+        <TouchableOpacity
+          style={{alignItems: 'center'}}
+          onPress={() => handleNavigation('Profile')}>
           <MaterialIcons
             name="account-circle"
             size={25}
             color={getColor('Profile')}
           />
+          <Text style={{color: getColor('Profile')}}>Profile</Text>
         </TouchableOpacity>
       </View>
     </View>

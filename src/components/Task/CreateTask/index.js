@@ -19,6 +19,7 @@ import appTheme from '../../../constants/colors';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {CustomDatePicker} from '../../CustomDatePicker';
 import CustomTextInput from '../../Global/CustomTextInput';
+import moment from 'moment';
 
 export function CreateTask({subTask = false}) {
   const {
@@ -91,6 +92,8 @@ export function CreateTask({subTask = false}) {
         {!subTask && (
           <>
             <CustomTextInput
+              multiline={true}
+              numberOfLines={3}
               value={data?.description}
               placeholder="Description"
               placeholderTextColor="gray"
@@ -111,9 +114,7 @@ export function CreateTask({subTask = false}) {
             <TouchableOpacity
               style={styles.textInput}
               onPress={() => setModalOpen(true)}>
-              <Text>{`${data?.due_date?.getDate()}-${
-                data?.due_date?.getMonth() + 1
-              }-${data?.due_date?.getFullYear()}`}</Text>
+              <Text>{moment(data?.due_date).format('DD MMM YY')}</Text>
             </TouchableOpacity>
           </>
         )}
