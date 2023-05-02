@@ -163,9 +163,9 @@ android {
         }
         release {
       storeFile file('your_key_name.keystore')
-      storePassword 'android'
+      storePassword 'tilicho'
       keyAlias 'your_key_alias'
-      keyPassword 'android'
+      keyPassword 'tilicho'
     }
     }
     buildTypes {
