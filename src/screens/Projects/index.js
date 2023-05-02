@@ -33,6 +33,7 @@ import {getScreenParent} from '../../utils/NavigationHelper';
 import {useFocusEffect} from '@react-navigation/core';
 import {Loader} from '../../components/Loader';
 import {dataFormatter} from '../../utils/DataFormatter';
+import {useIsFocused} from '@react-navigation/native';
 
 export function Projects({navigation}) {
   const tabs = ['All', 'In Progress', 'Completed'];
@@ -46,6 +47,8 @@ export function Projects({navigation}) {
   const [projectData, setProjectData] = useState([]);
 
   const allProjectData = useRef([]);
+
+  const isFocused = useIsFocused();
 
   const toggleTab = tab => {
     if (tab === 'Completed') {
@@ -121,7 +124,7 @@ export function Projects({navigation}) {
 
   const getProjects = async () => {
     const data = await Modals.projects.getUserProjects(user?.id);
-    allProjectData.current = data || [];
+    allProjectData.current = [...data] || [];
     setProjectData(data || []);
     setLoading(false);
 
@@ -136,9 +139,11 @@ export function Projects({navigation}) {
   };
 
   useEffect(() => {
-    api();
-    getProjects();
-  }, []);
+    if (isFocused) {
+      api();
+      getProjects();
+    }
+  }, [isFocused]);
 
   const leftComponent = () => (
     <Text style={{fontSize: 20, fontWeight: 'bold'}}>Projects</Text>

@@ -24,6 +24,7 @@ const styles = StyleSheet.create({
   taskTitle: {
     fontWeight: 'bold',
     paddingLeft: 10,
+    fontFamily: 'serif',
   },
   taskProgressBar: {borderRadius: 7, height: 6},
   teamWrapper: {

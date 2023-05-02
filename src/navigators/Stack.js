@@ -3,8 +3,8 @@ import {View, StyleSheet, TouchableOpacity, Text, Image} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Feather from 'react-native-vector-icons/Feather';
+import firestore from '@react-native-firebase/firestore';
+import {dataFormatter} from '../utils/DataFormatter';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {
   Dashboard,
@@ -26,7 +26,6 @@ import {AppContext} from '../context';
 import {TaskView} from '../screens/TaskView';
 import auth from '@react-native-firebase/auth';
 import {CreateProject} from '../components';
-import {Modals} from '../api/firebaseModal';
 
 const Stack = createStackNavigator();
 const BottomTab = createBottomTabNavigator();
@@ -213,8 +212,13 @@ function AppStack() {
   const {setUser} = useContext(AppContext);
   const userState = async User => {
     if (User) {
-      const data = await Modals?.users?.getUser(User?.uid);
-      setUser(data?.[0]);
+      firestore()
+        .collection('users')
+        .where('id', '==', User?.uid)
+        .onSnapshot(async document => {
+          const data = await dataFormatter(document);
+          setUser(data?.[0]);
+        });
       setUserIn(true);
     } else {
       setUserIn(false);

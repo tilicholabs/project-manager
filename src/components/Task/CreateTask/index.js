@@ -52,6 +52,7 @@ export function CreateTask({subTask = false}) {
         title: data?.title || '',
         description: data?.description || '',
         project_id: selectedProject?.id,
+        project_name: selectedProject?.title,
         team: selectedMembers || [],
         status: 'Not started',
         due_date: JSON?.stringify(data?.due_date),
@@ -97,23 +98,29 @@ export function CreateTask({subTask = false}) {
               value={data?.description}
               placeholder="Description"
               placeholderTextColor="gray"
-              style={styles.textInput}
+              textAlignVertical="top"
+              style={{...styles.textInput, height: 'auto'}}
               onChangeText={text =>
                 setData(prev => ({...prev, description: text}))
               }
             />
-            <Text
-              style={{
-                marginBottom: 10,
-                marginLeft: 3,
-                fontWeight: '500',
-                fontSize: 14,
-              }}>
-              Select date
-            </Text>
+
             <TouchableOpacity
               style={styles.textInput}
               onPress={() => setModalOpen(true)}>
+              <Text
+                style={{
+                  position: 'absolute',
+                  left: 6,
+                  top: -9,
+                  fontSize: 12,
+                  fontWeight: '500',
+                  color: 'black',
+                  backgroundColor: 'white',
+                  paddingHorizontal: 2,
+                }}>
+                Select date
+              </Text>
               <Text>{moment(data?.due_date).format('DD MMM YY')}</Text>
             </TouchableOpacity>
           </>
