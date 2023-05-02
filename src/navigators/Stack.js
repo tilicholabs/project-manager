@@ -1,5 +1,5 @@
 import React, {useState, useContext, useEffect} from 'react';
-import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, Text, Image} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -32,7 +32,7 @@ const Stack = createStackNavigator();
 const BottomTab = createBottomTabNavigator();
 
 const CustomTabBar = props => {
-  const {state, dispatch} = useContext(AppContext);
+  const {state, dispatch, user} = useContext(AppContext);
   const [data, setData] = useState({activeNavTab: 'Dashboard'});
 
   const handleNavigation = route => {
@@ -84,18 +84,24 @@ const CustomTabBar = props => {
         <TouchableOpacity
           style={{alignItems: 'center'}}
           onPress={() => handleNavigation('Members')}>
-          {/* <Feather name="send" size={25} color={getColor('Members')} /> */}
           <MaterialIcons name="groups" size={25} color={getColor('Members')} />
           <Text style={{color: getColor('Members')}}>Members</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={{alignItems: 'center'}}
           onPress={() => handleNavigation('Profile')}>
-          <MaterialIcons
-            name="account-circle"
-            size={25}
-            color={getColor('Profile')}
-          />
+          {user?.profile_image ? (
+            <Image
+              source={{uri: user?.profile_image}}
+              style={{height: 20, width: 20, borderRadius: 10}}
+            />
+          ) : (
+            <MaterialIcons
+              name="account-circle"
+              size={25}
+              color={getColor('Profile')}
+            />
+          )}
           <Text style={{color: getColor('Profile')}}>Profile</Text>
         </TouchableOpacity>
       </View>
