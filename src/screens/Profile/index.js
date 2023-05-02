@@ -45,6 +45,7 @@ export function Profile({navigation}) {
     saveToPhotos: true,
     mediaType: 'photo',
   };
+  console.log(user);
   const uploadImage = async () => {
     setIsLoading(false);
     const reference = storage().ref(user.id);
@@ -82,6 +83,7 @@ export function Profile({navigation}) {
             // fetch profileurl from storage
             const url = await storage().ref(user?.id).getDownloadURL();
             setImage(url);
+            console.log(user?.id);
             await Modals.users.update(user?.id, {profile_image: url});
             setIsLoading(true);
           }

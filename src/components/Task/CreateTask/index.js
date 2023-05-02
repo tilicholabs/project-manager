@@ -18,6 +18,7 @@ import {ProjectsListing} from '../../ProjectsListing';
 import appTheme from '../../../constants/colors';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {CustomDatePicker} from '../../CustomDatePicker';
+import CustomTextInput from '../../Global/CustomTextInput';
 
 export function CreateTask({subTask = false}) {
   const {
@@ -78,18 +79,19 @@ export function CreateTask({subTask = false}) {
       <Text style={styles.boldText}>
         {subTask ? 'Create Sub Task' : 'Create Task'}
       </Text>
-      <ScrollView
-        style={{flex: 1, width: '100%'}}
-        contentContainerStyle={{alignItems: 'center'}}>
-        <TextInput
+      <ScrollView style={{flex: 1, width: '100%'}}>
+        <CustomTextInput
+          value={data?.title}
           placeholder="Task"
           placeholderTextColor="gray"
           style={styles.textInput}
+          container={{marginTop: 10}}
           onChangeText={text => setData(prev => ({...prev, title: text}))}
         />
         {!subTask && (
           <>
-            <TextInput
+            <CustomTextInput
+              value={data?.description}
               placeholder="Description"
               placeholderTextColor="gray"
               style={styles.textInput}
@@ -97,20 +99,22 @@ export function CreateTask({subTask = false}) {
                 setData(prev => ({...prev, description: text}))
               }
             />
-            <View style={{flexDirection: 'row'}}>
-              <Text style={{fontWeight: 'bold', fontSize: 14}}>
-                Select due Date:{' '}
-              </Text>
-              <TouchableOpacity onPress={() => setModalOpen(true)}>
-                <Text
-                  style={{
-                    color: appTheme.INACTIVE_COLOR,
-                    marginLeft: 5,
-                  }}>{`${data?.due_date?.getDate()}-${
-                  data?.due_date?.getMonth() + 1
-                }-${data?.due_date?.getFullYear()}`}</Text>
-              </TouchableOpacity>
-            </View>
+            <Text
+              style={{
+                marginBottom: 10,
+                marginLeft: 3,
+                fontWeight: '500',
+                fontSize: 14,
+              }}>
+              Select date
+            </Text>
+            <TouchableOpacity
+              style={styles.textInput}
+              onPress={() => setModalOpen(true)}>
+              <Text>{`${data?.due_date?.getDate()}-${
+                data?.due_date?.getMonth() + 1
+              }-${data?.due_date?.getFullYear()}`}</Text>
+            </TouchableOpacity>
           </>
         )}
 
