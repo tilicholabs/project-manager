@@ -282,7 +282,7 @@ export function SignUp({navigation}) {
             style={{
               ...styles.inputRow,
               ...{
-                borderBottomColor: error.phoneNumber ? 'red' : 'gray',
+                borderBottomColor: error.department ? 'red' : 'gray',
               },
             }}>
             <MaterialCommunityIcons name="domain" size={20} color="gray" />

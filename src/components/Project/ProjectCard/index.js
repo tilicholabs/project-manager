@@ -111,12 +111,12 @@ export function ProjectCard({project, navigation}) {
                     display: 'flex',
                     alignItems: 'center',
                     backgroundColor: '#60C877',
-                    height: 80,
-                    width: 80,
+                    height: 40,
+                    width: 40,
                     borderRadius: 50,
-                    marginBottom: 20,
+                    marginLeft: -10,
                   }}>
-                  <Text style={{fontSize: 24, fontWeight: 'bold'}}>
+                  <Text style={{fontSize: 18, fontWeight: 'bold'}}>
                     {member?.user_name[0].toUpperCase()}
                   </Text>
                 </View>

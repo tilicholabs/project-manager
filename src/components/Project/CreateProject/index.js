@@ -21,7 +21,7 @@ import {Modals} from '../../../api/firebaseModal';
 import appTheam from '../../../constants/colors';
 
 export function CreateProject({navigation}) {
-  const {state, dispatch, members} = useContext(AppContext);
+  const {state, dispatch, members, user} = useContext(AppContext);
   const [searchValue, setSearch] = useState('');
   const [updatedMembers, setUpdatedMembers] = useState(members);
   const [searchFocused, setSearchFocused] = useState(false);
@@ -47,7 +47,6 @@ export function CreateProject({navigation}) {
   };
 
   const handleSetValue = (field, value) => {
-    // let {newProject} = data;
     if (field === 'selectedMembers') {
       let {selectedMembers} = data;
       const foundIndex = selectedMembers?.findIndex(a => a === value);
@@ -56,7 +55,9 @@ export function CreateProject({navigation}) {
       } else {
         selectedMembers = selectedMembers.filter(a => a !== value);
       }
-
+      if (!selectedMembers?.includes(user?.id)) {
+        selectedMembers.push(user.id);
+      }
       data['selectedMembers'] = selectedMembers;
       addMembersToFirst(selectedMembers, members);
     } else {
