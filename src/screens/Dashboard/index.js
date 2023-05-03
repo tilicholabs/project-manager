@@ -111,7 +111,7 @@ export function Dashboard({navigation}) {
           {
             backgroundColor: bg,
             position: 'relative',
-            opacity: 0.7,
+            opacity: 0.5,
           },
           selected && {opacity: 1},
         ]}
