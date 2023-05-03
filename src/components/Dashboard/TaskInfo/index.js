@@ -40,6 +40,7 @@ export function TaskInfo({task}) {
               backgroundColor: 'white',
               paddingLeft: 4,
               paddingRight: 10,
+              fontFamily: 'Montserrat-Regular',
             }}>
             {task?.project_name}
           </Text>
@@ -51,7 +52,9 @@ export function TaskInfo({task}) {
           </Text>
         </View>
         <View style={styles.teamWrapper}>
-          <Text>{findDueDate(JSON?.parse(task?.due_date))} </Text>
+          <Text>
+            {findDueDate(JSON?.parse(task?.due_date || JSON?.stringify(0)))}{' '}
+          </Text>
         </View>
         <MaterialIcons
           name="keyboard-arrow-right"

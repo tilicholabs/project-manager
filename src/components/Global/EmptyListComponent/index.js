@@ -3,7 +3,6 @@ import {View, Text, StyleSheet} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import appTheme from '../../../constants/colors';
 
-
 export function EmptyListComponent() {
   return (
     <View style={styles.emptyListContainer}>
@@ -26,5 +25,6 @@ const styles = StyleSheet.create({
     fontSize: 19,
     opacity: 0.6,
     marginTop: 20,
+    fontFamily: 'Montserrat-Regular',
   },
 });

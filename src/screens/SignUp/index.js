@@ -29,6 +29,7 @@ import {getTime} from '../../utils/DataHelper';
 import {connect} from 'http2';
 import {AppContext} from '../../context';
 import {Loader} from '../../components/Loader';
+import {PrimaryButton} from '../../components/PrimaryButton';
 
 export function SignUp({navigation}) {
   const handleBackButton = () => {
@@ -147,13 +148,13 @@ export function SignUp({navigation}) {
               },
             },
           };
-          console.log(userCredential?.user?.uid);
+
           await Modals.users.registerUser(userCredential?.user?.uid, userData);
           navigation.reset({
             index: 0,
             routes: [{name: 'BottomStack'}],
           });
-          setLoader(false);
+
           console.log('User account created & signed in!');
         })
         .catch(error => {
@@ -167,14 +168,11 @@ export function SignUp({navigation}) {
           }
           console.log(error);
         });
+      setLoader(false);
     }
   };
 
-  return loader ? (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <Loader />
-    </View>
-  ) : (
+  return (
     <>
       <View>
         <TouchableOpacity
@@ -334,11 +332,14 @@ export function SignUp({navigation}) {
             value={true}
           />
         </View> */}
-          <TouchableOpacity
+          <PrimaryButton
             style={styles.signUpBtnWrapper}
-            onPress={signUpHandler}>
-            <Text style={styles.signUpBtnText}>SIGN UP</Text>
-          </TouchableOpacity>
+            onPress={signUpHandler}
+            title={'SIGN UP'}
+            loader={loader}
+            titleStyle={styles.signUpBtnText}
+          />
+
           <TouchableOpacity
             style={styles.loginBtnWrapper}
             onPress={() => handleNavigation('Login')}>

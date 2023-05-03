@@ -116,7 +116,12 @@ export function ProjectCard({project, navigation}) {
                     borderRadius: 50,
                     marginLeft: -10,
                   }}>
-                  <Text style={{fontSize: 18, fontWeight: 'bold'}}>
+                  <Text
+                    style={{
+                      fontSize: 18,
+                      fontWeight: 'bold',
+                      fontFamily: 'Montserrat-Regular',
+                    }}>
                     {member?.user_name[0].toUpperCase()}
                   </Text>
                 </View>

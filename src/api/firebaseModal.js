@@ -27,7 +27,7 @@ export class FireBaseModal {
 
   createProject = async data => {
     const doc = await firestore().collection(this.basePath).doc();
-    await doc.set({...data, id: doc.id, status: 'ongoing'});
+    await doc.set({...data, id: doc.id, status: 'Not Started'});
   };
 
   createTask = async task => {

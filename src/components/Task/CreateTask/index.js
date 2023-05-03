@@ -20,6 +20,10 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import {CustomDatePicker} from '../../CustomDatePicker';
 import CustomTextInput from '../../Global/CustomTextInput';
 import moment from 'moment';
+import {TabScreenHeader} from '../../Global';
+import {Fragment} from 'react/cjs/react.production.min';
+import {goBack} from '../../../navigators/RootNavigation';
+import {PrimaryButton} from '../../PrimaryButton';
 
 export function CreateTask({subTask = false}) {
   const {
@@ -37,8 +41,10 @@ export function CreateTask({subTask = false}) {
     due_date: new Date(),
   });
   const [modalOpen, setModalOpen] = useState(false);
+  const [loader, setLoader] = useState(false);
 
   const taskCreateHandler = async () => {
+    setLoader(true);
     if (subTask) {
       await Modals.subTasks.set({
         title: data?.title || '',
@@ -60,10 +66,13 @@ export function CreateTask({subTask = false}) {
       });
     }
     setSelectedMembers([]);
-    dispatch({
-      type: 'toggleBottomModal',
-      payload: {bottomModal: ''},
-    });
+    setLoader(false);
+    if (!subTask) goBack();
+    else
+      dispatch({
+        type: 'toggleBottomModal',
+        payload: {bottomModal: ''},
+      });
   };
   const dateHandler = date => {
     setData(prv => ({...prv, due_date: date}));
@@ -76,89 +85,104 @@ export function CreateTask({subTask = false}) {
       data?.description !== '' &&
       selectedProject;
 
-  return (
-    <View style={styles.container}>
-      <Text style={styles.boldText}>
+  const leftComponent = () => {
+    return (
+      <Text
+        style={{
+          fontSize: 16,
+          fontFamily: 'Montserrat-Regular',
+          fontWeight: 'bold',
+        }}>
         {subTask ? 'Create Sub Task' : 'Create Task'}
       </Text>
-      <ScrollView style={{flex: 1, width: '100%'}}>
-        <CustomTextInput
-          value={data?.title}
-          placeholder="Task"
-          placeholderTextColor="gray"
-          style={styles.textInput}
-          container={{marginTop: 10}}
-          onChangeText={text => setData(prev => ({...prev, title: text}))}
-        />
-        {!subTask && (
-          <>
-            <CustomTextInput
-              multiline={true}
-              numberOfLines={3}
-              value={data?.description}
-              placeholder="Description"
-              placeholderTextColor="gray"
-              textAlignVertical="top"
-              style={{...styles.textInput, height: 'auto'}}
-              onChangeText={text =>
-                setData(prev => ({...prev, description: text}))
-              }
-            />
+    );
+  };
 
-            <TouchableOpacity
-              style={styles.textInput}
-              onPress={() => setModalOpen(true)}>
-              <Text
-                style={{
-                  position: 'absolute',
-                  left: 6,
-                  top: -9,
-                  fontSize: 12,
-                  fontWeight: '500',
-                  color: 'black',
-                  backgroundColor: 'white',
-                  paddingHorizontal: 2,
-                }}>
-                Select date
-              </Text>
-              <Text>{moment(data?.due_date).format('DD MMM YY')}</Text>
-            </TouchableOpacity>
-          </>
-        )}
+  return (
+    <Fragment>
+      <TabScreenHeader {...{leftComponent}} />
+      <View style={styles.container}>
+        <ScrollView>
+          <CustomTextInput
+            value={data?.title}
+            placeholder="Task"
+            placeholderTextColor="gray"
+            style={styles.textInput}
+            container={{marginTop: 10}}
+            onChangeText={text => setData(prev => ({...prev, title: text}))}
+          />
+          {!subTask && (
+            <>
+              <CustomTextInput
+                multiline={true}
+                numberOfLines={3}
+                value={data?.description}
+                placeholder="Description"
+                placeholderTextColor="gray"
+                textAlignVertical="top"
+                style={{...styles.textInput, height: 'auto'}}
+                onChangeText={text =>
+                  setData(prev => ({...prev, description: text}))
+                }
+              />
 
-        {!subTask && !isProjectSelected && (
+              <TouchableOpacity
+                style={styles.textInput}
+                onPress={() => setModalOpen(true)}>
+                <Text
+                  style={{
+                    position: 'absolute',
+                    left: 6,
+                    top: -9,
+                    fontSize: 12,
+                    fontWeight: '500',
+                    color: 'black',
+                    backgroundColor: 'white',
+                    paddingHorizontal: 2,
+                  }}>
+                  Select date
+                </Text>
+                <Text>{moment(data?.due_date).format('DD MMM YY')}</Text>
+              </TouchableOpacity>
+            </>
+          )}
+
+          {!subTask && !isProjectSelected && (
+            <View style={styles.teamTextWrapper}>
+              <Text style={styles.teamText}>Select Project</Text>
+              <ProjectsListing />
+            </View>
+          )}
           <View style={styles.teamTextWrapper}>
-            <Text style={styles.teamText}>Select Project</Text>
-            <ProjectsListing />
+            <Text style={styles.teamText}>Select Members</Text>
           </View>
-        )}
-        <View style={styles.teamTextWrapper}>
-          <Text style={styles.teamText}>Select Members</Text>
-        </View>
-        <View style={styles.teamSection}>
-          <SelectedMembers />
-        </View>
-      </ScrollView>
-      <TouchableOpacity
-        style={{
-          ...styles.btnWrapper,
-          ...{
-            backgroundColor: buttonEnableCondition
-              ? appTheme.PRIMARY_COLOR
-              : appTheme.INACTIVE_COLOR,
-          },
-        }}
-        disabled={!buttonEnableCondition}
-        onPress={taskCreateHandler}>
-        <Text style={styles.btnText}>Create</Text>
-      </TouchableOpacity>
-      <CustomDatePicker
-        open={modalOpen}
-        intialDate={data?.due_date || new Date()}
-        onClose={() => setModalOpen(false)}
-        childrenStyle={{marginTop: 150}}
-        {...{newDateCallBack: dateHandler}}
-      />
-    </View>
+          <View style={styles.teamSection}>
+            <SelectedMembers isFrom="CreateTask" />
+          </View>
+        </ScrollView>
+        <PrimaryButton
+          style={{
+            ...styles.btnWrapper,
+            ...{
+              backgroundColor: buttonEnableCondition
+                ? appTheme.PRIMARY_COLOR
+                : appTheme.INACTIVE_COLOR,
+            },
+          }}
+          disabled={!buttonEnableCondition}
+          onPress={taskCreateHandler}
+          titleStyle={styles.btnText}
+          title={'Create'}
+          {...{loader}}
+        />
+
+        <CustomDatePicker
+          open={modalOpen}
+          intialDate={data?.due_date || new Date()}
+          onClose={() => setModalOpen(false)}
+          {...{newDateCallBack: dateHandler}}
+        />
+      </View>
+    </Fragment>
   );
 }

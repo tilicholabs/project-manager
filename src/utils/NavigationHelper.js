@@ -13,6 +13,7 @@ export const getScreenParent = route => {
     'CreateProject',
     'Project',
     'TaskView',
+    'CreateTask',
   ];
 
   if (bottomTabStack.includes(route)) {

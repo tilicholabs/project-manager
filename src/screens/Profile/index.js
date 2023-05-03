@@ -27,7 +27,7 @@ import {Modals} from '../../api/firebaseModal';
 export function Profile({navigation}) {
   const {state, dispatch, user} = useContext(AppContext);
   const [image, setImage] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setImage(user?.profile_image);
@@ -51,7 +51,6 @@ export function Profile({navigation}) {
   };
 
   const uploadImage = async () => {
-    setIsLoading(false);
     const reference = storage().ref(user.id);
     try {
       const granted = await PermissionsAndroid.request(
@@ -72,14 +71,12 @@ export function Profile({navigation}) {
           },
         };
         launchImageLibrary({}, async response => {
+          setIsLoading(true);
           if (response.didCancel) {
-            setIsLoading(true);
             console.log('user cancelled image picker');
           } else if (response.error) {
-            setIsLoading(true);
             console.log('Image picker error', response.error);
           } else if (response.customButton) {
-            setIsLoading(true);
             console.log('user tapped custom button', response.customButton);
           } else {
             const pathToFile = response?.uri;
@@ -87,10 +84,10 @@ export function Profile({navigation}) {
             // fetch profileurl from storage
             const url = await storage().ref(user?.id).getDownloadURL();
             setImage(url);
-            console.log(user?.id);
+
             await Modals.users.update(user?.id, {profile_image: url});
-            setIsLoading(true);
           }
+          setIsLoading(false);
         });
       }
     } catch (e) {
@@ -123,7 +120,20 @@ export function Profile({navigation}) {
               </View> */}
               <View style={{alignItems: 'center'}}>
                 <View style={{position: 'relative'}}>
-                  {image?.length > 0 ? (
+                  {isLoading ? (
+                    <View
+                      style={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        height: 100,
+                        width: 100,
+                        backgroundColor: appTheme?.INACTIVE_COLOR,
+                        marginBottom: 20,
+                        borderRadius: 50,
+                      }}>
+                      <Loader />
+                    </View>
+                  ) : image?.length > 0 ? (
                     <Image
                       style={styles.profilePhoto}
                       source={{
@@ -142,7 +152,12 @@ export function Profile({navigation}) {
                         borderRadius: 50,
                         marginBottom: 20,
                       }}>
-                      <Text style={{fontSize: 24, fontWeight: 'bold'}}>
+                      <Text
+                        style={{
+                          fontSize: 24,
+                          fontFamily: 'Montserrat-Regular',
+                          fontWeight: 'bold',
+                        }}>
                         {user?.user_name[0].toUpperCase()}
                       </Text>
                     </View>

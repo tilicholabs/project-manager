@@ -19,10 +19,12 @@ import {emailValidator, passwordValidator} from '../../utils/FormValidator';
 import auth from '@react-native-firebase/auth';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {AppContext} from '../../context';
+import {PrimaryButton} from '../../components/PrimaryButton';
 
 export function Login({navigation}) {
   const [showPassword, setShowPassword] = useState(false);
   const {setUser} = useContext(AppContext);
+  const [isLoading, setLoading] = useState(false);
   const handleBackButton = () => {
     navigation?.goBack();
   };
@@ -70,6 +72,7 @@ export function Login({navigation}) {
 
   const loginHanlder = () => {
     if (formData.email !== '' && formData.password !== '') {
+      setLoading(true);
       auth()
         .signInWithEmailAndPassword(formData.email, formData.password)
         .then(user => {
@@ -79,6 +82,7 @@ export function Login({navigation}) {
             routes: [{name: 'BottomStack'}],
           });
           console.log('signed in succesfully');
+          setLoading(false);
         })
         .catch(error => {
           if (error.code === 'auth/user-not-found') {
@@ -91,6 +95,7 @@ export function Login({navigation}) {
             Alert.alert('Warning', 'Invalid UserName or Password');
           }
           console.log(error);
+          setLoading(false);
         });
     }
   };
@@ -164,9 +169,14 @@ export function Login({navigation}) {
             value={true}
           />
         </View> */}
-        <TouchableOpacity style={styles.loginBtnWrapper} onPress={loginHanlder}>
-          <Text style={styles.loginBtnText}>LOGIN</Text>
-        </TouchableOpacity>
+        <PrimaryButton
+          style={styles.loginBtnWrapper}
+          onPress={loginHanlder}
+          title={'LOGIN'}
+          loader={isLoading}
+          titleStyle={styles.loginBtnText}
+        />
+
         <TouchableOpacity
           style={styles.signUpBtnWrapper}
           onPress={() => handleNavigation('SignUp')}>
@@ -175,7 +185,7 @@ export function Login({navigation}) {
           </Text>
         </TouchableOpacity>
       </View>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         onPress={async () => {
           onGoogleButtonPress()
             .then(user => console.log(user))
@@ -191,7 +201,7 @@ export function Login({navigation}) {
             resizeMode: 'contain',
           }}
         />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </SafeAreaView>
   );
 }

@@ -52,7 +52,7 @@ export const Comments = () => {
 
   return loading ? (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <Text>loading</Text>
+      <Text style={{fontFamily: 'Montserrat-Regular'}}>loading</Text>
     </View>
   ) : (
     <View style={styles.commentsContainer}>
@@ -65,7 +65,11 @@ export const Comments = () => {
                 {item?.commenter_id === user?.id ? (
                   <Text style={{color: '#644CBC'}}>You</Text>
                 ) : (
-                  <Text style={{color: '#60C877'}}>
+                  <Text
+                    style={{
+                      color: '#60C877',
+                      fontFamily: 'Montserrat-Regular',
+                    }}>
                     {getUserName(item?.commenter_id)}
                   </Text>
                 )}

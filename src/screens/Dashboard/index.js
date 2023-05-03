@@ -25,10 +25,10 @@ import {getScreenParent} from '../../utils/NavigationHelper';
 import AppLogo from '../../components/AppLogo';
 import {Modals} from '../../api/firebaseModal';
 import {Loader} from '../../components/Loader';
+import {useIsFocused} from '@react-navigation/native';
 
 export function Dashboard({navigation}) {
   const {state, dispatch, user} = useContext(AppContext);
-  const [open, setOpen] = useState(false);
   const [value, setValue] = useState('All Tasks');
   const [searchValue, setSearch] = useState('');
   const [tasks, setTasks] = useState([]);
@@ -82,10 +82,7 @@ export function Dashboard({navigation}) {
   };
 
   const handleCreateTask = () => {
-    dispatch({
-      type: 'toggleBottomModal',
-      payload: {bottomModal: 'CreateTask'},
-    });
+    navigateToNestedRoute(getScreenParent('CreateTask'), 'CreateTask', {});
   };
 
   const handleCreateProject = () => {
@@ -99,7 +96,7 @@ export function Dashboard({navigation}) {
   const Card = ({
     bg = '',
     icon = '',
-    size = 19,
+    size = 25,
     color = '#fff',
     status = '',
     count = '',
@@ -114,12 +111,14 @@ export function Dashboard({navigation}) {
           {
             backgroundColor: bg,
             position: 'relative',
+            opacity: 0.7,
           },
+          selected && {opacity: 1},
         ]}
         {...{onPress, ...props}}>
         {selected && (
-          <View style={{position: 'absolute', top: -8, left: -5}}>
-            <Entypo name={'dot-single'} size={50} color={'white'} />
+          <View style={{position: 'absolute', top: -21, left: -20}}>
+            <Entypo name={'dot-single'} size={70} color={'black'} />
           </View>
         )}
         <MaterialCommunityIcons
@@ -146,6 +145,12 @@ export function Dashboard({navigation}) {
     );
   };
 
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    if (isFocused) setValue('All Tasks');
+  }, [isFocused]);
+
   return loading ? (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
       <Loader />
@@ -153,20 +158,25 @@ export function Dashboard({navigation}) {
   ) : (
     <SafeAreaView style={styles.container}>
       {/* <TabScreenHeader {...{leftComponent, isBackButtonPresent: false}} /> */}
-      <ActionButton buttonColor={appTheme?.PRIMARY_COLOR} style={{zIndex: 1}}>
+      <ActionButton
+        buttonTextStyle={{fontSize: 30}}
+        buttonColor={appTheme?.PRIMARY_COLOR}
+        style={{zIndex: 1}}
+        offsetX={20}
+        offsetY={10}>
         <ActionButton.Item
           buttonColor="#9b59b6"
           title="New Task"
           useNativeDriver={false}
           onPress={() => handleCreateTask()}>
-          <MaterialCommunityIcons name={'clock-outline'} />
+          <MaterialCommunityIcons size={25} name={'clock-outline'} />
         </ActionButton.Item>
         <ActionButton.Item
           buttonColor="#3498db"
           title="New Project"
           useNativeDriver={false}
           onPress={() => handleCreateProject()}>
-          <MaterialCommunityIcons name={'file-check-outline'} />
+          <MaterialCommunityIcons size={25} name={'file-check-outline'} />
         </ActionButton.Item>
       </ActionButton>
       <Text
@@ -176,8 +186,8 @@ export function Dashboard({navigation}) {
           color: 'black',
           marginHorizontal: 16,
           marginTop: 10,
-          fontFamily: 'serif',
-        }}>{`Welcome ${user?.user_name},`}</Text>
+          fontFamily: 'Montserrat-Regular',
+        }}>{`Welcome ${user?.user_name}`}</Text>
       <View style={{paddingTop: 10, paddingBottom: 20}}>
         <Search
           {...{
@@ -210,7 +220,12 @@ export function Dashboard({navigation}) {
             ...styles.tasksSection,
             paddingTop: !keyboardDetails?.isVisible ? 20 : 0,
           }}>
-          <Text style={{fontSize: 16, fontWeight: '600', fontFamily: 'serif'}}>
+          <Text
+            style={{
+              fontSize: 16,
+              fontWeight: '600',
+              fontFamily: 'Montserrat-Regular',
+            }}>
             Your Tasks
           </Text>
           <View style={styles.tasksBody}>
@@ -226,7 +241,7 @@ export function Dashboard({navigation}) {
                       fontSize: 17,
                       textAlign: 'center',
                       marginTop: 50,
-                      fontFamily: 'serif',
+                      fontFamily: 'Montserrat-Regular',
                     }}>
                     No tasks available
                   </Text>

@@ -7,8 +7,8 @@ import {
   ScrollView,
   Image,
 } from 'react-native';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import firestore from '@react-native-firebase/firestore';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import ProgressCircle from 'react-native-progress-circle';
 import shortid from 'shortid';
@@ -21,6 +21,9 @@ import ActionButton from 'react-native-action-button';
 import {Modals} from '../../api/firebaseModal';
 import {Loader} from '../../components/Loader';
 import {dataFormatter} from '../../utils/DataFormatter';
+import {navigateToNestedRoute} from '../../navigators/RootNavigation';
+import {getScreenParent} from '../../utils/NavigationHelper';
+import {colors} from '../../constants/all';
 
 export function Project({navigation, route}) {
   const {
@@ -38,6 +41,7 @@ export function Project({navigation, route}) {
   const tabs = ['All Tasks', 'In Progress', 'Completed'];
   const {bottomModal} = state;
   const [updated, setUpdated] = useState(false);
+  const id = useRef(selectedProject?.id);
 
   const [data, setData] = useState({
     activeTab: 'All Tasks',
@@ -118,23 +122,35 @@ export function Project({navigation, route}) {
     0;
 
   useEffect(() => {
-    if (!!percent) {
-      if (percent == 100 && selectedProject?.status != 'Completed') {
+    if (percent != undefined) {
+      const numberOfCompletedTasks = completedTasks?.length;
+      const numberOfInProgressTasks = (
+        Array?.isArray(totalTasks?.current) ? totalTasks?.current : []
+      )?.filter(item => item?.status === 'In Progress')?.length;
+
+      if (
+        numberOfCompletedTasks === totalTasks?.current?.length &&
+        selectedMembers?.status != 'Completed' &&
+        totalTasks?.current?.length != 0
+      ) {
         Modals.projects.update(selectedProject?.id, {status: 'Completed'});
         setSelectedProject(prv => ({...prv, status: 'Completed'}));
-      } else if (percent == 0 && selectedProject?.status != 'Not Started') {
-        Modals.projects.update(selectedProject?.id, {status: 'Not Started'});
-        setSelectedProject(prv => ({...prv, status: 'Not Started'}));
       } else if (
-        selectedProject?.status != 'In Progress' &&
-        percent > 0 &&
-        percent < 100
+        (numberOfInProgressTasks > 0 || numberOfCompletedTasks > 0) &&
+        selectedMembers?.status != 'In Progress'
       ) {
         Modals.projects.update(selectedProject?.id, {status: 'In Progress'});
         setSelectedProject(prv => ({...prv, status: 'In Progress'}));
+      } else if (
+        numberOfInProgressTasks == 0 &&
+        numberOfCompletedTasks == 0 &&
+        selectedMembers?.status != 'Not Started'
+      ) {
+        Modals.projects.update(selectedProject?.id, {status: 'Not Started'});
+        setSelectedProject(prv => ({...prv, status: 'Not Started'}));
       }
     }
-  }, [completedTasks, tasks]);
+  }, [tasks]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -143,15 +159,23 @@ export function Project({navigation, route}) {
         style={{zIndex: 1}}
         onPress={() => {
           setIsProjectSelected(true);
-          dispatch({
-            type: 'toggleBottomModal',
-            payload: {bottomModal: 'CreateTask'},
-          });
+          navigateToNestedRoute(
+            getScreenParent('CreateTask'),
+            'CreateTask',
+            {},
+          );
         }}
       />
       <TabScreenHeader
         leftComponent={() => (
-          <Text style={{fontSize: 16}}>Project Details</Text>
+          <Text
+            style={{
+              fontSize: 16,
+              fontFamily: 'Montserrat-Regular',
+              fontWeight: 'bold',
+            }}>
+            Project Details
+          </Text>
         )}
         isSearchBtnVisible={true}
         isMoreBtnVisible={true}
@@ -180,7 +204,7 @@ export function Project({navigation, route}) {
               <Text style={styles.projectTeamTitle}>Team</Text>
               <View style={styles.projectTeamWrapper}>
                 {filterMembers(selectedProject?.selectedMembers)?.map(
-                  member => {
+                  (member, index) => {
                     return !!member?.profile_image ? (
                       <Image
                         style={{
@@ -189,12 +213,14 @@ export function Project({navigation, route}) {
                           borderRadius: 50,
                           marginLeft: -10,
                         }}
+                        key={index}
                         source={{
                           uri: member?.profile_image,
                         }}
                       />
                     ) : (
                       <View
+                        key={index}
                         style={{
                           justifyContent: 'center',
                           display: 'flex',
@@ -205,7 +231,12 @@ export function Project({navigation, route}) {
                           borderRadius: 50,
                           marginLeft: -10,
                         }}>
-                        <Text style={{fontSize: 24, fontWeight: 'bold'}}>
+                        <Text
+                          style={{
+                            fontSize: 24,
+                            fontWeight: 'bold',
+                            fontFamily: 'Montserrat-Regular',
+                          }}>
                           {member?.user_name[0].toUpperCase()}
                         </Text>
                       </View>
@@ -248,11 +279,21 @@ export function Project({navigation, route}) {
               fontSize: 15,
             }}
           /> */}
-          <Text style={styles.projectStatus}>{selectedProject?.status}</Text>
+          <Text
+            style={[
+              styles.projectStatus,
+              {
+                borderColor: colors?.[selectedProject?.status],
+                color: 'black',
+                backgroundColor: colors?.[selectedProject?.status],
+              },
+            ]}>
+            {selectedProject?.status}
+          </Text>
         </View>
         <View style={styles.projectBody}>
           <View style={styles.projectTabs}>
-            {tabs?.map(tab => (
+            {tabs?.map((tab, index) => (
               <TouchableOpacity
                 style={[
                   styles.projectTab,
@@ -261,7 +302,7 @@ export function Project({navigation, route}) {
                 onPress={() => {
                   toggleTab(tab);
                 }}
-                key={shortid.generate()}>
+                key={shortid.generate(index)}>
                 <Text
                   style={[
                     styles.projectTabText,
@@ -284,8 +325,10 @@ export function Project({navigation, route}) {
                       <Loader />
                     </View>
                   ) : (
-                    (Array?.isArray(tasks) ? tasks : [])?.map(task => (
-                      <TaskInfo task={task} key={shortid.generate()} />
+                    (Array?.isArray(tasks) ? tasks : [])?.map((task, index) => (
+                      <View key={index}>
+                        <TaskInfo task={task} key={shortid.generate()} />
+                      </View>
                     ))
                   )}
                 </View>

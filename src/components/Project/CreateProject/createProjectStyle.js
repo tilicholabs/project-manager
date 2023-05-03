@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
   btnText: {
     color: '#fff',
     fontSize: 16,
+    fontFamily: 'Montserrat-Regular',
   },
   teamSection: {height: 200, width: '100%', flex: 1, paddingHorizontal: 16},
   teamWrapper: {
@@ -54,16 +55,20 @@ const styles = StyleSheet.create({
     backgroundColor: appTheme.INACTIVE_COLOR,
   },
   memberWrapper: {
-    width: '23%',
+    width: '30%',
     display: 'flex',
     alignItems: 'center',
-    marginBottom: 10,
-    paddingVertical: 5,
-    borderRadius: 5,
-    marginHorizontal: 2.5,
+    margin: 5,
+    padding: 5,
+    borderRadius: 10,
   },
-  memberPhoto: {height: 40, width: 40, borderRadius: 50},
-  memberName: {width: 60, textAlign: 'center', color: '#000', fontSize: 13},
+  memberPhoto: {height: 50, width: 50, borderRadius: 50},
+  memberName: {
+    textAlign: 'center',
+    color: '#000',
+    fontSize: 13,
+    fontFamily: 'Montserrat-Regular',
+  },
   activeMemberName: {color: '#fff'},
 });
 

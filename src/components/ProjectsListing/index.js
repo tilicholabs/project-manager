@@ -22,16 +22,15 @@ export const ProjectsListing = () => {
       {projects?.map((project, index) => (
         <TouchableOpacity
           style={{
-            display: 'flex',
             alignItems: 'center',
             backgroundColor:
               project?.id === selectedProject?.id
                 ? appTheme.INACTIVE_COLOR
                 : 'white',
-            padding: 10,
+            margin: 5,
+            padding: 5,
             borderRadius: 10,
-
-            width: '33.33%',
+            width: '30%',
           }}
           onPress={() => setSelectedProject(project)}>
           <View key={index} style={styles.projectTitleView}>
@@ -39,13 +38,13 @@ export const ProjectsListing = () => {
               {project?.title?.[0].toUpperCase()}
             </Text>
           </View>
-          <View style={{width: 50}}>
+          <View>
             <Text
               style={{
                 textAlign: 'center',
-                // marginLeft: index > 0 ? 7 : 0,
-                marginTop: 5,
-              }}>
+                fontFamily: 'Montserrat-Regular',
+              }}
+              numberOfLines={1}>
               {project?.title}
             </Text>
           </View>

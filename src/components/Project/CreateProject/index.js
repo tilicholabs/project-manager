@@ -1,4 +1,4 @@
-import React, {useState, useContext, Fragment} from 'react';
+import React, {useState, useContext, Fragment, useMemo} from 'react';
 import {
   View,
   Text,
@@ -19,13 +19,18 @@ import {onChange} from 'react-native-reanimated';
 import CustomTextInput from '../../Global/CustomTextInput';
 import {Modals} from '../../../api/firebaseModal';
 import appTheam from '../../../constants/colors';
+import {PrimaryButton} from '../../PrimaryButton';
 
 export function CreateProject({navigation}) {
   const {state, dispatch, members, user} = useContext(AppContext);
-  const [searchValue, setSearch] = useState('');
-  const [updatedMembers, setUpdatedMembers] = useState(
-    members?.filter(item => item?.id != user?.id),
+  const membersData = useMemo(
+    () => members?.filter(item => item?.id != user?.id),
+    [members],
   );
+
+  const [searchValue, setSearch] = useState('');
+  const [loader, setLoader] = useState(false);
+  const [updatedMembers, setUpdatedMembers] = useState(membersData);
   const [searchFocused, setSearchFocused] = useState(false);
   const [data, setData] = useState({
     title: '',
@@ -34,9 +39,9 @@ export function CreateProject({navigation}) {
   });
   const [keyboardDetails] = useKeyboardDetails();
 
-  const addMembersToFirst = (selectedMembers, members) => {
+  const addMembersToFirst = (selectedMembers, membersData) => {
     const newSelectedMembers = [];
-    const newMembers = members?.filter(item => {
+    const newMembers = membersData?.filter(item => {
       const foundIndex = selectedMembers?.findIndex(a => a === item?.id);
       if (foundIndex === -1) {
         return true;
@@ -59,7 +64,7 @@ export function CreateProject({navigation}) {
       }
 
       data['selectedMembers'] = selectedMembers;
-      addMembersToFirst(selectedMembers, members);
+      addMembersToFirst(selectedMembers, membersData);
     } else {
       data[field] = value;
     }
@@ -76,12 +81,21 @@ export function CreateProject({navigation}) {
     return value;
   };
   const leftComponent = () => {
-    return <Text style={{fontSize: 16}}>Create Project</Text>;
+    return (
+      <Text
+        style={{
+          fontSize: 16,
+          fontFamily: 'Montserrat-Regular',
+          fontWeight: 'bold',
+        }}>
+        Create Project
+      </Text>
+    );
   };
 
   const onChange = text => {
     setUpdatedMembers(
-      members?.filter(item =>
+      membersData?.filter(item =>
         item?.user_name?.toLowerCase()?.includes(text?.toLowerCase()),
       ),
     );
@@ -110,11 +124,15 @@ export function CreateProject({navigation}) {
             style={styles.textInput}
             onChangeText={text => handleSetValue('title', text)}
           />
+
           <CustomTextInput
+            multiline={true}
+            numberOfLines={3}
             value={data?.description}
             placeholder="Description"
             placeholderTextColor="gray"
-            style={styles.textInput}
+            textAlignVertical="top"
+            style={{...styles.textInput, height: 'auto'}}
             onChangeText={text => handleSetValue('description', text)}
           />
         </View>
@@ -163,7 +181,12 @@ export function CreateProject({navigation}) {
                             backgroundColor: '#60C877',
                           },
                         }}>
-                        <Text style={{fontSize: 18, fontWeight: 'bold'}}>
+                        <Text
+                          style={{
+                            fontSize: 18,
+                            fontWeight: 'bold',
+                            fontFamily: 'Montserrat-Regular',
+                          }}>
                           {member?.user_name?.[0]}
                         </Text>
                       </View>
@@ -175,7 +198,7 @@ export function CreateProject({navigation}) {
                           ? styles.activeMemberName
                           : null,
                       ]}
-                      numberOfLines={2}
+                      numberOfLines={1}
                       ellipsizeMode="tail">
                       {member?.user_name}
                     </Text>
@@ -185,7 +208,7 @@ export function CreateProject({navigation}) {
             </View>
           </ScrollView>
         </View>
-        <TouchableOpacity
+        <PrimaryButton
           style={{
             ...styles.btnWrapper,
             backgroundColor: validation()
@@ -193,7 +216,11 @@ export function CreateProject({navigation}) {
               : appTheam?.PRIMARY_COLOR,
           }}
           disabled={validation()}
+          {...{loader}}
+          title={'Add Project'}
+          titleStyle={styles.btnText}
           onPress={async () => {
+            setLoader(true);
             await Modals.projects.createProject({
               ...{
                 ...data,
@@ -201,10 +228,10 @@ export function CreateProject({navigation}) {
               },
               created_at: new Date().getTime(),
             });
+            setLoader(false);
             goBack();
-          }}>
-          <Text style={styles.btnText}>Add Project</Text>
-        </TouchableOpacity>
+          }}
+        />
       </View>
     </Fragment>
   );

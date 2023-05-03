@@ -3,8 +3,9 @@ import React, {useContext, useEffect, useState} from 'react';
 import shortid from 'shortid';
 import {AppContext} from '../../context';
 import styles from './selectMembersStyle';
+import {goBack} from '../../navigators/RootNavigation';
 
-export const SelectedMembers = ({showDone = false}) => {
+export const SelectedMembers = ({showDone = false, isFrom = ''}) => {
   const {
     state,
     selectedMembers,
@@ -14,6 +15,7 @@ export const SelectedMembers = ({showDone = false}) => {
     selectedTask,
     selectedProject,
   } = useContext(AppContext);
+
   const {bottomModal} = state;
   const [requiredMembers, setRequiredMembers] = useState([]);
 
@@ -66,7 +68,7 @@ export const SelectedMembers = ({showDone = false}) => {
       });
       setRequiredMembers(filteredKeys);
     }
-    if (bottomModal === 'CreateTask' && selectedProject) {
+    if (isFrom === 'CreateTask' && selectedProject) {
       setRequiredMembers(selectedProject?.selectedMembers);
     }
   }, [selectedProject, selectedTask, bottomModal]);
@@ -101,7 +103,12 @@ export const SelectedMembers = ({showDone = false}) => {
                           backgroundColor: '#60C877',
                         },
                       }}>
-                      <Text style={{fontSize: 18, fontWeight: 'bold'}}>
+                      <Text
+                        style={{
+                          fontSize: 18,
+                          fontWeight: 'bold',
+                          fontFamily: 'Montserrat-Regular',
+                        }}>
                         {member?.user_name[0]}
                       </Text>
                     </View>
@@ -111,7 +118,7 @@ export const SelectedMembers = ({showDone = false}) => {
                       styles.memberName,
                       isSelectedMember(member) ? styles.activeMemberName : null,
                     ]}
-                    numberOfLines={2}
+                    numberOfLines={1}
                     ellipsizeMode="tail">
                     {member?.user_name}
                   </Text>
@@ -123,12 +130,14 @@ export const SelectedMembers = ({showDone = false}) => {
       {showDone && (
         <TouchableOpacity
           style={styles.btnWrapper}
-          onPress={() =>
-            dispatch({
-              type: 'toggleBottomModal',
-              payload: {bottomModal: 'closeSelectMembers'},
-            })
-          }>
+          onPress={() => {
+            if (isFrom) goBack();
+            else
+              dispatch({
+                type: 'toggleBottomModal',
+                payload: {bottomModal: 'closeSelectMembers'},
+              });
+          }}>
           <Text style={styles.btnText}>Done</Text>
         </TouchableOpacity>
       )}

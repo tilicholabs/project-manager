@@ -27,5 +27,6 @@ const styles = StyleSheet.create({
     color: 'black',
     backgroundColor: 'white',
     paddingHorizontal: 2,
+    fontFamily: 'Montserrat-Regular',
   },
 });

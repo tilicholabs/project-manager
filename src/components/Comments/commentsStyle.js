@@ -10,6 +10,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 20,
     paddingBottom: 20,
+    fontFamily: 'Montserrat-Regular',
   },
   displayComments: {
     padding: 10,
@@ -26,12 +27,15 @@ const styles = StyleSheet.create({
   personNameText: {
     fontWeight: 'bold',
     fontSize: 15,
+    fontFamily: 'Montserrat-Regular',
   },
   timeText: {
     fontSize: 12,
+    fontFamily: 'Montserrat-Regular',
   },
   comment: {
     paddingTop: 10,
+    fontFamily: 'Montserrat-Regular',
   },
   enterCommentView: {
     flexDirection: 'row',
