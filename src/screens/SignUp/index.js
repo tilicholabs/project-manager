@@ -154,7 +154,7 @@ export function SignUp({navigation}) {
             index: 0,
             routes: [{name: 'BottomStack'}],
           });
-
+          setLoader(false);
           console.log('User account created & signed in!');
         })
         .catch(error => {
@@ -166,9 +166,9 @@ export function SignUp({navigation}) {
             Alert.alert('That email address is invalid!');
             console.log('That email address is invalid!');
           }
+          setLoader(false);
           console.log(error);
         });
-      setLoader(false);
     }
   };
 

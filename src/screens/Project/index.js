@@ -170,9 +170,9 @@ export function Project({navigation, route}) {
         leftComponent={() => (
           <Text
             style={{
-              fontSize: 16,
-              fontFamily: 'Montserrat-Regular',
+              fontSize: 20,
               fontWeight: 'bold',
+              fontFamily: 'Montserrat-Regular',
             }}>
             Project Details
           </Text>
@@ -180,83 +180,92 @@ export function Project({navigation, route}) {
         isSearchBtnVisible={true}
         isMoreBtnVisible={true}
       />
-      <View>
-        <View style={styles.projectDetailsSection}>
-          <View style={styles.projectTitleWrapper}>
-            <Text style={styles.projectTitle}>{selectedProject?.title}</Text>
-          </View>
-          <Text style={styles.projectDescription}>
-            {selectedProject?.description}
-          </Text>
-          <View style={styles.projectTeamAndProgress}>
-            <View style={styles.projectProgressWrapper}>
-              <ProgressCircle
-                percent={percent}
-                radius={50}
-                borderWidth={10}
-                color="#6AC67E"
-                shadowColor="#f4f4f4"
-                bgColor="#fff">
-                <Text style={styles.projectProgress}>{percent}%</Text>
-              </ProgressCircle>
+      {loading ? (
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+          <Loader />
+        </View>
+      ) : (
+        <View>
+          <View style={styles.projectDetailsSection}>
+            <View style={styles.projectTitleWrapper}>
+              <Text style={styles.projectTitle}>{selectedProject?.title}</Text>
             </View>
-            <View>
-              <Text style={styles.projectTeamTitle}>Team</Text>
-              <View style={styles.projectTeamWrapper}>
-                {filterMembers(selectedProject?.selectedMembers)?.map(
-                  (member, index) => {
-                    return !!member?.profile_image ? (
-                      <Image
-                        style={{
-                          height: 40,
-                          width: 40,
-                          borderRadius: 50,
-                          marginLeft: -10,
-                        }}
-                        key={index}
-                        source={{
-                          uri: member?.profile_image,
-                        }}
-                      />
-                    ) : (
-                      <View
-                        key={index}
-                        style={{
-                          justifyContent: 'center',
-                          display: 'flex',
-                          alignItems: 'center',
-                          backgroundColor: '#60C877',
-                          height: 40,
-                          width: 40,
-                          borderRadius: 50,
-                          marginLeft: -10,
-                        }}>
-                        <Text
+            <Text style={styles.projectDescription}>
+              {selectedProject?.description}
+            </Text>
+            <View style={styles.projectTeamAndProgress}>
+              <View style={styles.projectProgressWrapper}>
+                <ProgressCircle
+                  percent={percent}
+                  radius={50}
+                  borderWidth={10}
+                  color="#6AC67E"
+                  shadowColor="#f4f4f4"
+                  bgColor="#fff">
+                  <Text style={styles.projectProgress}>{percent}%</Text>
+                </ProgressCircle>
+              </View>
+              <View>
+                <Text style={styles.projectTeamTitle}>Team</Text>
+                <View style={styles.projectTeamWrapper}>
+                  {filterMembers(selectedProject?.selectedMembers)?.map(
+                    (member, index) => {
+                      return !!member?.profile_image ? (
+                        <Image
                           style={{
-                            fontSize: 24,
-                            fontWeight: 'bold',
-                            fontFamily: 'Montserrat-Regular',
+                            height: 40,
+                            width: 40,
+                            borderRadius: 50,
+                            marginLeft: -10,
+                          }}
+                          key={index}
+                          source={{
+                            uri: member?.profile_image,
+                          }}
+                        />
+                      ) : (
+                        <View
+                          key={index}
+                          style={{
+                            justifyContent: 'center',
+                            display: 'flex',
+                            alignItems: 'center',
+                            backgroundColor: '#60C877',
+                            height: 40,
+                            width: 40,
+                            borderRadius: 50,
+                            marginLeft: -10,
                           }}>
-                          {member?.user_name[0].toUpperCase()}
-                        </Text>
-                      </View>
-                    );
-                  },
-                )}
-                <TouchableOpacity
-                  style={styles.plusBtnContainer}
-                  onPress={() =>
-                    dispatch({
-                      type: 'toggleBottomModal',
-                      payload: {bottomModal: 'SelectMembers'},
-                    })
-                  }>
-                  <MaterialCommunityIcons name="plus" size={22} color="#fff" />
-                </TouchableOpacity>
+                          <Text
+                            style={{
+                              fontSize: 24,
+                              fontWeight: 'bold',
+                              fontFamily: 'Montserrat-Regular',
+                            }}>
+                            {member?.user_name[0].toUpperCase()}
+                          </Text>
+                        </View>
+                      );
+                    },
+                  )}
+                  <TouchableOpacity
+                    style={styles.plusBtnContainer}
+                    onPress={() =>
+                      dispatch({
+                        type: 'toggleBottomModal',
+                        payload: {bottomModal: 'SelectMembers'},
+                      })
+                    }>
+                    <MaterialCommunityIcons
+                      name="plus"
+                      size={22}
+                      color="#fff"
+                    />
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
-          </View>
-          {/* <DropDownPicker
+            {/* <DropDownPicker
             placeholderStyle={{fontSize: 15}}
             open={open}
             value={value}
@@ -279,64 +288,61 @@ export function Project({navigation, route}) {
               fontSize: 15,
             }}
           /> */}
-          <Text
-            style={[
-              styles.projectStatus,
-              {
-                borderColor: colors?.[selectedProject?.status],
-                color: 'black',
-                backgroundColor: colors?.[selectedProject?.status],
-              },
-            ]}>
-            {selectedProject?.status}
-          </Text>
-        </View>
-        <View style={styles.projectBody}>
-          <View style={styles.projectTabs}>
-            {tabs?.map((tab, index) => (
-              <TouchableOpacity
-                style={[
-                  styles.projectTab,
-                  isActiveTab(tab) ? styles.activeProjectTab : null,
-                ]}
-                onPress={() => {
-                  toggleTab(tab);
-                }}
-                key={shortid.generate(index)}>
-                <Text
-                  style={[
-                    styles.projectTabText,
-                    isActiveTab(tab)
-                      ? styles.activeProjectTabText
-                      : styles.inActiveProjectTabText,
-                  ]}>
-                  {tab}
-                </Text>
-              </TouchableOpacity>
-            ))}
+            <Text
+              style={[
+                styles.projectStatus,
+                {
+                  borderColor: colors?.[selectedProject?.status],
+                  color: 'black',
+                  backgroundColor: colors?.[selectedProject?.status],
+                },
+              ]}>
+              {selectedProject?.status}
+            </Text>
           </View>
-
-          <>
-            <View style={styles.bottomContainer}>
-              <ScrollView showsVerticalScrollIndicator={false}>
-                <View style={styles.bottomContent}>
-                  {loading ? (
-                    <View style={{marginTop: 30}}>
-                      <Loader />
-                    </View>
-                  ) : (
-                    (Array?.isArray(tasks) ? tasks : [])?.map((task, index) => (
-                      <View key={index}>
-                        <TaskInfo task={task} key={shortid.generate()} />
-                      </View>
-                    ))
-                  )}
-                </View>
-              </ScrollView>
+          <View style={styles.projectBody}>
+            <View style={styles.projectTabs}>
+              {tabs?.map((tab, index) => (
+                <TouchableOpacity
+                  style={[
+                    styles.projectTab,
+                    isActiveTab(tab) ? styles.activeProjectTab : null,
+                  ]}
+                  onPress={() => {
+                    toggleTab(tab);
+                  }}
+                  key={shortid.generate(index)}>
+                  <Text
+                    style={[
+                      styles.projectTabText,
+                      isActiveTab(tab)
+                        ? styles.activeProjectTabText
+                        : styles.inActiveProjectTabText,
+                    ]}>
+                    {tab}
+                  </Text>
+                </TouchableOpacity>
+              ))}
             </View>
-          </>
+
+            <>
+              <View style={styles.bottomContainer}>
+                <ScrollView showsVerticalScrollIndicator={false}>
+                  <View style={styles.bottomContent}>
+                    {(Array?.isArray(tasks) ? tasks : [])?.map(
+                      (task, index) => (
+                        <View key={index}>
+                          <TaskInfo task={task} key={shortid.generate()} />
+                        </View>
+                      ),
+                    )}
+                  </View>
+                </ScrollView>
+              </View>
+            </>
+          </View>
         </View>
-      </View>
+      )}
     </SafeAreaView>
   );
 }

@@ -18,7 +18,7 @@ export function TabScreenHeader({
           onPress={goBack}
         />
       )}
-      <View style={{marginLeft: 16}}>{leftComponent()}</View>
+      <View style={{marginLeft: 10, marginBottom: 2}}>{leftComponent()}</View>
     </View>
   );
 }

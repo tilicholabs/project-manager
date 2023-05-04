@@ -166,18 +166,18 @@ export function TaskView() {
     return (
       <Text
         style={{
-          fontSize: 16,
-          fontFamily: 'Montserrat-Regular',
+          fontSize: 20,
           fontWeight: 'bold',
+          fontFamily: 'Montserrat-Regular',
         }}>
         Task Details
       </Text>
     );
   };
 
-  const Card = (title, value, style = {}) => {
+  const Card = (title, value, style = {}, onPress = () => {}) => {
     return (
-      <View
+      <Pressable
         style={{
           height: 60,
           position: 'relative',
@@ -191,7 +191,8 @@ export function TaskView() {
           justifyContent: 'center',
           alignItems: 'center',
           ...style,
-        }}>
+        }}
+        {...{onPress}}>
         <Text
           style={{
             position: 'absolute',
@@ -200,8 +201,8 @@ export function TaskView() {
             fontSize: 12,
             fontWeight: '500',
             color: 'black',
-            backgroundColor: 'white',
-            paddingHorizontal: 2,
+            backgroundColor: '#fafafa',
+            paddingHorizontal: 5,
           }}
           numberOfLines={1}>
           {title}
@@ -209,7 +210,7 @@ export function TaskView() {
         <Text style={styles.taskTitle} numberOfLines={1}>
           {value}
         </Text>
-      </View>
+      </Pressable>
     );
   };
 
@@ -242,8 +243,14 @@ export function TaskView() {
             justifyContent: 'space-between',
             marginBottom: 16,
           }}>
-          {Card('Project Name', selectedTask?.project_name)}
-          {Card('Due Date', findDueDate(JSON?.parse(selectedTask?.due_date)))}
+          {Card('Task', selectedTask?.title)}
+
+          {Card(
+            'Due Date',
+            findDueDate(JSON?.parse(selectedTask?.due_date)),
+            {},
+            () => setModalOpen(true),
+          )}
         </View>
         <View
           style={{
@@ -251,11 +258,11 @@ export function TaskView() {
             justifyContent: 'space-between',
             marginBottom: 16,
           }}>
+          {Card('Project Name', selectedTask?.project_name)}
           {Card(
             'Status',
             progressHandler() === 100 ? 'Completed' : 'In Progress',
           )}
-          {Card('Task', selectedTask?.title)}
         </View>
         <View style={{marginBottom: 16}}>
           <Text
