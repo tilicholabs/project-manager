@@ -26,6 +26,8 @@ import {AppContext} from '../context';
 import {TaskView} from '../screens/TaskView';
 import auth from '@react-native-firebase/auth';
 import {CreateProject} from '../components';
+import {CreateTask} from '../components/Task';
+import {useRoute} from '@react-navigation/native';
 
 const Stack = createStackNavigator();
 const BottomTab = createBottomTabNavigator();
@@ -33,9 +35,9 @@ const BottomTab = createBottomTabNavigator();
 const CustomTabBar = props => {
   const {state, dispatch, user} = useContext(AppContext);
   const [data, setData] = useState({activeNavTab: 'Dashboard'});
+  const route = useRoute();
 
   const handleNavigation = route => {
-    setData(combineData(data, {activeNavTab: route}));
     props?.navigation.navigate(route);
   };
 
@@ -49,12 +51,17 @@ const CustomTabBar = props => {
     return color;
   };
 
-  const handleBottomModal = bottomModal => {
-    dispatch({
-      type: 'toggleBottomModal',
-      payload: {bottomModal},
-    });
-  };
+  useEffect(() => {
+    if (
+      data?.activeNavTab != route?.state?.routeNames?.[route?.state?.index] &&
+      !!route?.state?.routeNames?.[route?.state?.index]
+    ) {
+      setData(prv => ({
+        ...prv,
+        activeNavTab: route?.state?.routeNames?.[route?.state?.index],
+      }));
+    }
+  }, [route]);
 
   return (
     <View style={styles.menuWrapper}>
@@ -67,7 +74,13 @@ const CustomTabBar = props => {
             size={24}
             color={getColor('Dashboard')}
           />
-          <Text style={{color: getColor('Dashboard')}}>Home</Text>
+          <Text
+            style={{
+              color: getColor('Dashboard'),
+              fontFamily: 'Montserrat-Regular',
+            }}>
+            Home
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={{alignItems: 'center'}}
@@ -77,14 +90,26 @@ const CustomTabBar = props => {
             size={25}
             color={getColor('Projects')}
           />
-          <Text style={{color: getColor('Projects')}}>Projects</Text>
+          <Text
+            style={{
+              color: getColor('Projects'),
+              fontFamily: 'Montserrat-Regular',
+            }}>
+            Projects
+          </Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={{alignItems: 'center'}}
           onPress={() => handleNavigation('Members')}>
           <MaterialIcons name="groups" size={25} color={getColor('Members')} />
-          <Text style={{color: getColor('Members')}}>Members</Text>
+          <Text
+            style={{
+              color: getColor('Members'),
+              fontFamily: 'Montserrat-Regular',
+            }}>
+            Members
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={{alignItems: 'center'}}
@@ -92,7 +117,7 @@ const CustomTabBar = props => {
           {user?.profile_image ? (
             <Image
               source={{uri: user?.profile_image}}
-              style={{height: 20, width: 20, borderRadius: 10}}
+              style={{height: 28, width: 28, borderRadius: 28}}
             />
           ) : (
             <MaterialIcons
@@ -101,7 +126,13 @@ const CustomTabBar = props => {
               color={getColor('Profile')}
             />
           )}
-          <Text style={{color: getColor('Profile')}}>Profile</Text>
+          <Text
+            style={{
+              color: getColor('Profile'),
+              fontFamily: 'Montserrat-Regular',
+            }}>
+            Profile
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -198,6 +229,11 @@ const SingleStack = () => {
         options={{headerShown: false}}
       />
       <Stack.Screen
+        name="CreateTask"
+        component={CreateTask}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
         name="TaskView"
         component={TaskView}
         options={{headerShown: false}}
@@ -209,7 +245,7 @@ const SingleStack = () => {
 function AppStack() {
   const [userIn, setUserIn] = useState(false);
   const [firstRender, setFirstRender] = useState(true);
-  const {setUser} = useContext(AppContext);
+  const {setUser, user} = useContext(AppContext);
   const userState = async User => {
     if (User) {
       firestore()

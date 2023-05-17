@@ -27,6 +27,7 @@ import moment from 'moment/moment';
 import {Loader} from '../../components/Loader';
 import DatePicker from 'react-native-date-picker';
 import {CustomDatePicker} from '../../components/CustomDatePicker';
+import {findDueDate} from '../../utils/functions';
 
 export function TaskView() {
   const {
@@ -162,7 +163,55 @@ export function TaskView() {
   }-${findDate?.getFullYear()}`;
 
   const leftComponent = () => {
-    return <Text style={{fontSize: 16}}>Task Details</Text>;
+    return (
+      <Text
+        style={{
+          fontSize: 20,
+          fontWeight: 'bold',
+          fontFamily: 'Montserrat-Regular',
+        }}>
+        Task Details
+      </Text>
+    );
+  };
+
+  const Card = (title, value, style = {}, onPress = () => {}) => {
+    return (
+      <Pressable
+        style={{
+          height: 60,
+          position: 'relative',
+          width: '48%',
+          borderRadius: 50,
+          borderColor: appTheme.INACTIVE_COLOR,
+          borderWidth: 1,
+          fontSize: 16,
+          paddingVertical: 5,
+          paddingHorizontal: 7,
+          justifyContent: 'center',
+          alignItems: 'center',
+          ...style,
+        }}
+        {...{onPress}}>
+        <Text
+          style={{
+            position: 'absolute',
+            marginHorizontal: 'auto',
+            top: -9,
+            fontSize: 12,
+            fontWeight: '500',
+            color: 'black',
+            backgroundColor: '#fafafa',
+            paddingHorizontal: 5,
+          }}
+          numberOfLines={1}>
+          {title}
+        </Text>
+        <Text style={styles.taskTitle} numberOfLines={1}>
+          {value}
+        </Text>
+      </Pressable>
+    );
   };
 
   return loading ? (
@@ -179,7 +228,7 @@ export function TaskView() {
           <View style={styles.taskProgressWrapper}>
             <ProgressCircle
               percent={progressHandler() || 0}
-              radius={30}
+              radius={50}
               borderWidth={7}
               color="#6AC67E"
               shadowColor="#f4f4f4"
@@ -187,37 +236,66 @@ export function TaskView() {
               <Text style={styles.taskProgress}>{progressHandler() || 0}%</Text>
             </ProgressCircle>
           </View>
-          <Text style={styles.taskTitle}>{selectedTask?.title}</Text>
         </View>
-        <View style={{flexDirection: 'row'}}>
-          <Text style={styles.dueDateText}>Due Date - </Text>
-          <View style={styles.scheduleWrapper}>
-            <View style={styles.scheduleRow}>
-              <AntDesign
-                name="calendar"
-                size={20}
-                color={appTheme.INACTIVE_COLOR}
-              />
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginBottom: 16,
+          }}>
+          {Card('Task', selectedTask?.title)}
 
-              <TouchableOpacity onPress={() => setModalOpen(true)}>
-                <Text style={styles.scheduleText}>{date}</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+          {Card(
+            'Due Date',
+            findDueDate(JSON?.parse(selectedTask?.due_date)),
+            {},
+            () => setModalOpen(true),
+          )}
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginBottom: 16,
+          }}>
+          {Card('Project Name', selectedTask?.project_name)}
+          {Card(
+            'Status',
+            progressHandler() === 100 ? 'Completed' : 'In Progress',
+          )}
+        </View>
+        <View style={{marginBottom: 16}}>
+          <Text
+            style={{
+              fontSize: 14,
+              fontWeight: '400',
+              color: 'gray',
+              marginBottom: 3,
+            }}>
+            Description
+          </Text>
+          <Text
+            style={{
+              fontSize: 16,
+              fontWeight: '500',
+              color: 'black',
+
+              paddingHorizontal: 2,
+              marginBottom: 3,
+            }}>
+            {selectedTask?.description}
+          </Text>
         </View>
 
-        <Text style={styles.statusText}>{`Status - ${
-          progressHandler() === 100 ? 'Completed' : 'In Progress'
-        }`}</Text>
         <Text style={styles.taskTeamText}>Team</Text>
         <View style={styles.taskMembersWrapper}>
           {members?.map(member => {
             return selectedTask?.team?.includes(member?.id) ? (
-              member?.photo_url ? (
+              member?.profile_image ? (
                 <Image
                   key={shortid.generate()}
                   style={styles.taskMemberPhoto}
-                  source={{uri: member?.photo}}
+                  source={{uri: member?.profile_image}}
                 />
               ) : (
                 <View
@@ -238,7 +316,12 @@ export function TaskView() {
                   }}
                   key={shortid.generate()}>
                   <Text
-                    style={{fontSize: 15, fontWeight: 'bold', color: '#fff'}}>
+                    style={{
+                      fontSize: 15,
+                      fontWeight: 'bold',
+                      color: '#fff',
+                      fontFamily: 'Montserrat-Regular',
+                    }}>
                     {member?.user_name[0]}
                   </Text>
                 </View>
@@ -251,14 +334,16 @@ export function TaskView() {
           />
         </View>
 
-        <Text style={styles.longText}>{selectedTask?.description}</Text>
         <Text style={styles.subTaskText}>Sub-Tasks</Text>
         {subTasks?.length > 0 ? (
           subTasks.map((task, index) => {
             return (
               <View key={index} style={styles.subTasksStyle}>
                 <View>
-                  <Text>{task.title}</Text>
+                  <Text
+                    style={{fontSize: 14, fontFamily: 'Montserrat-Regular'}}>
+                    {task.title}
+                  </Text>
                 </View>
                 <StatusPopUp task={task} onSelect={statusUpateHandler} />
               </View>
@@ -272,7 +357,7 @@ export function TaskView() {
         style={{
           position: 'absolute',
           bottom: 70,
-          right: 35,
+          right: 20,
           shadowColor: '#000',
           shadowOffset: {width: 0, height: 1},
           shadowOpacity: 0.5,

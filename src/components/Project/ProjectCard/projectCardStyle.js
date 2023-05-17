@@ -19,6 +19,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 17,
     marginBottom: 5,
+    fontFamily: 'Montserrat-Regular',
   },
   projectTeamAndProgress: {
     display: 'flex',
@@ -29,8 +30,13 @@ const styles = StyleSheet.create({
   projectDescription: {
     color: appTheme.INACTIVE_COLOR,
     marginBottom: 10,
+    fontFamily: 'Montserrat-Regular',
   },
-  projectTeamTitle: {fontWeight: 'bold', marginBottom: 5},
+  projectTeamTitle: {
+    fontWeight: 'bold',
+    marginBottom: 5,
+    fontFamily: 'Montserrat-Regular',
+  },
   projectTeamWrapper: {
     display: 'flex',
     flexDirection: 'row',
@@ -46,6 +52,7 @@ const styles = StyleSheet.create({
   projectProgress: {
     fontWeight: 'bold',
     fontSize: 16,
+    fontFamily: 'Montserrat-Regular',
   },
   rowJustifyBetween: {
     display: 'flex',

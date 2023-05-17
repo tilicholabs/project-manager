@@ -8,6 +8,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontWeight: 'bold',
+    fontFamily: 'Montserrat-Regular',
     fontSize: 20,
   },
   leftHeaderWrapper: {
@@ -40,9 +41,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   profilePhoto: {
-    height: 100,
-    width: 100,
-    borderRadius: 50,
+    height: 110,
+    width: 110,
+    borderRadius: 110,
     marginBottom: 20,
   },
   statisticsContainer: {
@@ -63,11 +64,18 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
   },
-  nameText: {fontWeight: 'bold', fontSize: 16, marginBottom: 5},
+  nameText: {
+    fontWeight: 'bold',
+    fontSize: 16,
+    marginBottom: 5,
+    fontFamily: 'Montserrat-Regular',
+  },
   designationText: {
     fontSize: 12,
     color: appTheme.INACTIVE_COLOR,
     marginBottom: 20,
+
+    fontFamily: 'Montserrat-Regular',
   },
   editProfileWrapper: {
     backgroundColor: appTheme.PRIMARY_COLOR,
@@ -118,6 +126,7 @@ const styles = StyleSheet.create({
     color: appTheme.PRIMARY_COLOR,
     height: 25,
     marginLeft: 8,
+    fontFamily: 'Montserrat-Regular',
   },
   inputContainer: {
     marginTop: 25,

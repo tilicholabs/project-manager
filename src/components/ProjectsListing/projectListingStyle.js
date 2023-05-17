@@ -3,9 +3,9 @@ import appTheme from '../../constants/colors';
 
 const styles = StyleSheet.create({
   projectsView: {
+    width: '100%',
     flexDirection: 'row',
     flexWrap: 'wrap',
-    // marginHorizontal: 10,
   },
   projectTitleView: {
     display: 'flex',
@@ -14,11 +14,12 @@ const styles = StyleSheet.create({
     height: 50,
     width: 50,
     borderRadius: 40,
-    backgroundColor: appTheme.COLOR1,
+    backgroundColor: 'rgba(100, 76, 188,0.5)',
   },
   projectTitle: {
     fontWeight: 'bold',
     fontSize: 22,
+    fontFamily: 'Montserrat-Regular',
     color: '#fff',
   },
 });

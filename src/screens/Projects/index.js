@@ -93,16 +93,6 @@ export function Projects({navigation}) {
     return data;
   };
 
-  const percent = async id => {
-    const tasks = await (await getTasks(id)).length;
-    const completedTasks = await (await getCompletedTasks(id)).length;
-    if (tasks) {
-      return Number((completedTasks / tasks) * 100);
-    } else {
-      return 0;
-    }
-  };
-
   const api = async () => {
     const data = (await Modals.projects.getMembers()).docs;
     dispatch({
@@ -111,42 +101,31 @@ export function Projects({navigation}) {
     });
   };
 
-  const addPercentParameter = async arr => {
-    const result = await Promise.all(
-      arr.map(async item => {
-        const percentage = await percent(item?.id);
-        return {...item, percent: percentage};
-      }),
-    );
-
-    return result;
-  };
-
   const getProjects = async () => {
-    const data = await Modals.projects.getUserProjects(user?.id);
-    allProjectData.current = [...data] || [];
-    setProjectData(data || []);
+    setLoading(true);
+    const res = await Modals?.projects?.getUserProjects(user?.id);
+    allProjectData.current = [...res] || [];
+
+    toggleTab(data?.activeTab);
+    await api();
     setLoading(false);
-
-    firestore()
-      .collection('projects')
-      .where('selectedMembers', 'array-contains', user?.id)
-      .onSnapshot(async document => {
-        const data = await dataFormatter(document);
-
-        setProjectData(data);
-      });
   };
 
   useEffect(() => {
     if (isFocused) {
-      api();
       getProjects();
     }
   }, [isFocused]);
 
   const leftComponent = () => (
-    <Text style={{fontSize: 20, fontWeight: 'bold'}}>Projects</Text>
+    <Text
+      style={{
+        fontSize: 20,
+        fontWeight: 'bold',
+        fontFamily: 'Montserrat-Regular',
+      }}>
+      Projects
+    </Text>
   );
 
   return (
@@ -155,6 +134,8 @@ export function Projects({navigation}) {
       <ActionButton
         buttonColor={appTheme?.PRIMARY_COLOR}
         style={{zIndex: 1}}
+        offsetX={20}
+        buttonTextStyle={{fontSize: 30}}
         onPress={() => {
           navigateToNestedRoute(
             getScreenParent('CreateProject'),
@@ -170,14 +151,14 @@ export function Projects({navigation}) {
       ) : (
         <View style={styles.projectsBody}>
           <View style={styles.projectsTabs}>
-            {tabs?.map(tab => (
+            {tabs?.map((tab, index) => (
               <TouchableOpacity
                 style={[
                   styles.projectTab,
                   isActiveTab(tab) ? styles.activeProjectTab : null,
                 ]}
                 onPress={() => toggleTab(tab)}
-                key={shortid.generate()}>
+                key={shortid.generate(index)}>
                 <Text
                   style={[
                     styles.projectTabText,
@@ -193,7 +174,7 @@ export function Projects({navigation}) {
           {projects?.length > 0 ? (
             <FlatList
               data={projectData}
-              keyExtractor={(item, index) => shortid.generate()}
+              keyExtractor={(item, index) => shortid.generate(index)}
               renderItem={renderProjectInfo}
               horizontal={false}
               showsVerticalScrollIndicator={false}

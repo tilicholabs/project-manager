@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
   taskTitle: {
     fontWeight: 'bold',
     paddingLeft: 10,
-    fontFamily: 'serif',
+    fontFamily: 'Montserrat-Regular',
   },
   taskProgressBar: {borderRadius: 7, height: 6},
   teamWrapper: {
@@ -33,6 +33,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingLeft: 10,
     marginRight: 10,
+    fontFamily: 'Montserrat-Regular',
   },
   memberPhoto: {
     height: 40,

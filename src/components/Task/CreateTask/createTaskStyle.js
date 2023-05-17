@@ -4,8 +4,9 @@ import appTheme from '../../../constants/colors';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    display: 'flex',
-    alignItems: 'center',
+
+    paddingHorizontal: 16,
+    backgroundColor: 'white',
   },
   boldText: {
     fontWeight: 'bold',
@@ -28,7 +29,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 7,
     justifyContent: 'center',
   },
-  teamTextWrapper: {width: '90%'},
+  teamTextWrapper: {width: '100%'},
   teamText: {
     fontSize: 16,
     color: 'gray',
@@ -37,20 +38,20 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
   btnWrapper: {
-    marginTop: 'auto',
+    marginVertical: 10,
     height: 45,
     width: '90%',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 10,
+    alignSelf: 'center',
     borderRadius: 5,
   },
   btnText: {
     color: '#fff',
     fontSize: 16,
   },
-  teamSection: {width: '90%'},
+  teamSection: {width: '100%'},
   teamWrapper: {
     display: 'flex',
     flexDirection: 'row',

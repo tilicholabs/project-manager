@@ -7,6 +7,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fafafa',
     // backgroundColor: 'red',
   },
+  selectedMemberLastSeen: {fontFamily: 'Montserrat-Regular'},
   chatHeader: {
     display: 'flex',
     flexDirection: 'row',

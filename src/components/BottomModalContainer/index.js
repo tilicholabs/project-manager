@@ -7,7 +7,6 @@ import {
   Text,
   Pressable,
 } from 'react-native';
-import {CreateProject} from '../Project';
 import {CreateTask, TaskView} from '../Task';
 import styles from './bottomModalContainerStyle';
 import {AppContext} from '../../context';
@@ -47,9 +46,7 @@ export function BottomModalContainer() {
                 paddingHorizontal: 20,
                 paddingBottom: 10,
               }}>
-              {bottomModal === 'CreateProject' ? (
-                <CreateProject />
-              ) : bottomModal === 'CreateTask' ? (
+              {bottomModal === 'CreateTask' ? (
                 <CreateTask />
               ) : bottomModal === 'TaskView' ? (
                 <TaskView />
@@ -63,6 +60,7 @@ export function BottomModalContainer() {
                       fontSize: 20,
                       fontWeight: 'bold',
                       paddingBottom: 30,
+                      fontFamily: 'Montserrat-Regular',
                     }}>
                     Select Members
                   </Text>

@@ -47,7 +47,14 @@ export function Members() {
   };
 
   const leftComponent = () => (
-    <Text style={{fontSize: 20, fontWeight: 'bold'}}>Members</Text>
+    <Text
+      style={{
+        fontSize: 20,
+        fontWeight: 'bold',
+        fontFamily: 'Montserrat-Regular',
+      }}>
+      Members
+    </Text>
   );
 
   return (
@@ -91,6 +98,7 @@ export function Members() {
                         fontSize: 30,
                         lineHeight: 32,
                         color: 'white',
+                        fontFamily: 'Montserrat-Regular',
                       }}>
                       {member?.user_name[0]}
                     </Text>

@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 18,
     marginRight: 10,
+    fontFamily: 'Montserrat-Regular',
   },
   projectTeamAndProgress: {
     display: 'flex',
@@ -42,15 +43,21 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     alignItems: 'center',
   },
-  projectTeamTitle: {fontWeight: 'bold', marginBottom: 5},
+  projectTeamTitle: {
+    fontWeight: 'bold',
+    marginBottom: 5,
+    fontFamily: 'Montserrat-Regular',
+  },
   projectDescription: {
     color: appTheme.INACTIVE_COLOR,
     marginBottom: 30,
+    fontFamily: 'Montserrat-Regular',
   },
   projectProgressWrapper: {marginRight: 30},
   projectProgress: {
     fontWeight: 'bold',
     fontSize: 18,
+    fontFamily: 'Montserrat-Regular',
   },
   projectTeamWrapper: {
     display: 'flex',
@@ -79,14 +86,14 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
     borderRadius: 20,
     textAlign: 'center',
-    borderColor: appTheme.INACTIVE_COLOR,
+
     borderWidth: 1,
     textTransform: 'capitalize',
+    fontFamily: 'Montserrat-Regular',
     paddingHorizontal: 15,
     paddingVertical: 10,
     fontSize: 15,
     fontWeight: 'bold',
-    color: appTheme.INACTIVE_COLOR,
   },
   projectBody: {
     paddingTop: 20,
@@ -110,7 +117,12 @@ const styles = StyleSheet.create({
   activeProjectTab: {
     backgroundColor: appTheme.PRIMARY_COLOR,
   },
-  projectTabText: {fontSize: 16, paddingVertical: 7, textAlign: 'center'},
+  projectTabText: {
+    fontSize: 16,
+    paddingVertical: 7,
+    textAlign: 'center',
+    fontFamily: 'Montserrat-Regular',
+  },
   activeProjectTabText: {
     color: '#fff',
   },

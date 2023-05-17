@@ -29,6 +29,7 @@ import {getTime} from '../../utils/DataHelper';
 import {connect} from 'http2';
 import {AppContext} from '../../context';
 import {Loader} from '../../components/Loader';
+import {PrimaryButton} from '../../components/PrimaryButton';
 
 export function SignUp({navigation}) {
   const handleBackButton = () => {
@@ -147,7 +148,7 @@ export function SignUp({navigation}) {
               },
             },
           };
-          console.log(userCredential?.user?.uid);
+
           await Modals.users.registerUser(userCredential?.user?.uid, userData);
           navigation.reset({
             index: 0,
@@ -165,16 +166,13 @@ export function SignUp({navigation}) {
             Alert.alert('That email address is invalid!');
             console.log('That email address is invalid!');
           }
+          setLoader(false);
           console.log(error);
         });
     }
   };
 
-  return loader ? (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <Loader />
-    </View>
-  ) : (
+  return (
     <>
       <View>
         <TouchableOpacity
@@ -334,11 +332,14 @@ export function SignUp({navigation}) {
             value={true}
           />
         </View> */}
-          <TouchableOpacity
+          <PrimaryButton
             style={styles.signUpBtnWrapper}
-            onPress={signUpHandler}>
-            <Text style={styles.signUpBtnText}>SIGN UP</Text>
-          </TouchableOpacity>
+            onPress={signUpHandler}
+            title={'SIGN UP'}
+            loader={loader}
+            titleStyle={styles.signUpBtnText}
+          />
+
           <TouchableOpacity
             style={styles.loginBtnWrapper}
             onPress={() => handleNavigation('Login')}>

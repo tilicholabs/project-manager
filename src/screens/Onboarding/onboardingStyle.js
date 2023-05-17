@@ -21,12 +21,14 @@ const styles = StyleSheet.create({
     fontSize: 26,
     lineHeight: 32,
     marginBottom: 15,
+    fontFamily: 'Montserrat-Regular',
   },
   smallText: {
     fontSize: 16,
     color: appTheme.INACTIVE_COLOR,
     fontWeight: '500',
     marginBottom: 20,
+    fontFamily: 'Montserrat-Regular',
   },
   loginBtnWrapper: {
     borderColor: appTheme.INACTIVE_COLOR,
@@ -39,7 +41,11 @@ const styles = StyleSheet.create({
     borderRadius: 7,
     marginBottom: 15,
   },
-  loginBtnText: {fontWeight: 'bold', fontSize: 16},
+  loginBtnText: {
+    fontWeight: 'bold',
+    fontSize: 16,
+    fontFamily: 'Montserrat-Regular',
+  },
   signUpBtnWrapper: {
     backgroundColor: appTheme.PRIMARY_COLOR,
     display: 'flex',
@@ -49,7 +55,12 @@ const styles = StyleSheet.create({
     height: 45,
     borderRadius: 7,
   },
-  signUpBtnText: {fontWeight: 'bold', fontSize: 16, color: '#fff'},
+  signUpBtnText: {
+    fontWeight: 'bold',
+    fontSize: 16,
+    color: '#fff',
+    fontFamily: 'Montserrat-Regular',
+  },
 });
 
 export default styles;

@@ -5,7 +5,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fafafa',
-  },  
+  },
   headerTitle: {
     fontWeight: 'bold',
     fontSize: 19,
@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
   projectsBody: {
     paddingTop: 20,
     paddingHorizontal: 16,
-    paddingBottom: 120
+    paddingBottom: 120,
   },
   projectsTabs: {
     backgroundColor: '#fff',
@@ -32,7 +32,12 @@ const styles = StyleSheet.create({
   activeProjectTab: {
     backgroundColor: appTheme.PRIMARY_COLOR,
   },
-  projectTabText: {fontSize: 16, paddingVertical: 7, textAlign: 'center'},
+  projectTabText: {
+    fontSize: 16,
+    paddingVertical: 7,
+    textAlign: 'center',
+    fontFamily: 'Montserrat-Regular',
+  },
   activeProjectTabText: {
     color: '#fff',
   },

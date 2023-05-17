@@ -56,13 +56,13 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: 20,
     fontWeight: 'bold',
-    fontFamily: 'serif',
+    fontFamily: 'Montserrat-Regular',
   },
   statisticsTitle: {
     color: 'black',
     fontSize: 15,
     fontWeight: 'bold',
-    fontFamily: 'serif',
+    fontFamily: 'Montserrat-Regular',
   },
   tasksSection: {
     paddingBottom: 40,
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
 
     color: 'black',
 
-    fontFamily: 'serif',
+    fontFamily: 'Montserrat-Regular',
   },
 });
 

@@ -9,20 +9,20 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   topWrapper: {
-    display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     marginBottom: 15,
   },
   dueDateText: {
-    marginBottom: 15,
     fontSize: 15,
     fontWeight: 'bold',
+    fontFamily: 'Montserrat-Regular',
   },
   statusText: {
-    marginBottom: 15,
     fontSize: 15,
     fontWeight: 'bold',
+    fontFamily: 'Montserrat-Regular',
   },
   menuOptionsText: {
     fontSize: 15,
@@ -35,14 +35,16 @@ const styles = StyleSheet.create({
     height: 20,
     width: 20,
   },
-  taskProgressWrapper: {marginRight: 20},
+  taskProgressWrapper: {},
   taskProgress: {
     fontWeight: 'bold',
     fontSize: 14,
+    fontFamily: 'Montserrat-Regular',
   },
   taskTitle: {
     fontWeight: 'bold',
     fontSize: 18,
+    fontFamily: 'Montserrat-Regular',
   },
   taskTeamText: {fontWeight: 'bold', marginBottom: 7, fontSize: 17},
   taskMembersWrapper: {
@@ -51,6 +53,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingLeft: 10,
     marginBottom: 20,
+    fontFamily: 'Montserrat-Regular',
   },
   taskMemberPhoto: {
     height: 45,
@@ -63,7 +66,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 20,
   },
   scheduleRow: {
     display: 'flex',
@@ -75,6 +77,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 22,
     color: appTheme.INACTIVE_COLOR,
+    fontFamily: 'Montserrat-Regular',
   },
   subTaskView: {
     display: 'flex',
@@ -84,6 +87,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: 10,
     fontSize: 17,
+    fontFamily: 'Montserrat-Regular',
     marginBottom: 10,
   },
   subTasksStyle: {
@@ -134,6 +138,7 @@ const styles = StyleSheet.create({
   bottomText: {
     marginLeft: 10,
     color: appTheme.INACTIVE_COLOR,
+    fontFamily: 'Montserrat-Regular',
   },
 });
 

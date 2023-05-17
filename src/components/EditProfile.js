@@ -4,12 +4,14 @@ import CustomTextInput from './Global/CustomTextInput';
 import appTheme from '../constants/colors';
 import {AppContext} from '../context';
 import {Modals} from '../api/firebaseModal';
+import {PrimaryButton} from './PrimaryButton';
 
 export default function EditProfile() {
   const {dispatch, user, setUser} = useContext(AppContext);
 
   const [name, setName] = useState(user?.user_name || '');
   const [designation, setDesignation] = useState(user?.designation || '');
+  const [loader, setLoader] = useState(false);
 
   const validation = () => {
     if (!name || !designation) return true;
@@ -17,13 +19,15 @@ export default function EditProfile() {
   };
 
   const handleEdit = async () => {
+    setLoader(true);
     if (user?.user_name != name) {
-      Modals.users.update(user?.id, {user_name: name});
+      await Modals.users.update(user?.id, {user_name: name});
     }
     if (user?.designation != designation) {
-      Modals.users.update(user?.id, {designation});
+      await Modals.users.update(user?.id, {designation});
     }
     setUser(prv => ({...prv, user_name: name, designation}));
+    setLoader(false);
     dispatch({
       type: 'toggleBottomModal',
       payload: {bottomModal: null},
@@ -47,7 +51,7 @@ export default function EditProfile() {
           onChangeText={newText1 => setDesignation(newText1)}
         />
       </View>
-      <TouchableOpacity
+      <PrimaryButton
         style={{
           ...styles.btnWrapper,
           ...{
@@ -57,9 +61,11 @@ export default function EditProfile() {
           },
         }}
         disabled={validation()}
-        onPress={handleEdit}>
-        <Text style={styles.btnText}>Edit</Text>
-      </TouchableOpacity>
+        onPress={handleEdit}
+        title={'Edit'}
+        loader={loader}
+        titleStyle={styles.btnText}
+      />
     </View>
   );
 }
@@ -79,6 +85,7 @@ const styles = StyleSheet.create({
   boldText: {
     fontWeight: 'bold',
     fontSize: 18,
+    fontFamily: 'Montserrat-Regular',
     marginLeft: 'auto',
     marginRight: 'auto',
     marginBottom: 40,
@@ -99,5 +106,6 @@ const styles = StyleSheet.create({
   btnText: {
     color: '#fff',
     fontSize: 16,
+    fontFamily: 'Montserrat-Regular',
   },
 });
