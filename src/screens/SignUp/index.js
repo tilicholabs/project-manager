@@ -101,6 +101,7 @@ export function SignUp({navigation}) {
   };
 
   const signUpHandler = () => {
+    console.log('inside');
     if (
       (formData.userName !== '' &&
         formData.email !== '' &&
