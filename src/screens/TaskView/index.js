@@ -28,6 +28,8 @@ import {Loader} from '../../components/Loader';
 import DatePicker from 'react-native-date-picker';
 import {CustomDatePicker} from '../../components/CustomDatePicker';
 import {findDueDate} from '../../utils/functions';
+import {teamMembersCount} from '../../constants/constants';
+import {MemberView, MembersView} from '../../components/MembersView';
 
 export function TaskView() {
   const {
@@ -175,6 +177,13 @@ export function TaskView() {
     );
   };
 
+  const teamMembers = () => {
+    const teamMembersArray = members?.filter(member =>
+      selectedTask?.team?.includes(member?.id),
+    );
+    return teamMembersArray;
+  };
+
   const Card = (title, value, style = {}, onPress = () => {}) => {
     return (
       <Pressable
@@ -289,45 +298,7 @@ export function TaskView() {
 
         <Text style={styles.taskTeamText}>Team</Text>
         <View style={styles.taskMembersWrapper}>
-          {members?.map(member => {
-            return selectedTask?.team?.includes(member?.id) ? (
-              member?.profile_image ? (
-                <Image
-                  key={shortid.generate()}
-                  style={styles.taskMemberPhoto}
-                  source={{uri: member?.profile_image}}
-                />
-              ) : (
-                <View
-                  style={{
-                    ...styles.taskMemberPhoto,
-                    ...{
-                      backgroundColor: '#644CBC',
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      shadowColor: 'black',
-                      shadowOffset: {
-                        height: 0,
-                        width: 1,
-                      },
-                      elevation: 1,
-                    },
-                  }}
-                  key={shortid.generate()}>
-                  <Text
-                    style={{
-                      fontSize: 15,
-                      fontWeight: 'bold',
-                      color: '#fff',
-                      fontFamily: 'Montserrat-Regular',
-                    }}>
-                    {member?.user_name[0]}
-                  </Text>
-                </View>
-              )
-            ) : null;
-          })}
+          <MembersView members={teamMembers() || []} />
           <AddIcon
             style={{marginLeft: -10, elevation: 2}}
             onPress={handleAddTeamMember}

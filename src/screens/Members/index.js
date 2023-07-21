@@ -22,6 +22,7 @@ import colors from '../../constants/colors';
 import {Modals} from '../../api/firebaseModal';
 import firestore from '@react-native-firebase/firestore';
 import Search from '../../components/Search';
+import FastImage from 'react-native-fast-image';
 
 export function Members() {
   const {state, dispatch, members, setMembers} = useContext(AppContext);
@@ -79,7 +80,7 @@ export function Members() {
                 }}
                 key={shortid.generate()}>
                 {member?.profile_image ? (
-                  <Image
+                  <FastImage
                     style={styles.singleMemberPhoto}
                     source={{
                       uri: member?.profile_image,
@@ -122,7 +123,7 @@ export function Members() {
                       `whatsapp://send?phone=${member?.phone_number}`,
                     );
                   }}>
-                  <Image
+                  <FastImage
                     source={require('../../assets/whatsappIcon.png')}
                     style={{width: 30, height: 30}}
                   />

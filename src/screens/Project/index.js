@@ -25,6 +25,7 @@ import {navigateToNestedRoute} from '../../navigators/RootNavigation';
 import {getScreenParent} from '../../utils/NavigationHelper';
 import {colors} from '../../constants/all';
 import {taskModal} from '../../api/taskModal';
+import {MemberView, MembersView} from '../../components/MembersView';
 
 export function Project({navigation, route}) {
   const {
@@ -210,46 +211,11 @@ export function Project({navigation, route}) {
               <View>
                 <Text style={styles.projectTeamTitle}>Team</Text>
                 <View style={styles.projectTeamWrapper}>
-                  {filterMembers(selectedProject?.selectedMembers)?.map(
-                    (member, index) => {
-                      return !!member?.profile_image ? (
-                        <Image
-                          style={{
-                            height: 40,
-                            width: 40,
-                            borderRadius: 50,
-                            marginLeft: -10,
-                          }}
-                          key={index}
-                          source={{
-                            uri: member?.profile_image,
-                          }}
-                        />
-                      ) : (
-                        <View
-                          key={index}
-                          style={{
-                            justifyContent: 'center',
-                            display: 'flex',
-                            alignItems: 'center',
-                            backgroundColor: '#60C877',
-                            height: 40,
-                            width: 40,
-                            borderRadius: 50,
-                            marginLeft: -10,
-                          }}>
-                          <Text
-                            style={{
-                              fontSize: 24,
-                              fontWeight: 'bold',
-                              fontFamily: 'Montserrat-Regular',
-                            }}>
-                            {member?.user_name[0].toUpperCase()}
-                          </Text>
-                        </View>
-                      );
-                    },
-                  )}
+                  <MembersView
+                    members={
+                      filterMembers(selectedProject?.selectedMembers) || []
+                    }
+                  />
                   <TouchableOpacity
                     style={styles.plusBtnContainer}
                     onPress={() =>

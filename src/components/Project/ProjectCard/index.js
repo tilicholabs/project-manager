@@ -11,6 +11,8 @@ import {AppContext} from '../../../context';
 import {Modals} from '../../../api/firebaseModal';
 import {dataFormatter} from '../../../utils/DataFormatter';
 import {taskModal, tasks} from '../../../api/taskModal';
+import {MemberView, MembersView} from '../../MembersView';
+import {teamMembersCount} from '../../../constants/constants';
 
 export function ProjectCard({project, navigation}) {
   const {
@@ -94,42 +96,9 @@ export function ProjectCard({project, navigation}) {
           <Text style={styles.projectDescription}>{project?.description}</Text>
           <Text style={styles.projectTeamTitle}>Team</Text>
           <View style={styles.projectTeamWrapper}>
-            {filterMembers(project?.selectedMembers)?.map(member => {
-              return !!member?.profile_image ? (
-                <Image
-                  style={{
-                    height: 40,
-                    width: 40,
-                    borderRadius: 50,
-                    marginLeft: -10,
-                  }}
-                  source={{
-                    uri: member?.profile_image,
-                  }}
-                />
-              ) : (
-                <View
-                  style={{
-                    justifyContent: 'center',
-                    display: 'flex',
-                    alignItems: 'center',
-                    backgroundColor: '#60C877',
-                    height: 40,
-                    width: 40,
-                    borderRadius: 50,
-                    marginLeft: -10,
-                  }}>
-                  <Text
-                    style={{
-                      fontSize: 18,
-                      fontWeight: 'bold',
-                      fontFamily: 'Montserrat-Regular',
-                    }}>
-                    {member?.user_name[0].toUpperCase()}
-                  </Text>
-                </View>
-              );
-            })}
+            <MembersView
+              members={filterMembers(project?.selectedMembers) || []}
+            />
             <TouchableOpacity
               style={styles.plusBtnContainer}
               onPress={() => {

@@ -11,3 +11,5 @@ export const statusColors = {
   Completed: 'green',
   Rejected: 'red',
 };
+
+export const teamMembersCount = 4;
