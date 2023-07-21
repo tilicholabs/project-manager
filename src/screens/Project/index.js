@@ -24,6 +24,7 @@ import {dataFormatter} from '../../utils/DataFormatter';
 import {navigateToNestedRoute} from '../../navigators/RootNavigation';
 import {getScreenParent} from '../../utils/NavigationHelper';
 import {colors} from '../../constants/all';
+import {taskModal} from '../../api/taskModal';
 
 export function Project({navigation, route}) {
   const {
@@ -68,7 +69,8 @@ export function Project({navigation, route}) {
   };
 
   const getProjectTasks = async id => {
-    const res = await Modals.tasks.getProjectTasks(id);
+    // const res = await Modals.tasks.getProjectTasks(id);
+    const res = await taskModal.getProjectTasks(id);
     const formattedData = await dataFormatter(res);
     setTasks([...formattedData]);
     totalTasks.current = [...formattedData];

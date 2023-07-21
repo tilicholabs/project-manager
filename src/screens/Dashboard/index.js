@@ -26,6 +26,7 @@ import AppLogo from '../../components/AppLogo';
 import {Modals} from '../../api/firebaseModal';
 import {Loader} from '../../components/Loader';
 import {useIsFocused} from '@react-navigation/native';
+import {taskModal} from '../../api/taskModal';
 
 export function Dashboard({navigation}) {
   const {state, dispatch, user} = useContext(AppContext);
@@ -49,7 +50,10 @@ export function Dashboard({navigation}) {
 
   const getTasks = async () => {
     if (user?.id) {
-      const data = await Modals.tasks.getUserTasks(user?.id);
+      // const data = await Modals.tasks.getUserTasks(user?.id);
+
+      const data = await taskModal.getUserTasks(user?.id);
+
       setTasks(data);
       setLoading(false);
       firestore()

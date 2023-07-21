@@ -20,6 +20,7 @@ import CustomTextInput from '../../Global/CustomTextInput';
 import {Modals} from '../../../api/firebaseModal';
 import appTheam from '../../../constants/colors';
 import {PrimaryButton} from '../../PrimaryButton';
+import {projectModal} from '../../../api/projectModal';
 
 export function CreateProject({navigation}) {
   const {state, dispatch, members, user} = useContext(AppContext);
@@ -221,15 +222,23 @@ export function CreateProject({navigation}) {
           titleStyle={styles.btnText}
           onPress={async () => {
             setLoader(true);
-            await Modals.projects.createProject({
+
+            await projectModal.createProject({
               ...{
                 ...data,
                 selectedMembers: [...data?.selectedMembers, user.id],
               },
               created_at: new Date().getTime(),
             });
+            // await Modals.projects.createProject({
+            //   ...{
+            //     ...data,
+            //     selectedMembers: [...data?.selectedMembers, user.id],
+            //   },
+            //   created_at: new Date().getTime(),
+            // });
             setLoader(false);
-            goBack();
+          goBack();
           }}
         />
       </View>

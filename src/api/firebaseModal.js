@@ -34,59 +34,9 @@ export class FireBaseModal {
     await firestore().collection(this.basePath).add(task);
   };
 
-  getUser = async id => {
-    const data = await firestore()
-      .collection('users')
-      .where('id', '==', id)
-      .get();
-    return dataFormatter(data);
-  };
-
   getMembers = async () => {
     const members = await firestore().collection('users').get();
     return members;
-  };
-
-  getUserProjects = async id => {
-    const data = await firestore()
-      .collection(this.basePath)
-      .where('selectedMembers', 'array-contains', id)
-      .get();
-    return dataFormatter(data);
-  };
-
-  getProjects = async () => {
-    const projects = await firestore().collection('projects').orderBy().get();
-    return projects;
-  };
-
-  registerUser = async (id, data) => {
-    await firestore().collection(this.basePath).doc(id).set(data);
-  };
-
-  getProjectTasks = async projectId => {
-    return await firestore()
-      .collection('tasks')
-      // Filter results
-      .where('project_id', '==', projectId)
-      .get();
-  };
-
-  getCompletedTasks = async projectId => {
-    return await firestore()
-      .collection('tasks')
-      // Filter results
-      .where('status', '==', 'Completed')
-      .where('project_id', '==', projectId)
-      .get();
-  };
-
-  getUserTasks = async id => {
-    const data = await firestore()
-      .collection(this.basePath)
-      .where('team', 'array-contains', id)
-      .get();
-    return dataFormatter(data);
   };
 }
 

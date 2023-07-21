@@ -10,6 +10,7 @@ import {getScreenParent} from '../../../utils/NavigationHelper';
 import {AppContext} from '../../../context';
 import {Modals} from '../../../api/firebaseModal';
 import {dataFormatter} from '../../../utils/DataFormatter';
+import {taskModal, tasks} from '../../../api/taskModal';
 
 export function ProjectCard({project, navigation}) {
   const {
@@ -63,7 +64,9 @@ export function ProjectCard({project, navigation}) {
   // );
 
   const getPercentage = async () => {
-    const data = await Modals.tasks.getProjectTasks(project?.id);
+    // const data = await Modals.tasks.getProjectTasks(project?.id);
+
+    const data = await taskModal.getProjectTasks(project?.id);
     const formattedData = await dataFormatter(data);
     const completedTasks = (
       Array?.isArray(formattedData) ? formattedData : []

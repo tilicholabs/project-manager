@@ -34,6 +34,7 @@ import {useFocusEffect} from '@react-navigation/core';
 import {Loader} from '../../components/Loader';
 import {dataFormatter} from '../../utils/DataFormatter';
 import {useIsFocused} from '@react-navigation/native';
+import {projectModal} from '../../api/projectModal';
 
 export function Projects({navigation}) {
   const tabs = ['All', 'In Progress', 'Completed'];
@@ -103,7 +104,8 @@ export function Projects({navigation}) {
 
   const getProjects = async () => {
     setLoading(true);
-    const res = await Modals?.projects?.getUserProjects(user?.id);
+    // const res = await Modals?.projects?.getUserProjects(user?.id);
+    const res = await projectModal?.getUserProjects(user?.id);
     allProjectData.current = [...res] || [];
 
     toggleTab(data?.activeTab);

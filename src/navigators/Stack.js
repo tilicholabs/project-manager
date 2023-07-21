@@ -27,7 +27,9 @@ import {TaskView} from '../screens/TaskView';
 import auth from '@react-native-firebase/auth';
 import {CreateProject} from '../components';
 import {CreateTask} from '../components/Task';
-import {useRoute} from '@react-navigation/native';
+import {getFocusedRouteNameFromRoute, useRoute} from '@react-navigation/native';
+import {MainStack} from './MainStack';
+import {BottomStack} from './BottomStack';
 
 const Stack = createStackNavigator();
 const BottomTab = createBottomTabNavigator();
@@ -36,6 +38,7 @@ const CustomTabBar = props => {
   const {state, dispatch, user} = useContext(AppContext);
   const [data, setData] = useState({activeNavTab: 'Dashboard'});
   const route = useRoute();
+  const routeName = getFocusedRouteNameFromRoute(route);
 
   const handleNavigation = route => {
     props?.navigation.navigate(route);
@@ -43,7 +46,7 @@ const CustomTabBar = props => {
 
   const getColor = title => {
     let color;
-    if (title === data?.activeNavTab) {
+    if (title === routeName) {
       color = appTheme.PRIMARY_COLOR;
     } else {
       color = appTheme.INACTIVE_COLOR;
@@ -153,94 +156,94 @@ export const customHeader = ({title = '', bg = '#fafafa'}) => {
   };
 };
 
-const BottomStack = () => {
-  return (
-    <BottomTab.Navigator tabBar={props => <CustomTabBar {...props} />}>
-      <BottomTab.Screen
-        name="Dashboard"
-        component={Dashboard}
-        options={{headerShown: false}}
-      />
-      <BottomTab.Screen
-        name="Projects"
-        component={Projects}
-        options={{headerShown: false}}
-      />
-      <BottomTab.Screen
-        name="Members"
-        component={Members}
-        options={{headerShown: false}}
-      />
-      <BottomTab.Screen
-        name="Profile"
-        component={Profile}
-        options={{headerShown: false}}
-      />
-    </BottomTab.Navigator>
-  );
-};
+// const BottomStack = () => {
+//   return (
+//     <BottomTab.Navigator tabBar={props => <CustomTabBar {...props} />}>
+//       <BottomTab.Screen
+//         name="Dashboard"
+//         component={Dashboard}
+//         options={{headerShown: false}}
+//       />
+//       <BottomTab.Screen
+//         name="Projects"
+//         component={Projects}
+//         options={{headerShown: false}}
+//       />
+//       <BottomTab.Screen
+//         name="Members"
+//         component={Members}
+//         options={{headerShown: false}}
+//       />
+//       <BottomTab.Screen
+//         name="Profile"
+//         component={Profile}
+//         options={{headerShown: false}}
+//       />
+//     </BottomTab.Navigator>
+//   );
+// };
 
-const SingleStack = () => {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="Onboarding"
-        component={Onboarding}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="Login"
-        component={Login}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="SignUp"
-        component={SignUp}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="Chat"
-        component={Chat}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="Project"
-        component={Project}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="Reports"
-        component={Reports}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="Calendar"
-        component={Calendar}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="Tasks"
-        component={Tasks}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="CreateProject"
-        component={CreateProject}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="CreateTask"
-        component={CreateTask}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="TaskView"
-        component={TaskView}
-        options={{headerShown: false}}
-      />
-    </Stack.Navigator>
-  );
-};
+// const SingleStack = () => {
+//   return (
+//     <Stack.Navigator>
+//       <Stack.Screen
+//         name="Onboarding"
+//         component={Onboarding}
+//         options={{headerShown: false}}
+//       />
+//       <Stack.Screen
+//         name="Login"
+//         component={Login}
+//         options={{headerShown: false}}
+//       />
+//       <Stack.Screen
+//         name="SignUp"
+//         component={SignUp}
+//         options={{headerShown: false}}
+//       />
+//       <Stack.Screen
+//         name="Chat"
+//         component={Chat}
+//         options={{headerShown: false}}
+//       />
+//       <Stack.Screen
+//         name="Project"
+//         component={Project}
+//         options={{headerShown: false}}
+//       />
+//       <Stack.Screen
+//         name="Reports"
+//         component={Reports}
+//         options={{headerShown: false}}
+//       />
+//       <Stack.Screen
+//         name="Calendar"
+//         component={Calendar}
+//         options={{headerShown: false}}
+//       />
+//       <Stack.Screen
+//         name="Tasks"
+//         component={Tasks}
+//         options={{headerShown: false}}
+//       />
+//       <Stack.Screen
+//         name="CreateProject"
+//         component={CreateProject}
+//         options={{headerShown: false}}
+//       />
+//       <Stack.Screen
+//         name="CreateTask"
+//         component={CreateTask}
+//         options={{headerShown: false}}
+//       />
+//       <Stack.Screen
+//         name="TaskView"
+//         component={TaskView}
+//         options={{headerShown: false}}
+//       />
+//     </Stack.Navigator>
+//   );
+// };
 
 function AppStack() {
   const [userIn, setUserIn] = useState(false);
@@ -273,7 +276,7 @@ function AppStack() {
     <Stack.Navigator initialRouteName="BottomStack">
       <Stack.Screen
         name="SingleStack"
-        component={SingleStack}
+        component={MainStack}
         options={{headerShown: false}}
       />
       {userIn && (
