@@ -17,10 +17,11 @@ import {useKeyboardDetails} from '../../../hooks/useKeyboardDetails';
 import {TabScreenHeader} from '../../Global';
 import {onChange} from 'react-native-reanimated';
 import CustomTextInput from '../../Global/CustomTextInput';
-import {Modals} from '../../../api/firebaseModal';
+import {Models} from '../../../api/firebaseModel';
 import appTheam from '../../../constants/colors';
 import {PrimaryButton} from '../../PrimaryButton';
-import {projectModal} from '../../../api/projectModal';
+import {projectModel} from '../../../api/projectModel';
+import {fonts} from '../../../constants/fonts';
 
 export function CreateProject({navigation}) {
   const {state, dispatch, members, user} = useContext(AppContext);
@@ -86,7 +87,7 @@ export function CreateProject({navigation}) {
       <Text
         style={{
           fontSize: 16,
-          fontFamily: 'Montserrat-Regular',
+          fontFamily: fonts.regular,
           fontWeight: 'bold',
         }}>
         Create Project
@@ -186,7 +187,7 @@ export function CreateProject({navigation}) {
                           style={{
                             fontSize: 18,
                             fontWeight: 'bold',
-                            fontFamily: 'Montserrat-Regular',
+                            fontFamily: fonts.regular,
                           }}>
                           {member?.user_name?.[0]}
                         </Text>
@@ -223,14 +224,14 @@ export function CreateProject({navigation}) {
           onPress={async () => {
             setLoader(true);
 
-            await projectModal.createProject({
+            await projectModel.createProject({
               ...{
                 ...data,
                 selectedMembers: [...data?.selectedMembers, user.id],
               },
               created_at: new Date().getTime(),
             });
-            // await Modals.projects.createProject({
+            // await Models.projects.createProject({
             //   ...{
             //     ...data,
             //     selectedMembers: [...data?.selectedMembers, user.id],
@@ -238,7 +239,7 @@ export function CreateProject({navigation}) {
             //   created_at: new Date().getTime(),
             // });
             setLoader(false);
-          goBack();
+            goBack();
           }}
         />
       </View>

@@ -13,7 +13,7 @@ import styles from './createTaskStyle';
 import {combineData, getTime} from '../../../utils/DataHelper';
 import {AppContext} from '../../../context';
 import {SelectedMembers} from '../../SelectMembers';
-import {Modals} from '../../../api/firebaseModal';
+import {Models} from '../../../api/firebaseModel';
 import {ProjectsListing} from '../../ProjectsListing';
 import appTheme from '../../../constants/colors';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -24,6 +24,7 @@ import {TabScreenHeader} from '../../Global';
 import {Fragment} from 'react/cjs/react.production.min';
 import {goBack} from '../../../navigators/RootNavigation';
 import {PrimaryButton} from '../../PrimaryButton';
+import {fonts} from '../../../constants/fonts';
 
 export function CreateTask({subTask = false}) {
   const {
@@ -40,13 +41,13 @@ export function CreateTask({subTask = false}) {
     description: '',
     due_date: new Date(),
   });
-  const [modalOpen, setModalOpen] = useState(false);
+  const [ModelOpen, setModelOpen] = useState(false);
   const [loader, setLoader] = useState(false);
 
   const taskCreateHandler = async () => {
     setLoader(true);
     if (subTask) {
-      await Modals.subTasks.set({
+      await Models.subTasks.set({
         title: data?.title || '',
         parent_task_id: selectedTask?.id || '',
         status: 'Not started',
@@ -54,7 +55,7 @@ export function CreateTask({subTask = false}) {
         created_at: getTime(),
       });
     } else {
-      await Modals.tasks.set({
+      await Models.tasks.set({
         title: data?.title || '',
         description: data?.description || '',
         project_id: selectedProject?.id,
@@ -70,8 +71,8 @@ export function CreateTask({subTask = false}) {
     if (!subTask) goBack();
     else
       dispatch({
-        type: 'toggleBottomModal',
-        payload: {bottomModal: ''},
+        type: 'toggleBottomModel',
+        payload: {bottomModel: ''},
       });
   };
   const dateHandler = date => {
@@ -90,7 +91,7 @@ export function CreateTask({subTask = false}) {
       <Text
         style={{
           fontSize: 16,
-          fontFamily: 'Montserrat-Regular',
+          fontFamily: fonts.regular,
           fontWeight: 'bold',
         }}>
         {subTask ? 'Create Sub Task' : 'Create Task'}
@@ -128,7 +129,7 @@ export function CreateTask({subTask = false}) {
 
               <TouchableOpacity
                 style={styles.textInput}
-                onPress={() => setModalOpen(true)}>
+                onPress={() => setModelOpen(true)}>
                 <Text
                   style={{
                     position: 'absolute',
@@ -177,9 +178,9 @@ export function CreateTask({subTask = false}) {
         />
 
         <CustomDatePicker
-          open={modalOpen}
+          open={ModelOpen}
           intialDate={data?.due_date || new Date()}
-          onClose={() => setModalOpen(false)}
+          onClose={() => setModelOpen(false)}
           {...{newDateCallBack: dateHandler}}
         />
       </View>

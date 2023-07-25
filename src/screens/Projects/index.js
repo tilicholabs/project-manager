@@ -27,20 +27,21 @@ import {combineData} from '../../utils/DataHelper';
 import ActionButton from 'react-native-action-button';
 import appTheme from '../../constants/colors';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {Modals} from '../../api/firebaseModal';
+import {Models} from '../../api/firebaseModel';
 import {navigateToNestedRoute} from '../../navigators/RootNavigation';
 import {getScreenParent} from '../../utils/NavigationHelper';
 import {useFocusEffect} from '@react-navigation/core';
 import {Loader} from '../../components/Loader';
 import {dataFormatter} from '../../utils/DataFormatter';
 import {useIsFocused} from '@react-navigation/native';
-import {projectModal} from '../../api/projectModal';
+import {projectModel} from '../../api/projectModel';
+import {fonts} from '../../constants/fonts';
 
 export function Projects({navigation}) {
   const tabs = ['All', 'In Progress', 'Completed'];
 
   const {state, dispatch, user} = useContext(AppContext);
-  const {projects, bottomModal} = state;
+  const {projects, bottomModel} = state;
   const [loading, setLoading] = useState(true);
 
   const [data, setData] = useState({activeTab: 'All'});
@@ -85,17 +86,17 @@ export function Projects({navigation}) {
   };
 
   const getTasks = async id => {
-    const data = (await Modals.tasks.getProjectTasks(id)).docs;
+    const data = (await Models.tasks.getProjectTasks(id)).docs;
     return data;
   };
 
   const getCompletedTasks = async id => {
-    const data = (await Modals.tasks.getCompletedTasks(id)).docs;
+    const data = (await Models.tasks.getCompletedTasks(id)).docs;
     return data;
   };
 
   const api = async () => {
-    const data = (await Modals.projects.getMembers()).docs;
+    const data = (await Models.projects.getMembers()).docs;
     dispatch({
       type: 'setMembers',
       payload: data,
@@ -104,8 +105,8 @@ export function Projects({navigation}) {
 
   const getProjects = async () => {
     setLoading(true);
-    // const res = await Modals?.projects?.getUserProjects(user?.id);
-    const res = await projectModal?.getUserProjects(user?.id);
+    // const res = await Models?.projects?.getUserProjects(user?.id);
+    const res = await projectModel?.getUserProjects(user?.id);
     allProjectData.current = [...res] || [];
 
     toggleTab(data?.activeTab);
@@ -124,7 +125,7 @@ export function Projects({navigation}) {
       style={{
         fontSize: 20,
         fontWeight: 'bold',
-        fontFamily: 'Montserrat-Regular',
+        fontFamily: fonts.regular,
       }}>
       Projects
     </Text>

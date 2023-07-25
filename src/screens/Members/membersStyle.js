@@ -1,5 +1,6 @@
 import {StyleSheet} from 'react-native';
 import colors from '../../constants/colors';
+import {fonts} from '../../constants/fonts';
 
 const styles = StyleSheet.create({
   container: {
@@ -7,7 +8,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fafafa',
     // backgroundColor: 'red',
   },
-  selectedMemberLastSeen: {fontFamily: 'Montserrat-Regular'},
+  selectedMemberLastSeen: {fontFamily: fonts.regular},
   chatHeader: {
     display: 'flex',
     flexDirection: 'row',

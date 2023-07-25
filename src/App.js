@@ -3,13 +3,13 @@ import {SafeAreaView, StyleSheet, StatusBar} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {Provider as PaperProvider} from 'react-native-paper';
 import {MenuProvider} from 'react-native-popup-menu';
-import {BottomModalContainer} from './components';
+import {BottomModelContainer} from './components';
 import AppStack from './navigators/Stack';
 import initialState from './store/state';
 import reducer from './store/reducer';
 import {AppContext} from './context';
 import {navigationRef} from './navigators/RootNavigation';
-import {Modals} from './api/firebaseModal';
+import {Models} from './api/firebaseModel';
 import firestore from '@react-native-firebase/firestore';
 import {dataFormatter} from './utils/DataFormatter';
 
@@ -24,7 +24,7 @@ const App = () => {
   const [isProjectSelected, setIsProjectSelected] = useState(false);
 
   const getMembers = async () => {
-    const data = await Modals.users.get();
+    const data = await Models.users.get();
     setMembers(data);
 
     firestore()
@@ -66,7 +66,7 @@ const App = () => {
             <NavigationContainer ref={navigationRef}>
               <AppStack />
             </NavigationContainer>
-            {state?.bottomModal ? <BottomModalContainer /> : null}
+            {state?.bottomModel ? <BottomModelContainer /> : null}
           </SafeAreaView>
         </MenuProvider>
       </PaperProvider>

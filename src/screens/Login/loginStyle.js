@@ -1,5 +1,6 @@
 import {StyleSheet} from 'react-native';
 import appTheme from '../../constants/colors';
+import {fonts} from '../../constants/fonts';
 
 const styles = StyleSheet.create({
   container: {
@@ -18,7 +19,7 @@ const styles = StyleSheet.create({
     fontSize: 17,
     marginLeft: 10,
     color: 'gray',
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: fonts.regular,
   },
   bodyContent: {
     paddingHorizontal: 20,
@@ -29,14 +30,14 @@ const styles = StyleSheet.create({
     fontSize: 20,
     lineHeight: 32,
     marginBottom: 10,
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: fonts.regular,
   },
   smallText: {
     fontSize: 14,
     color: appTheme.INACTIVE_COLOR,
     fontWeight: '500',
     marginBottom: 40,
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: fonts.regular,
   },
   inputRow: {
     display: 'flex',
@@ -70,7 +71,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
     color: '#fff',
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: fonts.regular,
   },
   signUpBtnWrapper: {
     borderColor: appTheme.INACTIVE_COLOR,
@@ -87,7 +88,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
     color: '#000000aa',
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: fonts.regular,
   },
 });
 

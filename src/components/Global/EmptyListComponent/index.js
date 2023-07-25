@@ -2,6 +2,7 @@ import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import appTheme from '../../../constants/colors';
+import {fonts} from '../../../constants/fonts';
 
 export function EmptyListComponent() {
   return (
@@ -25,6 +26,6 @@ const styles = StyleSheet.create({
     fontSize: 19,
     opacity: 0.6,
     marginTop: 20,
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: fonts.regular,
   },
 });

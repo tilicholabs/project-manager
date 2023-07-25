@@ -24,7 +24,7 @@ import {
   userNameValidator,
 } from '../../utils/FormValidator';
 import auth from '@react-native-firebase/auth';
-import {Modals} from '../../api/firebaseModal';
+import {Models} from '../../api/firebaseModel';
 import {getTime} from '../../utils/DataHelper';
 import {connect} from 'http2';
 import {AppContext} from '../../context';
@@ -150,7 +150,7 @@ export function SignUp({navigation}) {
             },
           };
 
-          await Modals.users.registerUser(userCredential?.user?.uid, userData);
+          await Models.users.registerUser(userCredential?.user?.uid, userData);
           navigation.reset({
             index: 0,
             routes: [{name: 'BottomStack'}],

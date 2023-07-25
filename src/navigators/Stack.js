@@ -30,6 +30,7 @@ import {CreateTask} from '../components/Task';
 import {getFocusedRouteNameFromRoute, useRoute} from '@react-navigation/native';
 import {MainStack} from './MainStack';
 import {BottomStack} from './BottomStack';
+import {fonts} from '../constants/fonts';
 
 const Stack = createStackNavigator();
 const BottomTab = createBottomTabNavigator();
@@ -80,7 +81,7 @@ const CustomTabBar = props => {
           <Text
             style={{
               color: getColor('Dashboard'),
-              fontFamily: 'Montserrat-Regular',
+              fontFamily: fonts.regular,
             }}>
             Home
           </Text>
@@ -96,7 +97,7 @@ const CustomTabBar = props => {
           <Text
             style={{
               color: getColor('Projects'),
-              fontFamily: 'Montserrat-Regular',
+              fontFamily: fonts.regular,
             }}>
             Projects
           </Text>
@@ -109,7 +110,7 @@ const CustomTabBar = props => {
           <Text
             style={{
               color: getColor('Members'),
-              fontFamily: 'Montserrat-Regular',
+              fontFamily: fonts.regular,
             }}>
             Members
           </Text>
@@ -132,7 +133,7 @@ const CustomTabBar = props => {
           <Text
             style={{
               color: getColor('Profile'),
-              fontFamily: 'Montserrat-Regular',
+              fontFamily: fonts.regular,
             }}>
             Profile
           </Text>

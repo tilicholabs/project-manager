@@ -3,8 +3,9 @@ import React, {useContext, useState} from 'react';
 import CustomTextInput from './Global/CustomTextInput';
 import appTheme from '../constants/colors';
 import {AppContext} from '../context';
-import {Modals} from '../api/firebaseModal';
+import {Models} from '../api/firebaseModel';
 import {PrimaryButton} from './PrimaryButton';
+import {fonts} from '../constants/fonts';
 
 export default function EditProfile() {
   const {dispatch, user, setUser} = useContext(AppContext);
@@ -21,16 +22,16 @@ export default function EditProfile() {
   const handleEdit = async () => {
     setLoader(true);
     if (user?.user_name != name) {
-      await Modals.users.update(user?.id, {user_name: name});
+      await Models.users.update(user?.id, {user_name: name});
     }
     if (user?.designation != designation) {
-      await Modals.users.update(user?.id, {designation});
+      await Models.users.update(user?.id, {designation});
     }
     setUser(prv => ({...prv, user_name: name, designation}));
     setLoader(false);
     dispatch({
-      type: 'toggleBottomModal',
-      payload: {bottomModal: null},
+      type: 'toggleBottomModel',
+      payload: {bottomModel: null},
     });
   };
   return (
@@ -85,7 +86,7 @@ const styles = StyleSheet.create({
   boldText: {
     fontWeight: 'bold',
     fontSize: 18,
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: fonts.regular,
     marginLeft: 'auto',
     marginRight: 'auto',
     marginBottom: 40,
@@ -106,6 +107,6 @@ const styles = StyleSheet.create({
   btnText: {
     color: '#fff',
     fontSize: 16,
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: fonts.regular,
   },
 });

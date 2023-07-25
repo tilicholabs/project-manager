@@ -1,4 +1,5 @@
 import {StyleSheet} from 'react-native';
+import {fonts} from '../../constants/fonts';
 
 const styles = StyleSheet.create({
   commentsContainer: {
@@ -10,7 +11,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 20,
     paddingBottom: 20,
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: fonts.regular,
   },
   displayComments: {
     padding: 10,
@@ -27,15 +28,15 @@ const styles = StyleSheet.create({
   personNameText: {
     fontWeight: 'bold',
     fontSize: 15,
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: fonts.regular,
   },
   timeText: {
     fontSize: 12,
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: fonts.regular,
   },
   comment: {
     paddingTop: 10,
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: fonts.regular,
   },
   enterCommentView: {
     flexDirection: 'row',

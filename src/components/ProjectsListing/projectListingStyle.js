@@ -1,5 +1,6 @@
 import {StyleSheet} from 'react-native';
 import appTheme from '../../constants/colors';
+import {fonts} from '../../constants/fonts';
 
 const styles = StyleSheet.create({
   projectsView: {
@@ -19,7 +20,7 @@ const styles = StyleSheet.create({
   projectTitle: {
     fontWeight: 'bold',
     fontSize: 22,
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: fonts.regular,
     color: '#fff',
   },
 });

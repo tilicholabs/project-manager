@@ -19,10 +19,11 @@ import {navigateToNestedRoute} from '../../navigators/RootNavigation';
 import {getScreenParent} from '../../utils/NavigationHelper';
 import {AddIcon} from '../../components/AddIcon';
 import colors from '../../constants/colors';
-import {Modals} from '../../api/firebaseModal';
+import {Models} from '../../api/firebaseModel';
 import firestore from '@react-native-firebase/firestore';
 import Search from '../../components/Search';
 import FastImage from 'react-native-fast-image';
+import {fonts} from '../../constants/fonts';
 
 export function Members() {
   const {state, dispatch, members, setMembers} = useContext(AppContext);
@@ -42,8 +43,8 @@ export function Members() {
 
   const handleAddMember = () => {
     dispatch({
-      type: 'toggleBottomModal',
-      payload: {bottomModal: 'AddMember'},
+      type: 'toggleBottomModel',
+      payload: {bottomModel: 'AddMember'},
     });
   };
 
@@ -52,7 +53,7 @@ export function Members() {
       style={{
         fontSize: 20,
         fontWeight: 'bold',
-        fontFamily: 'Montserrat-Regular',
+        fontFamily: fonts.regular,
       }}>
       Members
     </Text>
@@ -99,7 +100,7 @@ export function Members() {
                         fontSize: 30,
                         lineHeight: 32,
                         color: 'white',
-                        fontFamily: 'Montserrat-Regular',
+                        fontFamily: fonts.regular,
                       }}>
                       {member?.user_name[0]}
                     </Text>
@@ -131,7 +132,7 @@ export function Members() {
                 <TouchableOpacity
                   disabled={true}
                   onPress={async () => {
-                    await Modals.users.delete(member?.id);
+                    await Models.users.delete(member?.id);
                   }}>
                   <MaterialCommunityIcons
                     name="delete"
@@ -168,7 +169,7 @@ const styles1 = StyleSheet.create({
     alignItems: 'center',
     marginTop: 22,
   },
-  modalView: {
+  ModelView: {
     margin: 20,
     backgroundColor: 'white',
     borderRadius: 20,
@@ -199,7 +200,7 @@ const styles1 = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
-  modalText: {
+  ModelText: {
     marginBottom: 15,
     textAlign: 'center',
   },

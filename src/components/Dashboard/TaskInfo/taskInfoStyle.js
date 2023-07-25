@@ -1,5 +1,6 @@
 import {StyleSheet} from 'react-native';
 import appTheme from '../../../constants/colors';
+import {fonts} from '../../../constants/fonts';
 
 const styles = StyleSheet.create({
   container: {
@@ -24,7 +25,7 @@ const styles = StyleSheet.create({
   taskTitle: {
     fontWeight: 'bold',
     paddingLeft: 10,
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: fonts.regular,
   },
   taskProgressBar: {borderRadius: 7, height: 6},
   teamWrapper: {
@@ -33,7 +34,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingLeft: 10,
     marginRight: 10,
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: fonts.regular,
   },
   memberPhoto: {
     height: 40,

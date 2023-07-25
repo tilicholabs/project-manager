@@ -5,7 +5,7 @@ import styles from './updateProfileStyle';
 import colors from '../../constants/colors';
 import {AppContext} from '../../context';
 import {UploadImage} from '../UploadImage';
-import {Modals} from '../../api/firebaseModal';
+import {Models} from '../../api/firebaseModel';
 import {InputTextField} from '../TextInput';
 import {Loader} from '../Loader';
 import appTheme from '../../constants/colors';
@@ -166,14 +166,14 @@ export const UpdateProfile = () => {
           // Linking.openURL(
           //   `mailto:${memberDetails?.email}?subject=SendMail&body=URL: https://example.com`,
           // );
-          await Modals.users.update(user?.id, memberDetails);
+          await Models.users.update(user?.id, memberDetails);
           // dispatch({
           //   type: 'members',
           //   payload: {memberDetails: memberDetails},
           // });
           dispatch({
-            type: 'toggleBottomModal',
-            payload: {bottomModal: ''},
+            type: 'toggleBottomModel',
+            payload: {bottomModel: ''},
           });
         }}>
         <Text style={styles.addTextStyle}>Update</Text>

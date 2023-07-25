@@ -1,4 +1,11 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {View, Text, Image, TouchableOpacity} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import ProgressCircle from 'react-native-progress-circle';
@@ -8,9 +15,9 @@ import appTheme from '../../../constants/colors';
 import {navigateToNestedRoute} from '../../../navigators/RootNavigation';
 import {getScreenParent} from '../../../utils/NavigationHelper';
 import {AppContext} from '../../../context';
-import {Modals} from '../../../api/firebaseModal';
+import {Models} from '../../../api/firebaseModel';
 import {dataFormatter} from '../../../utils/DataFormatter';
-import {taskModal, tasks} from '../../../api/taskModal';
+import {taskModel, tasks} from '../../../api/taskModel';
 import {MemberView, MembersView} from '../../MembersView';
 import {teamMembersCount} from '../../../constants/constants';
 
@@ -24,7 +31,7 @@ export function ProjectCard({project, navigation}) {
     selectedMembers,
     setSelectedMembers,
   } = useContext(AppContext);
-  const {bottomModal} = state;
+  const {bottomModel} = state;
 
   const [percentage, setPercentage] = useState(0);
 
@@ -34,41 +41,40 @@ export function ProjectCard({project, navigation}) {
     navigateToNestedRoute(getScreenParent(screen), screen, params);
   };
 
-  const filterMembers = arr => {
+  const filterMembers = useCallback(arr => {
     const result = members.filter(item => {
-      let bool = false;
       return arr?.find(ele => {
         return item?.id === ele;
       });
     });
     return result;
-  };
+  }, []);
 
   const addTeamHandler = async () => {
-    await Modals.projects.update(project?.id, {
+    await Models.projects.update(project?.id, {
       selectedMembers: [...project?.selectedMembers, ...selectedMembers],
     });
     dispatch({
-      type: 'toggleBottomModal',
-      payload: {bottomModal: null},
+      type: 'toggleBottomModel',
+      payload: {bottomModel: null},
     });
     setSelectedMembers([]);
   };
 
   useEffect(() => {
-    if (bottomModal === 'closeSelectMembers') {
+    if (bottomModel === 'closeSelectMembers') {
       addTeamHandler();
     }
-  }, [bottomModal]);
+  }, [bottomModel]);
 
   // const percent = Math?.round(
   //   (completedTasks?.length / totalTasks?.current?.length) * 100,
   // );
 
   const getPercentage = async () => {
-    // const data = await Modals.tasks.getProjectTasks(project?.id);
+    // const data = await Models.tasks.getProjectTasks(project?.id);
 
-    const data = await taskModal.getProjectTasks(project?.id);
+    const data = await taskModel.getProjectTasks(project?.id);
     const formattedData = await dataFormatter(data);
     const completedTasks = (
       Array?.isArray(formattedData) ? formattedData : []
@@ -104,8 +110,8 @@ export function ProjectCard({project, navigation}) {
               onPress={() => {
                 setSelectedProject(project);
                 dispatch({
-                  type: 'toggleBottomModal',
-                  payload: {bottomModal: 'SelectMembers'},
+                  type: 'toggleBottomModel',
+                  payload: {bottomModel: 'SelectMembers'},
                 });
               }}>
               <MaterialCommunityIcons name="plus" size={22} color="#fff" />

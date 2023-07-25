@@ -1,13 +1,9 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useMemo, useState} from 'react';
 import {
   View,
   Text,
   TouchableOpacity,
-  Image,
   ScrollView,
-  Modal,
-  Button,
-  TouchableHighlight,
   Pressable,
 } from 'react-native';
 import shortid from 'shortid';
@@ -20,7 +16,7 @@ import {AppContext} from '../../context';
 import appTheme from '../../constants/colors';
 import {AddIcon, TabScreenHeader} from '../../components';
 import firestore from '@react-native-firebase/firestore';
-import {Modals} from '../../api/firebaseModal';
+import {Models} from '../../api/firebaseModel';
 import {dataFormatter} from '../../utils/DataFormatter';
 import {StatusPopUp} from '../../components/StatusPopUp';
 import moment from 'moment/moment';
@@ -30,6 +26,7 @@ import {CustomDatePicker} from '../../components/CustomDatePicker';
 import {findDueDate} from '../../utils/functions';
 import {teamMembersCount} from '../../constants/constants';
 import {MemberView, MembersView} from '../../components/MembersView';
+import {fonts} from '../../constants/fonts';
 
 export function TaskView() {
   const {
@@ -42,8 +39,8 @@ export function TaskView() {
     setSelectedMembers,
   } = useContext(AppContext);
   const [subTasks, setSubTasks] = useState([]);
-  const {bottomModal} = state;
-  const [modalOpen, setModalOpen] = useState(false);
+  const {bottomModel} = state;
+  const [modelOpen, setModelOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const onChange = (event, selectedDate) => {
@@ -52,22 +49,22 @@ export function TaskView() {
   };
   const handleCreateTask = () => {
     dispatch({
-      type: 'toggleBottomModal',
-      payload: {bottomModal: 'CreateSubTask'},
+      type: 'toggleBottomModel',
+      payload: {bottomModel: 'CreateSubTask'},
     });
   };
 
   const handleAddTeamMember = () => {
     dispatch({
-      type: 'toggleBottomModal',
-      payload: {bottomModal: 'SelectMembers'},
+      type: 'toggleBottomModel',
+      payload: {bottomModel: 'SelectMembers'},
     });
   };
 
   const handleComments = () => {
     dispatch({
-      type: 'toggleBottomModal',
-      payload: {bottomModal: 'Comments'},
+      type: 'toggleBottomModel',
+      payload: {bottomModel: 'Comments'},
     });
   };
 
@@ -77,20 +74,20 @@ export function TaskView() {
       item => item?.status === 'Completed',
     );
     if (completedTasks !== subTasks?.length) {
-      await Modals.tasks.update(selectedTask?.id, {status: 'In Progress'});
+      await Models.tasks.update(selectedTask?.id, {status: 'In Progress'});
       setSelectedTask(prev => ({...prev, status: 'In Progress'}));
     }
     if (completedTasks === subTasks?.length) {
-      await Modals.tasks.update(selectedTask?.id, {status: 'Completed'});
+      await Models.tasks.update(selectedTask?.id, {status: 'Completed'});
       setSelectedTask(prev => ({...prev, status: 'Completed'}));
     }
-    await Modals.subTasks.update(id, {status: status});
+    await Models.subTasks.update(id, {status: status});
     setLoading(false);
   };
   const dateHandler = date => {
     const due_date = JSON?.stringify(date);
     setSelectedTask(prv => ({...prv, due_date}));
-    Modals?.tasks?.update(selectedTask?.id, {due_date});
+    Models?.tasks?.update(selectedTask?.id, {due_date});
   };
 
   useEffect(() => {
@@ -122,12 +119,12 @@ export function TaskView() {
       ...prev,
       team: [...prev.team, ...selectedMembers],
     }));
-    await Modals.tasks.update(selectedTask?.id, {
+    await Models.tasks.update(selectedTask?.id, {
       team: [...selectedTask?.team, ...selectedMembers],
     });
     dispatch({
-      type: 'toggleBottomModal',
-      payload: {bottomModal: null},
+      type: 'toggleBottomModel',
+      payload: {bottomModel: null},
     });
   };
 
@@ -154,10 +151,10 @@ export function TaskView() {
   }, [subTasks]);
 
   useEffect(() => {
-    if (bottomModal === 'closeSelectMembers') {
+    if (bottomModel === 'closeSelectMembers') {
       teamHandler();
     }
-  }, [bottomModal]);
+  }, [bottomModel]);
   const findDate = new Date(JSON?.parse(selectedTask?.due_date));
 
   const date = `${findDate?.getDate()}-${
@@ -170,19 +167,19 @@ export function TaskView() {
         style={{
           fontSize: 20,
           fontWeight: 'bold',
-          fontFamily: 'Montserrat-Regular',
+          fontFamily: fonts.regular,
         }}>
         Task Details
       </Text>
     );
   };
 
-  const teamMembers = () => {
+  const teamMembers = useMemo(() => {
     const teamMembersArray = members?.filter(member =>
       selectedTask?.team?.includes(member?.id),
     );
     return teamMembersArray;
-  };
+  }, []);
 
   const Card = (title, value, style = {}, onPress = () => {}) => {
     return (
@@ -258,7 +255,7 @@ export function TaskView() {
             'Due Date',
             findDueDate(JSON?.parse(selectedTask?.due_date)),
             {},
-            () => setModalOpen(true),
+            () => setModelOpen(true),
           )}
         </View>
         <View
@@ -298,7 +295,7 @@ export function TaskView() {
 
         <Text style={styles.taskTeamText}>Team</Text>
         <View style={styles.taskMembersWrapper}>
-          <MembersView members={teamMembers() || []} />
+          <MembersView members={teamMembers || []} />
           <AddIcon
             style={{marginLeft: -10, elevation: 2}}
             onPress={handleAddTeamMember}
@@ -311,8 +308,7 @@ export function TaskView() {
             return (
               <View key={index} style={styles.subTasksStyle}>
                 <View>
-                  <Text
-                    style={{fontSize: 14, fontFamily: 'Montserrat-Regular'}}>
+                  <Text style={{fontSize: 14, fontFamily: fonts.regular}}>
                     {task.title}
                   </Text>
                 </View>
@@ -352,9 +348,9 @@ export function TaskView() {
         </TouchableOpacity> */}
       </View>
       <CustomDatePicker
-        open={modalOpen}
+        open={modelOpen}
         intialDate={findDate || new Date()}
-        onClose={() => setModalOpen(false)}
+        onClose={() => setModelOpen(false)}
         {...{newDateCallBack: dateHandler}}
       />
     </View>
