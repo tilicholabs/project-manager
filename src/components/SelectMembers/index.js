@@ -17,7 +17,7 @@ export const SelectedMembers = ({showDone = false, isFrom = ''}) => {
     selectedProject,
   } = useContext(AppContext);
 
-  const {bottomModel} = state;
+  const {bottomModal} = state;
   const [requiredMembers, setRequiredMembers] = useState([]);
 
   const handleSetValue = value => {
@@ -45,10 +45,10 @@ export const SelectedMembers = ({showDone = false, isFrom = ''}) => {
   };
 
   useEffect(() => {
-    if (bottomModel === 'CreateSubTask' && selectedTask) {
+    if (bottomModal === 'CreateSubTask' && selectedTask) {
       setRequiredMembers(selectedTask?.team);
     }
-    if (bottomModel === 'SelectMembers' && selectedTask) {
+    if (bottomModal === 'SelectMembers' && selectedTask) {
       const filteredData = members?.filter(
         item => item?.id && !selectedTask?.team?.includes(item?.id),
       );
@@ -58,7 +58,7 @@ export const SelectedMembers = ({showDone = false, isFrom = ''}) => {
       });
       setRequiredMembers(filteredKeys);
     }
-    if (bottomModel === 'SelectMembers' && selectedProject) {
+    if (bottomModal === 'SelectMembers' && selectedProject) {
       const filteredData = members?.filter(
         item =>
           item?.id && !selectedProject?.selectedMembers?.includes(item?.id),
@@ -72,7 +72,7 @@ export const SelectedMembers = ({showDone = false, isFrom = ''}) => {
     if (isFrom === 'CreateTask' && selectedProject) {
       setRequiredMembers(selectedProject?.selectedMembers);
     }
-  }, [selectedProject, selectedTask, bottomModel]);
+  }, [selectedProject, selectedTask, bottomModal]);
 
   return (
     <>
@@ -136,7 +136,7 @@ export const SelectedMembers = ({showDone = false, isFrom = ''}) => {
             else
               dispatch({
                 type: 'toggleBottomModel',
-                payload: {bottomModel: 'closeSelectMembers'},
+                payload: {bottomModal: 'closeSelectMembers'},
               });
           }}>
           <Text style={styles.btnText}>Done</Text>

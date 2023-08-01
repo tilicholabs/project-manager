@@ -3,10 +3,10 @@ import initialState from '../state';
 export const appReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'toggleBottomModel': {
-      const bottomModel = action.payload.bottomModel;
+      const bottomModal = action.payload.bottomModal;
       return {
         ...state,
-        bottomModel,
+        bottomModal,
       };
     }
     case 'viewTask': {

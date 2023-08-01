@@ -44,7 +44,7 @@ export function Members() {
   const handleAddMember = () => {
     dispatch({
       type: 'toggleBottomModel',
-      payload: {bottomModel: 'AddMember'},
+      payload: {bottomModal: 'AddMember'},
     });
   };
 

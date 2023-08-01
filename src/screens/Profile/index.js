@@ -99,7 +99,7 @@ export function Profile({navigation}) {
   const editProfile = () => {
     dispatch({
       type: 'toggleBottomModel',
-      payload: {bottomModel: 'EditProfile'},
+      payload: {bottomModal: 'EditProfile'},
     });
   };
   return (

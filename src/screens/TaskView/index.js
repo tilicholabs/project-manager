@@ -39,7 +39,7 @@ export function TaskView() {
     setSelectedMembers,
   } = useContext(AppContext);
   const [subTasks, setSubTasks] = useState([]);
-  const {bottomModel} = state;
+  const {bottomModal} = state;
   const [modelOpen, setModelOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -50,21 +50,21 @@ export function TaskView() {
   const handleCreateTask = () => {
     dispatch({
       type: 'toggleBottomModel',
-      payload: {bottomModel: 'CreateSubTask'},
+      payload: {bottomModal: 'CreateSubTask'},
     });
   };
 
   const handleAddTeamMember = () => {
     dispatch({
       type: 'toggleBottomModel',
-      payload: {bottomModel: 'SelectMembers'},
+      payload: {bottomModal: 'SelectMembers'},
     });
   };
 
   const handleComments = () => {
     dispatch({
       type: 'toggleBottomModel',
-      payload: {bottomModel: 'Comments'},
+      payload: {bottomModal: 'Comments'},
     });
   };
 
@@ -124,7 +124,7 @@ export function TaskView() {
     });
     dispatch({
       type: 'toggleBottomModel',
-      payload: {bottomModel: null},
+      payload: {bottomModal: null},
     });
   };
 
@@ -151,10 +151,10 @@ export function TaskView() {
   }, [subTasks]);
 
   useEffect(() => {
-    if (bottomModel === 'closeSelectMembers') {
+    if (bottomModal === 'closeSelectMembers') {
       teamHandler();
     }
-  }, [bottomModel]);
+  }, [bottomModal]);
   const findDate = new Date(JSON?.parse(selectedTask?.due_date));
 
   const date = `${findDate?.getDate()}-${

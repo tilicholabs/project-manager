@@ -31,7 +31,7 @@ export function ProjectCard({project, navigation}) {
     selectedMembers,
     setSelectedMembers,
   } = useContext(AppContext);
-  const {bottomModel} = state;
+  const {bottomModal} = state;
 
   const [percentage, setPercentage] = useState(0);
 
@@ -56,16 +56,16 @@ export function ProjectCard({project, navigation}) {
     });
     dispatch({
       type: 'toggleBottomModel',
-      payload: {bottomModel: null},
+      payload: {bottomModal: null},
     });
     setSelectedMembers([]);
   };
 
   useEffect(() => {
-    if (bottomModel === 'closeSelectMembers') {
+    if (bottomModal === 'closeSelectMembers') {
       addTeamHandler();
     }
-  }, [bottomModel]);
+  }, [bottomModal]);
 
   // const percent = Math?.round(
   //   (completedTasks?.length / totalTasks?.current?.length) * 100,
@@ -111,7 +111,7 @@ export function ProjectCard({project, navigation}) {
                 setSelectedProject(project);
                 dispatch({
                   type: 'toggleBottomModel',
-                  payload: {bottomModel: 'SelectMembers'},
+                  payload: {bottomModal: 'SelectMembers'},
                 });
               }}>
               <MaterialCommunityIcons name="plus" size={22} color="#fff" />

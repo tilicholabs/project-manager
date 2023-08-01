@@ -8,21 +8,21 @@ import {
   Pressable,
 } from 'react-native';
 import {CreateTask, TaskView} from '../Task';
-import styles from './bottomModelContainerStyle';
+import styles from './bottomModalContainerStyle';
 import {AppContext} from '../../context';
 import {SelectedMembers} from '../SelectMembers';
 import {Comments} from '../Comments';
 import EditProfile from '../EditProfile';
 import {fonts} from '../../constants/fonts';
 
-export function BottomModelContainer() {
+export function BottomModalContainer() {
   const {state, dispatch} = useContext(AppContext);
-  const {bottomModel} = state;
+  const {bottomModal} = state;
 
-  const handleBottomModel = bottomModel => {
+  const handleBottomModel = bottomModal => {
     dispatch({
       type: 'toggleBottomModel',
-      payload: {bottomModel},
+      payload: {bottomModal},
     });
   };
 
@@ -47,13 +47,13 @@ export function BottomModelContainer() {
                 paddingHorizontal: 20,
                 paddingBottom: 10,
               }}>
-              {bottomModel === 'CreateTask' ? (
+              {bottomModal === 'CreateTask' ? (
                 <CreateTask />
-              ) : bottomModel === 'TaskView' ? (
+              ) : bottomModal === 'TaskView' ? (
                 <TaskView />
-              ) : bottomModel === 'CreateSubTask' ? (
+              ) : bottomModal === 'CreateSubTask' ? (
                 <CreateTask subTask={true} />
-              ) : bottomModel === 'SelectMembers' ? (
+              ) : bottomModal === 'SelectMembers' ? (
                 <>
                   <Text
                     style={{
@@ -67,9 +67,9 @@ export function BottomModelContainer() {
                   </Text>
                   <SelectedMembers showDone={true} />
                 </>
-              ) : bottomModel === 'Comments' ? (
+              ) : bottomModal === 'Comments' ? (
                 <Comments />
-              ) : bottomModel === 'EditProfile' ? (
+              ) : bottomModal === 'EditProfile' ? (
                 <EditProfile />
               ) : null}
             </Pressable>

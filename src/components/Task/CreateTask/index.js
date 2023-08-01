@@ -72,7 +72,7 @@ export function CreateTask({subTask = false}) {
     else
       dispatch({
         type: 'toggleBottomModel',
-        payload: {bottomModel: ''},
+        payload: {bottomModal: ''},
       });
   };
   const dateHandler = date => {

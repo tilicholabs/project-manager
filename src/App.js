@@ -3,7 +3,7 @@ import {SafeAreaView, StyleSheet, StatusBar} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {Provider as PaperProvider} from 'react-native-paper';
 import {MenuProvider} from 'react-native-popup-menu';
-import {BottomModelContainer} from './components';
+import {BottomModalContainer} from './components';
 import AppStack from './navigators/Stack';
 import initialState from './store/state';
 import reducer from './store/reducer';
@@ -66,7 +66,7 @@ const App = () => {
             <NavigationContainer ref={navigationRef}>
               <AppStack />
             </NavigationContainer>
-            {state?.bottomModel ? <BottomModelContainer /> : null}
+            {state?.bottomModal ? <BottomModalContainer /> : null}
           </SafeAreaView>
         </MenuProvider>
       </PaperProvider>

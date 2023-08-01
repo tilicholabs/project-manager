@@ -48,7 +48,7 @@ export function Project({navigation, route}) {
   const [loading, setLoading] = useState(true);
   const [tasks, setTasks] = useState([]);
   const tabs = ['All Tasks', 'In Progress', 'Completed'];
-  const {bottomModel} = state;
+  const {bottomModal} = state;
   const [updated, setUpdated] = useState(false);
   const id = useRef(selectedProject?.id);
 
@@ -103,7 +103,7 @@ export function Project({navigation, route}) {
     }));
 
     setSelectedMembers([]);
-  }, [bottomModel]);
+  }, [bottomModal]);
 
   useEffect(() => {
     getProjectTasks(selectedProject?.id);
@@ -228,7 +228,7 @@ export function Project({navigation, route}) {
                     onPress={() =>
                       dispatch({
                         type: 'toggleBottomModel',
-                        payload: {bottomModel: 'SelectMembers'},
+                        payload: {bottomModal: 'SelectMembers'},
                       })
                     }>
                     <MaterialCommunityIcons

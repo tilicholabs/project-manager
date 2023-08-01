@@ -31,7 +31,7 @@ export default function EditProfile() {
     setLoader(false);
     dispatch({
       type: 'toggleBottomModel',
-      payload: {bottomModel: null},
+      payload: {bottomModal: null},
     });
   };
   return (

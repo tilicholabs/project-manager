@@ -173,7 +173,7 @@ export const UpdateProfile = () => {
           // });
           dispatch({
             type: 'toggleBottomModel',
-            payload: {bottomModel: ''},
+            payload: {bottomModal: ''},
           });
         }}>
         <Text style={styles.addTextStyle}>Update</Text>

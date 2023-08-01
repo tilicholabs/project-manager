@@ -41,7 +41,7 @@ export function Projects({navigation}) {
   const tabs = ['All', 'In Progress', 'Completed'];
 
   const {state, dispatch, user} = useContext(AppContext);
-  const {projects, bottomModel} = state;
+  const {projects, bottomModal} = state;
   const [loading, setLoading] = useState(true);
 
   const [data, setData] = useState({activeTab: 'All'});
