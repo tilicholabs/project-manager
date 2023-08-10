@@ -10,9 +10,10 @@ import {AppContext} from '../../../context';
 import {navigateToNestedRoute} from '../../../navigators/RootNavigation';
 import {getScreenParent} from '../../../utils/NavigationHelper';
 import {StatusPopUp} from '../../StatusPopUp';
-import {Modals} from '../../../api/firebaseModal';
+import {Models} from '../../../api/firebaseModel';
 import moment from 'moment';
 import {findDueDate} from '../../../utils/functions';
+import {fonts} from '../../../constants/fonts';
 
 export function TaskInfo({task}) {
   const {setSelectedTask} = useContext(AppContext);
@@ -23,7 +24,7 @@ export function TaskInfo({task}) {
   };
 
   const statusUpateHandler = async (id, status) => {
-    await Modals.tasks.update(id, {status: status});
+    await Models.tasks.update(id, {status: status});
   };
 
   return (
@@ -40,7 +41,7 @@ export function TaskInfo({task}) {
               backgroundColor: 'white',
               paddingLeft: 4,
               paddingRight: 10,
-              fontFamily: 'Montserrat-Regular',
+              fontFamily: fonts.regular,
             }}>
             {task?.project_name}
           </Text>

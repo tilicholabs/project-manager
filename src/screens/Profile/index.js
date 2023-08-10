@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
-  Modal,
+  Model,
   PermissionsAndroid,
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -22,7 +22,8 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import {utils} from '@react-native-firebase/app';
 import storage from '@react-native-firebase/storage';
 import {Loader} from '../../components/Loader';
-import {Modals} from '../../api/firebaseModal';
+import {Models} from '../../api/firebaseModel';
+import {fonts} from '../../constants/fonts';
 
 export function Profile({navigation}) {
   const {state, dispatch, user} = useContext(AppContext);
@@ -85,7 +86,7 @@ export function Profile({navigation}) {
             const url = await storage().ref(user?.id).getDownloadURL();
             setImage(url);
 
-            await Modals.users.update(user?.id, {profile_image: url});
+            await Models.users.update(user?.id, {profile_image: url});
           }
           setIsLoading(false);
         });
@@ -97,7 +98,7 @@ export function Profile({navigation}) {
 
   const editProfile = () => {
     dispatch({
-      type: 'toggleBottomModal',
+      type: 'toggleBottomModel',
       payload: {bottomModal: 'EditProfile'},
     });
   };
@@ -155,7 +156,7 @@ export function Profile({navigation}) {
                       <Text
                         style={{
                           fontSize: 24,
-                          fontFamily: 'Montserrat-Regular',
+                          fontFamily: fonts.regular,
                           fontWeight: 'bold',
                         }}>
                         {user?.user_name[0].toUpperCase()}

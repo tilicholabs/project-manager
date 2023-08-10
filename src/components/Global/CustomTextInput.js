@@ -1,5 +1,6 @@
 import {StyleSheet, Text, TextInput, View} from 'react-native';
 import React, {useState} from 'react';
+import {fonts} from '../../constants/fonts';
 
 export default function CustomTextInput(props) {
   return (
@@ -27,6 +28,6 @@ const styles = StyleSheet.create({
     color: 'black',
     backgroundColor: 'white',
     paddingHorizontal: 2,
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: fonts.regular,
   },
 });

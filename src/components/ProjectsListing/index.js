@@ -1,15 +1,16 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
-import {Modals} from '../../api/firebaseModal';
+import {Models} from '../../api/firebaseModel';
 import styles from './projectListingStyle';
 import appTheme from '../../constants/colors';
 import {AppContext} from '../../context';
+import {fonts} from '../../constants/fonts';
 
 export const ProjectsListing = () => {
   const [projects, setProjects] = useState([]);
   const {selectedProject, setSelectedProject} = useContext(AppContext);
   const getAllProjects = async () => {
-    const data = await Modals.projects.get();
+    const data = await Models.projects.get();
     setProjects(data);
   };
 
@@ -42,7 +43,7 @@ export const ProjectsListing = () => {
             <Text
               style={{
                 textAlign: 'center',
-                fontFamily: 'Montserrat-Regular',
+                fontFamily: fonts.regular,
               }}
               numberOfLines={1}>
               {project?.title}

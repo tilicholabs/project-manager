@@ -1,5 +1,6 @@
 import {StyleSheet} from 'react-native';
 import appTheme from '../../constants/colors';
+import {fonts} from '../../constants/fonts';
 
 const styles = StyleSheet.create({
   container: {
@@ -17,12 +18,12 @@ const styles = StyleSheet.create({
   dueDateText: {
     fontSize: 15,
     fontWeight: 'bold',
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: fonts.regular,
   },
   statusText: {
     fontSize: 15,
     fontWeight: 'bold',
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: fonts.regular,
   },
   menuOptionsText: {
     fontSize: 15,
@@ -39,12 +40,12 @@ const styles = StyleSheet.create({
   taskProgress: {
     fontWeight: 'bold',
     fontSize: 14,
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: fonts.regular,
   },
   taskTitle: {
     fontWeight: 'bold',
     fontSize: 18,
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: fonts.regular,
   },
   taskTeamText: {fontWeight: 'bold', marginBottom: 7, fontSize: 17},
   taskMembersWrapper: {
@@ -53,7 +54,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingLeft: 10,
     marginBottom: 20,
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: fonts.regular,
   },
   taskMemberPhoto: {
     height: 45,
@@ -77,7 +78,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 22,
     color: appTheme.INACTIVE_COLOR,
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: fonts.regular,
   },
   subTaskView: {
     display: 'flex',
@@ -87,7 +88,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: 10,
     fontSize: 17,
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: fonts.regular,
     marginBottom: 10,
   },
   subTasksStyle: {
@@ -138,7 +139,7 @@ const styles = StyleSheet.create({
   bottomText: {
     marginLeft: 10,
     color: appTheme.INACTIVE_COLOR,
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: fonts.regular,
   },
 });
 

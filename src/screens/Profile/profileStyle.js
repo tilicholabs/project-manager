@@ -1,5 +1,6 @@
 import {StyleSheet} from 'react-native';
 import appTheme from '../../constants/colors';
+import {fonts} from '../../constants/fonts';
 
 const styles = StyleSheet.create({
   container: {
@@ -8,7 +9,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontWeight: 'bold',
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: fonts.regular,
     fontSize: 20,
   },
   leftHeaderWrapper: {
@@ -68,14 +69,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
     marginBottom: 5,
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: fonts.regular,
   },
   designationText: {
     fontSize: 12,
     color: appTheme.INACTIVE_COLOR,
     marginBottom: 20,
 
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: fonts.regular,
   },
   editProfileWrapper: {
     backgroundColor: appTheme.PRIMARY_COLOR,
@@ -126,7 +127,7 @@ const styles = StyleSheet.create({
     color: appTheme.PRIMARY_COLOR,
     height: 25,
     marginLeft: 8,
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: fonts.regular,
   },
   inputContainer: {
     marginTop: 25,

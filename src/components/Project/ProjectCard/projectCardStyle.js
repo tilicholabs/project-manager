@@ -1,5 +1,6 @@
 import {StyleSheet} from 'react-native';
 import appTheme from '../../../constants/colors';
+import {fonts} from '../../../constants/fonts';
 
 const styles = StyleSheet.create({
   container: {
@@ -19,7 +20,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 17,
     marginBottom: 5,
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: fonts.regular,
   },
   projectTeamAndProgress: {
     display: 'flex',
@@ -30,12 +31,12 @@ const styles = StyleSheet.create({
   projectDescription: {
     color: appTheme.INACTIVE_COLOR,
     marginBottom: 10,
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: fonts.regular,
   },
   projectTeamTitle: {
     fontWeight: 'bold',
     marginBottom: 5,
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: fonts.regular,
   },
   projectTeamWrapper: {
     display: 'flex',
@@ -52,7 +53,7 @@ const styles = StyleSheet.create({
   projectProgress: {
     fontWeight: 'bold',
     fontSize: 16,
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: fonts.regular,
   },
   rowJustifyBetween: {
     display: 'flex',

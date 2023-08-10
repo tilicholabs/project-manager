@@ -9,7 +9,7 @@ import initialState from './store/state';
 import reducer from './store/reducer';
 import {AppContext} from './context';
 import {navigationRef} from './navigators/RootNavigation';
-import {Modals} from './api/firebaseModal';
+import {Models} from './api/firebaseModel';
 import firestore from '@react-native-firebase/firestore';
 import {dataFormatter} from './utils/DataFormatter';
 
@@ -24,7 +24,7 @@ const App = () => {
   const [isProjectSelected, setIsProjectSelected] = useState(false);
 
   const getMembers = async () => {
-    const data = await Modals.users.get();
+    const data = await Models.users.get();
     setMembers(data);
 
     firestore()

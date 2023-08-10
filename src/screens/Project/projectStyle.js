@@ -1,5 +1,6 @@
 import {StyleSheet} from 'react-native';
 import appTheme from '../../constants/colors';
+import {fonts} from '../../constants/fonts';
 
 const styles = StyleSheet.create({
   container: {
@@ -35,7 +36,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 18,
     marginRight: 10,
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: fonts.regular,
   },
   projectTeamAndProgress: {
     display: 'flex',
@@ -46,18 +47,18 @@ const styles = StyleSheet.create({
   projectTeamTitle: {
     fontWeight: 'bold',
     marginBottom: 5,
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: fonts.regular,
   },
   projectDescription: {
     color: appTheme.INACTIVE_COLOR,
     marginBottom: 30,
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: fonts.regular,
   },
   projectProgressWrapper: {marginRight: 30},
   projectProgress: {
     fontWeight: 'bold',
     fontSize: 18,
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: fonts.regular,
   },
   projectTeamWrapper: {
     display: 'flex',
@@ -89,7 +90,7 @@ const styles = StyleSheet.create({
 
     borderWidth: 1,
     textTransform: 'capitalize',
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: fonts.regular,
     paddingHorizontal: 15,
     paddingVertical: 10,
     fontSize: 15,
@@ -121,7 +122,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     paddingVertical: 7,
     textAlign: 'center',
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: fonts.regular,
   },
   activeProjectTabText: {
     color: '#fff',

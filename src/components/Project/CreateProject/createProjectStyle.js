@@ -1,5 +1,6 @@
 import {StyleSheet} from 'react-native';
 import appTheme from '../../../constants/colors';
+import {fonts} from '../../../constants/fonts';
 
 const styles = StyleSheet.create({
   container: {
@@ -43,7 +44,7 @@ const styles = StyleSheet.create({
   btnText: {
     color: '#fff',
     fontSize: 16,
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: fonts.regular,
   },
   teamSection: {height: 200, width: '100%', flex: 1, paddingHorizontal: 16},
   teamWrapper: {
@@ -67,7 +68,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#000',
     fontSize: 13,
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: fonts.regular,
   },
   activeMemberName: {color: '#fff'},
 });

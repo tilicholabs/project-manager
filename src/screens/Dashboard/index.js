@@ -23,10 +23,11 @@ import {useKeyboardDetails} from '../../hooks/useKeyboardDetails';
 import {navigateToNestedRoute} from '../../navigators/RootNavigation';
 import {getScreenParent} from '../../utils/NavigationHelper';
 import AppLogo from '../../components/AppLogo';
-import {Modals} from '../../api/firebaseModal';
+import {Models} from '../../api/firebaseModel';
 import {Loader} from '../../components/Loader';
 import {useIsFocused} from '@react-navigation/native';
-import {taskModal} from '../../api/taskModal';
+import {taskModel} from '../../api/taskModel';
+import {fonts} from '../../constants/fonts';
 
 export function Dashboard({navigation}) {
   const {state, dispatch, user} = useContext(AppContext);
@@ -50,9 +51,9 @@ export function Dashboard({navigation}) {
 
   const getTasks = async () => {
     if (user?.id) {
-      // const data = await Modals.tasks.getUserTasks(user?.id);
+      // const data = await Models.tasks.getUserTasks(user?.id);
 
-      const data = await taskModal.getUserTasks(user?.id);
+      const data = await taskModel.getUserTasks(user?.id);
 
       setTasks(data);
       setLoading(false);
@@ -190,7 +191,7 @@ export function Dashboard({navigation}) {
           color: 'black',
           marginHorizontal: 16,
           marginTop: 10,
-          fontFamily: 'Montserrat-Regular',
+          fontFamily: fonts.regular,
         }}>{`Welcome ${user?.user_name}`}</Text>
       <View style={{paddingTop: 10, paddingBottom: 20}}>
         <Search
@@ -228,7 +229,7 @@ export function Dashboard({navigation}) {
             style={{
               fontSize: 16,
               fontWeight: '600',
-              fontFamily: 'Montserrat-Regular',
+              fontFamily: fonts.regular,
             }}>
             Your Tasks
           </Text>
@@ -245,7 +246,7 @@ export function Dashboard({navigation}) {
                       fontSize: 17,
                       textAlign: 'center',
                       marginTop: 50,
-                      fontFamily: 'Montserrat-Regular',
+                      fontFamily: fonts.regular,
                     }}>
                     No tasks available
                   </Text>

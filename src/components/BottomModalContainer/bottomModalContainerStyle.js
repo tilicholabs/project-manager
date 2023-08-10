@@ -15,13 +15,13 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     borderRadius: 20,
   },
-  modalContainer: {
+  ModelContainer: {
     flex: 1,
     display: 'flex',
     justifyContent: 'flex-end',
     backgroundColor: 'rgba(0,0,0,0.2)',
   },
-  setModalDimensions: (height, width) => ({
+  setModelDimensions: (height, width) => ({
     height,
     width,
     backgroundColor: '#fff',

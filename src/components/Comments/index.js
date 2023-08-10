@@ -9,13 +9,14 @@ import {
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import appTheme from '../../constants/colors';
-import {Modals} from '../../api/firebaseModal';
+import {Models} from '../../api/firebaseModel';
 import {getTime} from '../../utils/DataHelper';
 import {AppContext} from '../../context';
 import firestore from '@react-native-firebase/firestore';
 import {dataFormatter} from '../../utils/DataFormatter';
 import styles from './commentsStyle';
 import moment from 'moment';
+import {fonts} from '../../constants/fonts';
 // import moment from 'moment';
 
 export const Comments = () => {
@@ -26,7 +27,7 @@ export const Comments = () => {
 
   const commentHandler = async () => {
     setLoading(true);
-    await Modals.comments.set({
+    await Models.comments.set({
       title: comment.current,
       task_id: selectedTask?.id,
       commenter_id: user?.id,
@@ -52,7 +53,7 @@ export const Comments = () => {
 
   return loading ? (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <Text style={{fontFamily: 'Montserrat-Regular'}}>loading</Text>
+      <Text style={{fontFamily: fonts.regular}}>loading</Text>
     </View>
   ) : (
     <View style={styles.commentsContainer}>
@@ -68,7 +69,7 @@ export const Comments = () => {
                   <Text
                     style={{
                       color: '#60C877',
-                      fontFamily: 'Montserrat-Regular',
+                      fontFamily: fonts.regular,
                     }}>
                     {getUserName(item?.commenter_id)}
                   </Text>

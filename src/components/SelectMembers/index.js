@@ -4,6 +4,7 @@ import shortid from 'shortid';
 import {AppContext} from '../../context';
 import styles from './selectMembersStyle';
 import {goBack} from '../../navigators/RootNavigation';
+import {fonts} from '../../constants/fonts';
 
 export const SelectedMembers = ({showDone = false, isFrom = ''}) => {
   const {
@@ -107,7 +108,7 @@ export const SelectedMembers = ({showDone = false, isFrom = ''}) => {
                         style={{
                           fontSize: 18,
                           fontWeight: 'bold',
-                          fontFamily: 'Montserrat-Regular',
+                          fontFamily: fonts.regular,
                         }}>
                         {member?.user_name[0]}
                       </Text>
@@ -134,7 +135,7 @@ export const SelectedMembers = ({showDone = false, isFrom = ''}) => {
             if (isFrom) goBack();
             else
               dispatch({
-                type: 'toggleBottomModal',
+                type: 'toggleBottomModel',
                 payload: {bottomModal: 'closeSelectMembers'},
               });
           }}>

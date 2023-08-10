@@ -1,4 +1,10 @@
-import React, {useState, useContext, useEffect, useRef} from 'react';
+import React, {
+  useState,
+  useContext,
+  useEffect,
+  useRef,
+  useCallback,
+} from 'react';
 import {
   View,
   Text,
@@ -18,14 +24,15 @@ import {combineData} from '../../utils/DataHelper';
 import {AppContext} from '../../context';
 import appTheme from '../../constants/colors';
 import ActionButton from 'react-native-action-button';
-import {Modals} from '../../api/firebaseModal';
+import {Models} from '../../api/firebaseModel';
 import {Loader} from '../../components/Loader';
 import {dataFormatter} from '../../utils/DataFormatter';
 import {navigateToNestedRoute} from '../../navigators/RootNavigation';
 import {getScreenParent} from '../../utils/NavigationHelper';
 import {colors} from '../../constants/all';
-import {taskModal} from '../../api/taskModal';
+import {taskModel} from '../../api/taskModel';
 import {MemberView, MembersView} from '../../components/MembersView';
+import {fonts} from '../../constants/fonts';
 
 export function Project({navigation, route}) {
   const {
@@ -70,8 +77,8 @@ export function Project({navigation, route}) {
   };
 
   const getProjectTasks = async id => {
-    // const res = await Modals.tasks.getProjectTasks(id);
-    const res = await taskModal.getProjectTasks(id);
+    // const res = await Models.tasks.getProjectTasks(id);
+    const res = await taskModel.getProjectTasks(id);
     const formattedData = await dataFormatter(res);
     setTasks([...formattedData]);
     totalTasks.current = [...formattedData];
@@ -106,7 +113,7 @@ export function Project({navigation, route}) {
     return () => setIsProjectSelected(false);
   }, []);
 
-  const filterMembers = arr => {
+  const filterMembers = useCallback(arr => {
     const result = members.filter(item => {
       return arr?.find(ele => {
         return item?.id === ele;
@@ -114,7 +121,7 @@ export function Project({navigation, route}) {
     });
 
     return result;
-  };
+  }, []);
 
   const completedTasks = (
     Array?.isArray(totalTasks?.current) ? totalTasks?.current : []
@@ -136,20 +143,20 @@ export function Project({navigation, route}) {
         selectedMembers?.status != 'Completed' &&
         totalTasks?.current?.length != 0
       ) {
-        Modals.projects.update(selectedProject?.id, {status: 'Completed'});
+        Models.projects.update(selectedProject?.id, {status: 'Completed'});
         setSelectedProject(prv => ({...prv, status: 'Completed'}));
       } else if (
         (numberOfInProgressTasks > 0 || numberOfCompletedTasks > 0) &&
         selectedMembers?.status != 'In Progress'
       ) {
-        Modals.projects.update(selectedProject?.id, {status: 'In Progress'});
+        Models.projects.update(selectedProject?.id, {status: 'In Progress'});
         setSelectedProject(prv => ({...prv, status: 'In Progress'}));
       } else if (
         numberOfInProgressTasks == 0 &&
         numberOfCompletedTasks == 0 &&
         selectedMembers?.status != 'Not Started'
       ) {
-        Modals.projects.update(selectedProject?.id, {status: 'Not Started'});
+        Models.projects.update(selectedProject?.id, {status: 'Not Started'});
         setSelectedProject(prv => ({...prv, status: 'Not Started'}));
       }
     }
@@ -175,7 +182,7 @@ export function Project({navigation, route}) {
             style={{
               fontSize: 20,
               fontWeight: 'bold',
-              fontFamily: 'Montserrat-Regular',
+              fontFamily: fonts.regular,
             }}>
             Project Details
           </Text>
@@ -220,7 +227,7 @@ export function Project({navigation, route}) {
                     style={styles.plusBtnContainer}
                     onPress={() =>
                       dispatch({
-                        type: 'toggleBottomModal',
+                        type: 'toggleBottomModel',
                         payload: {bottomModal: 'SelectMembers'},
                       })
                     }>

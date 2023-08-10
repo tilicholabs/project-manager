@@ -1,5 +1,6 @@
 import {StyleSheet} from 'react-native';
 import appTheme from '../../constants/colors';
+import {fonts} from '../../constants/fonts';
 
 const styles = StyleSheet.create({
   container: {
@@ -56,13 +57,13 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: 20,
     fontWeight: 'bold',
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: fonts.regular,
   },
   statisticsTitle: {
     color: 'black',
     fontSize: 15,
     fontWeight: 'bold',
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: fonts.regular,
   },
   tasksSection: {
     paddingBottom: 40,
@@ -108,7 +109,7 @@ const styles = StyleSheet.create({
 
     color: 'black',
 
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: fonts.regular,
   },
 });
 

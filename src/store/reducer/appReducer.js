@@ -2,7 +2,7 @@ import initialState from '../state';
 
 export const appReducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'toggleBottomModal': {
+    case 'toggleBottomModel': {
       const bottomModal = action.payload.bottomModal;
       return {
         ...state,

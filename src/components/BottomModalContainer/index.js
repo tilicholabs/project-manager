@@ -13,14 +13,15 @@ import {AppContext} from '../../context';
 import {SelectedMembers} from '../SelectMembers';
 import {Comments} from '../Comments';
 import EditProfile from '../EditProfile';
+import {fonts} from '../../constants/fonts';
 
 export function BottomModalContainer() {
   const {state, dispatch} = useContext(AppContext);
   const {bottomModal} = state;
 
-  const handleBottomModal = bottomModal => {
+  const handleBottomModel = bottomModal => {
     dispatch({
-      type: 'toggleBottomModal',
+      type: 'toggleBottomModel',
       payload: {bottomModal},
     });
   };
@@ -29,16 +30,16 @@ export function BottomModalContainer() {
     <Modal
       animationType="slide"
       transparent={true}
-      onRequestClose={() => handleBottomModal(null)}
+      onRequestClose={() => handleBottomModel(null)}
       style={{backgroundColor: 'red'}}>
-      <SafeAreaView style={styles.modalContainer}>
+      <SafeAreaView style={styles.ModelContainer}>
         <Pressable
-          onPress={() => handleBottomModal(null)}
+          onPress={() => handleBottomModel(null)}
           style={{flex: 1, display: 'flex', justifyContent: 'flex-end'}}>
           <TouchableOpacity
             style={styles.closeButton}
-            onPress={() => handleBottomModal(null)}></TouchableOpacity>
-          <View style={styles.setModalDimensions('70%', '100%')}>
+            onPress={() => handleBottomModel(null)}></TouchableOpacity>
+          <View style={styles.setModelDimensions('70%', '100%')}>
             <Pressable
               style={{
                 flex: 1,
@@ -60,7 +61,7 @@ export function BottomModalContainer() {
                       fontSize: 20,
                       fontWeight: 'bold',
                       paddingBottom: 30,
-                      fontFamily: 'Montserrat-Regular',
+                      fontFamily: fonts.regular,
                     }}>
                     Select Members
                   </Text>
