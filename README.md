@@ -17,9 +17,9 @@ You can create a project by adding `Title` and `Description`.You can add multipl
 | -------------------------------------- | ---------------------------------------- |
 | ![app](/src/assets/createProject.jpeg) | ![app](/src/assets/projectsListing.jpeg) |
 
-| Project Details                         | Project Status                         |
-| --------------------------------------- | -------------------------------------- |
-| ![app](/src/assets/projectDetails.jpeg) | ![app](/src/assets/projectStatus.jpeg) |
+| Project Details                  | Project Status                         |
+| -------------------------------- | -------------------------------------- |
+| ![app](/src/assets/app_logo.png) | ![app](/src/assets/projectStatus.jpeg) |
 
 ## Task creation
 
