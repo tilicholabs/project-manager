@@ -15,11 +15,11 @@ You can create a project by adding `Title` and `Description`.You can add multipl
 
 | Create Project                            | Projects Listing                        |
 | ----------------------------------------- | --------------------------------------- |
-| ![Imgur](https://i.imgur.com/N7lODwZ.jpg) | ![app](https://i.imgur.com/8v5GXOU.jpg) |
+| ![Imgur](https://i.imgur.com/YTE3tEh.jpg) | ![app](https://i.imgur.com/HLpWsXP.jpg) |
 
 | Project Details                         | Project Status                          |
 | --------------------------------------- | --------------------------------------- |
-| ![app](https://i.imgur.com/qqcknLw.jpg) | ![app](https://i.imgur.com/uqIPhSV.jpg) |
+| ![app](https://i.imgur.com/4a4wnFe.jpg) | ![app](https://i.imgur.com/puzBcgn.jpg) |
 
 ## Task creation
 
@@ -27,7 +27,7 @@ You can create a task by adding `Title`, `Description` and `Due date`. All tasks
 
 | Create Task                             | Dashboard                               |
 | --------------------------------------- | --------------------------------------- |
-| ![app](https://i.imgur.com/xiBrOj9.jpg) | ![app](https://i.imgur.com/bUDj601.jpg) |
+| ![app](https://i.imgur.com/KhikPXu.jpg) | ![app](https://i.imgur.com/kze36WZ.jpg) |
 
 ## Task status
 
@@ -35,15 +35,15 @@ Tasks are listed in `Dashboard` screen. You can change the status of task from t
 
 | Task Status                             | Project Status                          |
 | --------------------------------------- | --------------------------------------- |
-| ![app](https://i.imgur.com/dJ1HM1t.jpg) | ![app](https://i.imgur.com/uqIPhSV.jpg) |
+| ![app](https://i.imgur.com/zbOMVRa.jpg) | ![app](https://i.imgur.com/puzBcgn.jpg) |
 
 ## Sub-Tasks creation
 
 You can create a `sub-tasks` for particular task. When you tap on particular task , it will go to `Task details` screen. The `Sub-tasks` related to that particular task are listed in that screen. You can create a new `sub-task` from there. The sub-tasks are also have the status, you can change it from there only.
 
-| Sub-task creation                       | Task Details                            |
+| Sub-task creation                       | Task-Details                            |
 | --------------------------------------- | --------------------------------------- |
-| ![app](https://i.imgur.com/bfGlgoM.jpg) | ![app](https://i.imgur.com/sdZpayX.jpg) |
+| ![app](https://i.imgur.com/dv5HxMK.jpg) | ![app](https://i.imgur.com/9WdPouH.jpg) |
 
 ## Real-time collaboration with team members
 
@@ -64,7 +64,7 @@ The project management app has both login and signup flow. Users have an specifi
 
 | Login                                   | Sign-up                                 |
 | --------------------------------------- | --------------------------------------- |
-| ![app](https://i.imgur.com/2EYTx8V.jpg) | ![app](https://i.imgur.com/2DbJaVu.jpg) |
+| ![app](https://i.imgur.com/5SMLlLS.jpg) | ![app](https://i.imgur.com/Xz5kWYV.jpg) |
 
 ## Credits
 
