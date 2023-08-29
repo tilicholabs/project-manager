@@ -1,33 +1,73 @@
 # Project Management mobile app built with ReactNative
 
+## Features
 
-### App UI Mockup
+- Create and manage projects.
+- Add and assign tasks to team members.
+- Track task status (Not Started, In Progress, Completed).
+- Add Sub-Tasks to tasks.
+- Real-time collaboration with team members.
+- User authentication and access control.
 
-https://user-images.githubusercontent.com/26362657/123002066-5c83b000-d3a9-11eb-88ab-d72949d0cda0.mp4
+## Create and manage projects
 
-### App Screenshots
+You can create a project by adding `Title` and `Description`.You can add multiple `team members` into the project. Created projects are listed at `Projects` screen. You can find all tasks related to the project in the `Project details` page. You can change the status of particular task. You can Add team members as well in this screen.
 
-![App Screenshots](https://imgur.com/gQEdod3.png)
+| Create Project                          | Projects Listing                          |
+| --------------------------------------- | ----------------------------------------- |
+| ![app](./src/assets/createProject.jpeg) | ![app](./src/assets/projectsListing.jpeg) |
 
-### Like this project?
-Don't forget to star :star2: this repo.
+| Project Details                          | Project Status                          |
+| ---------------------------------------- | --------------------------------------- |
+| ![app](./src/assets/projectDetails.jpeg) | ![app](./src/assets/projectStatus.jpeg) |
 
-### Want to support? Buy me a coffee
-<a href="https://www.buymeacoffee.com/princewilliroka"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=princewilliroka&button_colour=BD5FFF&font_colour=ffffff&font_family=Cookie&outline_colour=000000&coffee_colour=FFDD00"></a>
+## Task creation
 
-### Usage and Setup
-- Clone this repo. Go into the root folder and run *yarn* to install the dependencies.
-- From the terminal, run *yarn start* and *yarn android* or *yarn ios* to execute the app on a device or emulator.
+You can create a task by adding `Title`, `Description` and `Due date`. All tasks related to signed user will listed in the `Dashboard`. You can create task from the particular `Project details` screen as well.
 
-### Author
+| Create Task                          | Dashboard                      |
+| ------------------------------------ | ------------------------------ |
+| ![app](./src/assets/createTask.jpeg) | ![app](./src/assets/home.jpeg) |
 
-👤 **Princewill Iroka**
+## Task status
+
+Tasks are listed in `Dashboard` screen. You can change the status of task from there or tasks are listed at `Project details` screen as well. You can change status of task from this screen also.
+
+| Task Status                          | Project Status                          |
+| ------------------------------------ | --------------------------------------- |
+| ![app](./src/assets/taskStatus.jpeg) | ![app](./src/assets/projectStatus.jpeg) |
+
+## Sub-Tasks creation
+
+You can create a `sub-tasks` for particular task. When you tap on particular task , it will go to `Task details` screen. The `Sub-tasks` related to that particular task are listed in that screen. You can create a new `sub-task` from there. The sub-tasks are also have the status, you can change it from there only.
+
+| Sub-task creation                         | Task Details                          |
+| ----------------------------------------- | ------------------------------------- |
+| ![app](./src/assets/subTaskCreation.jpeg) | ![app](./src/assets/taskDetails.jpeg) |
+
+## Real-time collaboration with team members
+
+The "Real-time Collaboration with Team Members" feature is at the heart of our project management app. It empowers teams to work together seamlessly, fostering communication, transparency, and productivity throughout the project's lifecycle.
+
+## Key Benefits:
+
+- `Instant Communication :`
+  Team members can communicate instantly, eliminating the need for lengthy email chains or delayed responses. Whether it's discussing project details, sharing updates, or asking questions, real-time chat makes it effortless.
+
+- `Task Coordination :` Collaborators can coordinate on tasks efficiently. When a task's status changes or a comment is added, all relevant team members are notified immediately, ensuring everyone is on the same page.
+
+- `Enhanced Transparency :` Real-time updates provide complete transparency into project progress. Team members can view task changes, project milestones, and new comments as they occur, enabling them to respond promptly.
+
+## User authentication and access control
+
+The project management app has both login and signup flow. Users have an specific set of access controls over `CRUD` operations. This accessess are controlled over `admin` level.
+
+| Login                           | Sign-up                          |
+| ------------------------------- | -------------------------------- |
+| ![app](./src/assets/login.jpeg) | ![app](./src/assets/signUp.jpeg) |
+
+## Credits
+
+👤 _Princewill Iroka_
 
 - Twitter: [@PrincewillIroka](https://twitter.com/PrincewillIroka)
-
-### Credit
-UI designed by 👤 [Nurency](https://dribbble.com/shots/15225935-Task-Management-App)
-
-### License
-Copyright 2021 **Princewill Iroka** \
-This project is licensed under the terms of the [MIT license.](https://github.com/PrincewillIroka/gmail_clone/blob/main/LICENSE)
