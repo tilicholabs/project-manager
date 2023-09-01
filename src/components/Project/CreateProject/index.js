@@ -15,7 +15,6 @@ import Search from '../../Search';
 import {goBack} from '../../../navigators/RootNavigation';
 import {useKeyboardDetails} from '../../../hooks/useKeyboardDetails';
 import {TabScreenHeader} from '../../Global';
-import {onChange} from 'react-native-reanimated';
 import CustomTextInput from '../../Global/CustomTextInput';
 import {Models} from '../../../api/firebaseModel';
 import appTheam from '../../../constants/colors';

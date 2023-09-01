@@ -1,5 +1,41 @@
 {
   "name": "project_management_mobile_app",
   "displayName": "project_management_mobile_app",
-  "plugins": ["@react-native-google-signin/google-signin"]
+  "plugins": ["@react-native-google-signin/google-signin"],
+  "expo": {
+    "name": "Project Manager",
+    "slug": "project-manager",
+    "jsEngine": "hermes",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "runtimeVersion": {
+      "policy": "31"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.pagepro.testpublishapp",
+      "buildNumber": "1.0.0",
+      "jsEngine": "jsc",
+      "infoPlist": {
+        "Expo.usesLegacySwift": false,
+        "Expo.plist.hermes_enabled": true
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#FFFFFF"
+      },
+      "package": "com.pagepro.testpublishapp",
+      "versionCode": 1
+    },
+    "extra": {
+      "eas": {
+        "projectId": "d146d6cc-aaef-4892-8092-43bfd99e0bad"
+      }
+    }
+  }
 }
