@@ -24,7 +24,7 @@
     "expo-updates": "~0.18.12",
     "moment": "^2.29.1",
     "react": "17.0.1",
-    "react-native": "^0.71.3",
+    "react-native": "^0.57.8",
     "react-native-action-button": "^2.8.5",
     "react-native-date-picker": "^4.1.1",
     "react-native-dropdown-picker": "^5.1.21",

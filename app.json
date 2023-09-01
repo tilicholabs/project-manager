@@ -6,22 +6,19 @@
     "name": "Project Manager",
     "slug": "project-manager",
     "privacy": "unlisted",
-    "jsEngine": "hermes",
     "version": "1.0.0",
     "orientation": "portrait",
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "sdkVersion": "48.0.0",
+    "sdkVersion": "31.0.0",
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.pagepro.testpublishapp",
       "buildNumber": "1.0.0",
-      "jsEngine": "jsc",
       "infoPlist": {
-        "Expo.usesLegacySwift": false,
-        "Expo.plist.hermes_enabled": true
+        "Expo.usesLegacySwift": false
       }
     },
     "android": {
@@ -36,6 +33,6 @@
         "projectId": "d146d6cc-aaef-4892-8092-43bfd99e0bad"
       }
     },
-    "platforms": ["android", "ios", "web"]
+    "platforms": ["android", "ios"]
   }
 }
